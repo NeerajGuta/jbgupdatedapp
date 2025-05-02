@@ -482,7 +482,7 @@ function Home() {
                           gap: 10,
                           padding: 4,
                           borderWidth: 2,
-                          height: 85,
+                          height: 95,
                           borderColor: '#2b2cd6',
                           borderRadius: 23,
                           paddingHorizontal: 30,
@@ -512,7 +512,7 @@ function Home() {
                         <TextInput
                           style={styles.input}
                           placeholder={gold ? `${gold} Grams` : 'Grams'}
-                          placeholderTextColor="#f3d25b"
+                          placeholderTextColor="#fff"
                           keyboardType="number-pad"
                           value={gold}
                           onChangeText={gold =>
@@ -563,8 +563,8 @@ function Home() {
                       /> */}
                         <TextInput
                           style={styles.input}
-                          placeholder={Amount ? `${Amount} Amount` : 'Amount'}
-                          placeholderTextColor="#f3d25b"
+                          placeholder={Amount ? `${Amount} ` : 'Amount'}
+                          placeholderTextColor="#fff"
                           keyboardType="number-pad"
                           value={Amount}
                           onChangeText={newAmount => {
@@ -576,9 +576,7 @@ function Home() {
                             }
                           }}
                         />
-                        {/* Number(ele.rate) +
-                                    (ele.rate * (NewGst + ele?.percentage)) /
-                                      100, */}
+                       
                       </View>
                     </View>
                   </View>
@@ -1011,30 +1009,32 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     fontSize: 16,
     borderRadius: 13,
-    color: '#fff',
+    color: '#fff', 
+    placeholderTextColor:'#fff',
     textAlign: 'center',
-    fontWeight: '600',
+    fontWeight: '900',
     width: 130,
     borderColor: '#feac03',
     backgroundColor: 'transparent',
     // shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 2,
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 3.84,
+    // elevation: 2,
   },
   itemicon: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent:'center',
     alignItems: 'center',
-    width: '100%',
+    width: '100%', 
+    gap:5,
   },
   icons: {
     fontSize: 22,
-    color: '#f3d25b',
+    color: '#fff',
   },
   button: {
     backgroundColor: '#f3d25b',
