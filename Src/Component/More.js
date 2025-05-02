@@ -100,7 +100,7 @@ const More = () => {
   }, 1000);
 
   return (
-    <>
+    <ScrollView style={styles.main}>
       {loader ? (
         <>
           <View
@@ -113,271 +113,306 @@ const More = () => {
           </View>
         </>
       ) : (
-        <>
-          <StatusBar backgroundColor="#f3d25b" barStyle="light-content" />
-          <ScrollView>
+        <ScrollView style={{backgroundColor: '2b2cd6'}}>
+          <StatusBar backgroundColor="#2b2cd6" barStyle="light-content" />
+          <ScrollView style={{backgroundColor: '2b2cd6'}}>
             <View style={styles.conatiner}>
-              <ImageBackground
-                source={require('../../assets/images/app-bg.jpg')}
-                resizeMode="cover"
-                style={styles.image}>
-                {}
-                <View style={styles.booking}>
-                  <TouchableOpacity
-                    style={{flexDirection: 'row'}}
-                    onPress={() => {
-                      navigation.navigate('BookingDetails');
-                    }}>
-                    <Animatable.View
-                      animation="fadeInLeft"
-                      style={styles.profiles1}>
-                      <Image
-                        source={require('../../assets/images/choices.png')}
-                        resizeMode="cover"
-                        style={[styles.img, {width: 25, height: 25}]}
-                      />
-                      <Text style={styles.passfont}>Purchase Histroy</Text>
-                    </Animatable.View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{flexDirection: 'row'}}
-                    onPress={() => {
-                      navigation.navigate('CoinDetails');
-                    }}>
-                    <Animatable.View
-                      animation="fadeInRight"
-                      style={styles.profiles1}>
-                      <Image
-                        source={require('../../assets/images/choices.png')}
-                        resizeMode="cover"
-                        style={[styles.img, {width: 25, height: 25}]}
-                      />
-                      <Text style={styles.passfont}>Withdraw History</Text>
-                    </Animatable.View>
-                  </TouchableOpacity>
+              <View style={styles.booking}>
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    navigation.navigate('BookingDetails');
+                  }}>
+                  <Animatable.View
+                    animation="fadeInLeft"
+                    style={styles.profiles1}>
+                    <Image
+                      source={require('../../assets/images/choices.png')}
+                      resizeMode="cover"
+                      style={[
+                        styles.img,
+                        {width: 25, height: 25, backgroundColor: '#f3d25b'},
+                      ]}
+                    />
+                    <Text style={styles.passfont}>Purchase Histroy</Text>
+                  </Animatable.View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    navigation.navigate('CoinDetails');
+                  }}>
+                  <Animatable.View
+                    animation="fadeInRight"
+                    style={styles.profiles1}>
+                    <Image
+                      source={require('../../assets/images/choices.png')}
+                      resizeMode="cover"
+                      style={[
+                        styles.img,
+                        {width: 25, height: 25, backgroundColor: '#f3d25b'},
+                      ]}
+                    />
+                    <Text style={styles.passfont}>Withdraw History</Text>
+                  </Animatable.View>
+                </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={{flexDirection: 'row'}}
-                    onPress={() => {
-                      navigation.navigate('EarnedBonusPoint');
-                    }}>
-                    <Animatable.View
-                      animation="fadeInRight"
-                      style={styles.profiles1}>
-                      <Image
-                        source={require('../../assets/images/padlock.png')}
-                        resizeMode="cover"
-                        style={[styles.img, {width: 25, height: 25}]}
-                      />
-                      <Text style={styles.passfont}>Just buy gold Balance</Text>
-                    </Animatable.View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{flexDirection: 'row'}}
-                    onPress={() => shareApp()}
-                    // onPress={() => {
-                    //   navigation.navigate('AboutUs');
-                    // }}
-                  >
-                    <Animatable.View
-                      animation="fadeInLeft"
-                      style={styles.profiles1}>
-                      <Image
-                        source={require('../../assets/images/share.png')}
-                        resizeMode="cover"
-                        style={[styles.img, {width: 25, height: 25}]}
-                      />
-                      <Text style={styles.passfont}>Share and Earn</Text>
-                    </Animatable.View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{flexDirection: 'row'}}
-                    onPress={() => {
-                      navigation.navigate('AboutUs');
-                    }}>
-                    <Animatable.View
-                      animation="fadeInLeft"
-                      style={styles.profiles1}>
-                      <Image
-                        source={require('../../assets/images/information.png')}
-                        resizeMode="cover"
-                        style={[styles.img, {width: 25, height: 25}]}
-                      />
-                      <Text style={styles.passfont}>About Us</Text>
-                    </Animatable.View>
-                  </TouchableOpacity>
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    navigation.navigate('EarnedBonusPoint');
+                  }}>
+                  <Animatable.View
+                    animation="fadeInRight"
+                    style={styles.profiles1}>
+                    <Image
+                      source={require('../../assets/images/padlock.png')}
+                      resizeMode="cover"
+                      style={[
+                        styles.img,
+                        {width: 25, height: 25, backgroundColor: '#f3d25b'},
+                      ]}
+                    />
+                    <Text style={styles.passfont}>Just buy gold Balance</Text>
+                  </Animatable.View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => shareApp()}
+                  // onPress={() => {
+                  //   navigation.navigate('AboutUs');
+                  // }}
+                >
+                  <Animatable.View
+                    animation="fadeInLeft"
+                    style={styles.profiles1}>
+                    <Image
+                      source={require('../../assets/images/share.png')}
+                      resizeMode="cover"
+                      style={[
+                        styles.img,
+                        {width: 25, height: 25, backgroundColor: '#f3d25b'},
+                      ]}
+                    />
+                    <Text style={styles.passfont}>Share and Earn</Text>
+                  </Animatable.View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    navigation.navigate('AboutUs');
+                  }}>
+                  <Animatable.View
+                    animation="fadeInLeft"
+                    style={styles.profiles1}>
+                    <Image
+                      source={require('../../assets/images/information.png')}
+                      resizeMode="cover"
+                      style={[
+                        styles.img,
+                        {width: 25, height: 25, backgroundColor: '#f3d25b'},
+                      ]}
+                    />
+                    <Text style={styles.passfont}>About Us</Text>
+                  </Animatable.View>
+                </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={{flexDirection: 'row'}}
-                    onPress={() => {
-                      navigation.navigate('TermsCondition');
-                    }}>
-                    <Animatable.View
-                      animation="fadeInRight"
-                      style={styles.profiles1}>
-                      <Image
-                        source={require('../../assets/images/terms-and-conditions.png')}
-                        resizeMode="cover"
-                        style={[styles.img, {width: 25, height: 25}]}
-                      />
-                      <Text style={styles.passfont}>Terms & Condition</Text>
-                    </Animatable.View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{flexDirection: 'row'}}
-                    onPress={() => {
-                      navigation.navigate('PrivacyPolicy');
-                    }}>
-                    <Animatable.View
-                      animation="fadeInLeft"
-                      style={styles.profiles1}>
-                      <Image
-                        source={require('../../assets/images/insurance.png')}
-                        resizeMode="cover"
-                        style={[styles.img, {width: 25, height: 25}]}
-                      />
-                      <Text style={styles.passfont}>Privacy policy</Text>
-                    </Animatable.View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{flexDirection: 'row'}}
-                    onPress={() => {
-                      navigation.navigate('Disclaimer');
-                    }}>
-                    <Animatable.View
-                      animation="fadeInRight"
-                      style={styles.profiles1}>
-                      <Image
-                        source={require('../../assets/images/file.png')}
-                        resizeMode="cover"
-                        style={[styles.img, {width: 25, height: 25}]}
-                      />
-                      <Text style={styles.passfont}>Disclaimer</Text>
-                    </Animatable.View>
-                  </TouchableOpacity>
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    navigation.navigate('TermsCondition');
+                  }}>
+                  <Animatable.View
+                    animation="fadeInRight"
+                    style={styles.profiles1}>
+                    <Image
+                      source={require('../../assets/images/terms-and-conditions.png')}
+                      resizeMode="cover"
+                      style={[
+                        styles.img,
+                        {width: 25, height: 25, backgroundColor: '#f3d25b'},
+                      ]}
+                    />
+                    <Text style={styles.passfont}>Terms & Condition</Text>
+                  </Animatable.View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    navigation.navigate('PrivacyPolicy');
+                  }}>
+                  <Animatable.View
+                    animation="fadeInLeft"
+                    style={styles.profiles1}>
+                    <Image
+                      source={require('../../assets/images/insurance.png')}
+                      resizeMode="cover"
+                      style={[
+                        styles.img,
+                        {width: 25, height: 25, backgroundColor: '#f3d25b'},
+                      ]}
+                    />
+                    <Text style={styles.passfont}>Privacy policy</Text>
+                  </Animatable.View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    navigation.navigate('Disclaimer');
+                  }}>
+                  <Animatable.View
+                    animation="fadeInRight"
+                    style={styles.profiles1}>
+                    <Image
+                      source={require('../../assets/images/file.png')}
+                      resizeMode="cover"
+                      style={[
+                        styles.img,
+                        {width: 25, height: 25, backgroundColor: '#f3d25b'},
+                      ]}
+                    />
+                    <Text style={styles.passfont}>Disclaimer</Text>
+                  </Animatable.View>
+                </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={{flexDirection: 'row'}}
-                    onPress={() => {
-                      navigation.navigate('Help');
-                    }}>
-                    <Animatable.View
-                      animation="fadeInRight"
-                      style={styles.profiles1}>
-                      <Image
-                        source={require('../../assets/images/terms-and-conditions.png')}
-                        resizeMode="cover"
-                        style={[styles.img, {width: 25, height: 25}]}
-                      />
-                      <Text style={styles.passfont}>Help</Text>
-                    </Animatable.View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{flexDirection: 'row'}}
-                    onPress={() => {
-                      // removeUser();
-                      toggleModal();
-                    }}>
-                    <Animatable.View
-                      animation="fadeInRight"
-                      style={styles.profiles1}>
-                      <Image
-                        source={require('../../assets/images/logout.png')}
-                        resizeMode="cover"
-                        style={[styles.img, {width: 25, height: 25}]}
-                      />
-                      <Text style={[styles.passfont, {color: 'red'}]}>
-                        Sign Out
-                      </Text>
-                    </Animatable.View>
-                  </TouchableOpacity>
-                  {/* Modal */}
-                  <View style={{flex: 1}}>
-                    {/* <Button title="Show modal" onPress={toggleModal} /> */}
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    navigation.navigate('Help');
+                  }}>
+                  <Animatable.View
+                    animation="fadeInRight"
+                    style={styles.profiles1}>
+                    <Image
+                      source={require('../../assets/images/terms-and-conditions.png')}
+                      resizeMode="cover"
+                      style={[
+                        styles.img,
+                        {width: 25, height: 25, backgroundColor: '#f3d25b'},
+                      ]}
+                    />
+                    <Text style={styles.passfont}>Help</Text>
+                  </Animatable.View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{flexDirection: 'row'}}
+                  onPress={() => {
+                    // removeUser();
+                    toggleModal();
+                  }}>
+                  <Animatable.View
+                    animation="fadeInRight"
+                    style={styles.profiles1}>
+                    <Image
+                      source={require('../../assets/images/logout.png')}
+                      resizeMode="cover"
+                      style={[styles.img, {width: 25, height: 25}]}
+                    />
+                    <Text style={[styles.passfont, {color: 'red'}]}>
+                      Sign Out
+                    </Text>
+                  </Animatable.View>
+                </TouchableOpacity>
+                {/* Modal */}
+                <View style={{flex: 1}}>
+                  {/* <Button title="Show modal" onPress={toggleModal} /> */}
 
-                    <Modal isVisible={isModalVisible}>
-                      <View style={{backgroundColor: 'white', height: 130}}>
-                        <View
+                  <Modal isVisible={isModalVisible}>
+                    <View style={{backgroundColor: 'white', height: 130}}>
+                      <View
+                        style={{
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+
+                          alignItems: 'center',
+                        }}>
+                        <Text
                           style={{
                             flexDirection: 'column',
                             justifyContent: 'center',
-
+                            paddingTop: 20,
                             alignItems: 'center',
+                            fontSize: 17,
+                            fontWeight: '600',
+                            color: 'black',
+                            fontFamily: 'Poppins-SemiBoldItalic',
                           }}>
-                          <Text
-                            style={{
-                              flexDirection: 'column',
-                              justifyContent: 'center',
-                              paddingTop: 20,
-                              alignItems: 'center',
-                              fontSize: 17,
-                              fontWeight: '600',
-                              color: 'black',
-                              fontFamily: 'Poppins-SemiBoldItalic',
-                            }}>
-                            Are you sure want logout ?
-                          </Text>
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: 20,
-                          }}>
-                          <LinearGradient
-                            start={{x: 1, y: 0}}
-                            end={{x: 0, y: 0}}
-                            colors={['#874701', '#874701', '#874701']}
-                            style={styles.linearGradientmodel}>
-                            <TouchableOpacity onPress={toggleModal}>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontSize: 15,
-                                  fontFamily: 'Poppins-Regular',
-                                }}>
-                                {' '}
-                                Cancel
-                              </Text>
-                            </TouchableOpacity>
-                          </LinearGradient>
-                          <LinearGradient
-                            start={{x: 1, y: 0}}
-                            end={{x: 0, y: 0}}
-                            colors={['#874701', '#874701', '#874701']}
-                            style={styles.linearGradientmodel}>
-                            <TouchableOpacity onPress={removeUser}>
-                              <Text
-                                style={{
-                                  color: 'white',
-                                  fontSize: 15,
-                                  fontFamily: 'Poppins-Regular',
-                                }}>
-                                Yes
-                              </Text>
-                            </TouchableOpacity>
-                          </LinearGradient>
-                        </View>
+                          Are you sure want logout ?
+                        </Text>
                       </View>
-                    </Modal>
-                  </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          padding: 20,
+                        }}>
+                        <LinearGradient
+                          start={{x: 1, y: 0}}
+                          end={{x: 0, y: 0}}
+                          colors={['#874701', '#874701', '#874701']}
+                          style={styles.linearGradientmodel}>
+                          <TouchableOpacity onPress={toggleModal}>
+                            <Text
+                              style={{
+                                color: 'white',
+                                fontSize: 15,
+                                fontFamily: 'Poppins-Regular',
+                              }}>
+                              {' '}
+                              Cancel
+                            </Text>
+                          </TouchableOpacity>
+                        </LinearGradient>
+                        <LinearGradient
+                          start={{x: 1, y: 0}}
+                          end={{x: 0, y: 0}}
+                          colors={['#874701', '#874701', '#874701']}
+                          style={styles.linearGradientmodel}>
+                          <TouchableOpacity onPress={removeUser}>
+                            <Text
+                              style={{
+                                color: 'white',
+                                fontSize: 15,
+                                fontFamily: 'Poppins-Regular',
+                              }}>
+                              Yes
+                            </Text>
+                          </TouchableOpacity>
+                        </LinearGradient>
+                      </View>
+                    </View>
+                  </Modal>
                 </View>
-              </ImageBackground>
+              </View>
             </View>
           </ScrollView>
-        </>
+          <Image
+            source={require('../../assets/images/g12.png')}
+            resizeMode="contain"
+            style={{
+              width: '100%',
+              height: 100,
+              marginTop: 80,
+            }}
+          />
+        </ScrollView>
       )}
-    </>
+    </ScrollView>
   );
 };
 
 export default More;
 
 const styles = StyleSheet.create({
+  main: {
+    // flex: 1,
+    backgroundColor: 's#2b2cd6',
+  },
   conatiner: {
     flex: 1,
-    backgroundColor: 'white',
+    padding: 10,
+    backgroundColor: '#2b2cd6',
   },
   account: {
     padding: 10,
@@ -409,14 +444,15 @@ const styles = StyleSheet.create({
   },
   booking: {
     padding: 10,
+    backgroundColor: '2b2cd6',
   },
   profiles1: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 17,
+    paddingTop: 10,
     paddingBottom: 17,
     borderBottomWidth: 1,
-    backgroundColor: '#f3d25b',
+    backgroundColor: '#fff',
     paddingBottom: 10,
     marginBottom: 8,
     paddingLeft: 10,
@@ -429,7 +465,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.48,
     shadowRadius: 11.95,
 
-    elevation: 15,
+    elevation: 3,
     width: '100%',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,

@@ -4,6 +4,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Image} from 'react-native-animatable';
 
 const Help = () => {
   return (
@@ -14,7 +15,7 @@ const Help = () => {
             <FontAwesome5 name="phone-alt" size={22} style={styles.service} />
             <View>
               <Text style={styles.textfont}>Our 24x7 Customer Service</Text>
-              <Text style={styles.textfont1}>+91  9019095596 / 9019070105</Text>
+              <Text style={styles.textfont1}>+91 9019095596 / 9019070105</Text>
             </View>
           </View>
           <View style={styles.contact}>
@@ -37,10 +38,19 @@ const Help = () => {
             <View>
               <Text style={styles.textfont}>Location</Text>
               <Text style={styles.textfont1}>
-                Ground Floor, No 3, 9th A Main Road, Basaveshwara Nagar, Nagarbhavi, Bengaluru, Karnataka{'\n'}560072
+                Ground Floor, No 3, 9th A Main Road, Byraweshwara Nagar,
+                Nagarbhavi, Bengaluru Karnataka{'\n'}560072
               </Text>
             </View>
           </View>
+          <Image
+            source={require('../../assets/images/g11.png')}
+            resizeMode="contain"
+            style={{
+              width: '100%',
+              height: 300,
+            }}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -52,7 +62,7 @@ export default Help;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#2b2cd6',
   },
   contact: {
     flexDirection: 'row',
@@ -63,7 +73,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 10,
     shadowColor: '#000',
-    backgroundColor: '#f3d25b',
+    backgroundColor: '#fff',
     shadowOffset: {
       width: 0,
       height: 2,

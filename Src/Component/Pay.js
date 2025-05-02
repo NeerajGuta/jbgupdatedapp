@@ -169,6 +169,9 @@ const Pay = ({navigation, route}) => {
           gold: gold,
           PaymentId: paymentid,
           totalCoin: Number(gold),
+          goldRate: goldRate,
+          goldValue:goldValue*gold,
+          gst: gstAmount,
           // totalCoin: totalgoldStore + Number(gold),
         },
       };
@@ -215,12 +218,12 @@ const Pay = ({navigation, route}) => {
       RazorpayCheckout.open(options)
         .then(data => {
           // handle success
-          // Alert.alert(`Success: ${data.razorpay_payment_id}`);
+          Alert.alert(`Success: ${data.razorpay_payment_id}`);
           placeorder(data.razorpay_payment_id);
         })
         .catch(error => {
           // handle failure
-          // Alert.alert(`Error: ${error.code} | ${error.description}`);
+          Alert.alert(`Error: ${error.code} | ${error.description}`);
         });
     } catch (error) {
       console.log(error);

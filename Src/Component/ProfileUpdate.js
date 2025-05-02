@@ -94,7 +94,8 @@ const ProfileUpdate = ({navigation}) => {
 
   return (
     <>
-      <StatusBar backgroundColor="#f3d25b" barStyle="light-content" />
+      <StatusBar backgroundColor="#2b2cd6" barStyle="light-content" />
+
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.reg}>

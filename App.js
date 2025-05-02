@@ -105,9 +105,9 @@ const MyStack = () => {
         name="AboutUs"
         options={{
           headerShown: true,
-          headerTintColor: 'white',
+          headerTintColor: '#f3d25b',
           headerStyle: {
-            backgroundColor: '#f3d25b',
+            backgroundColor: '#fff',
           },
           title: 'About us',
         }}
@@ -117,11 +117,11 @@ const MyStack = () => {
         name="BookingDetails"
         options={{
           headerShown: true,
-          headerTintColor: 'white',
+          headerTintColor: '#f3d25b',
           headerStyle: {
-            backgroundColor: '#f3d25b',
+            backgroundColor: '#fff',
           },
-          title: 'Purchase Histroy',
+          title: 'Purchase History',
         }}
         component={BookingDetails}
       />
@@ -129,9 +129,9 @@ const MyStack = () => {
         name="CoinDetails"
         options={{
           headerShown: true,
-          headerTintColor: 'white',
+          headerTintColor: '#f3d25b',
           headerStyle: {
-            backgroundColor: '#f3d25b',
+            backgroundColor: '#fff',
           },
           title: 'Withdraw History',
         }}
@@ -141,9 +141,9 @@ const MyStack = () => {
         name="PrivacyPolicy"
         options={{
           headerShown: true,
-          headerTintColor: 'white',
+          headerTintColor: '#f3d25b',
           headerStyle: {
-            backgroundColor: '#f3d25b',
+            backgroundColor: '#fff',
           },
           title: 'Privacy Policy',
         }}
@@ -164,9 +164,9 @@ const MyStack = () => {
         name="TermsCondition"
         options={{
           headerShown: true,
-          headerTintColor: 'white',
+          headerTintColor: '#f3d25b',
           headerStyle: {
-            backgroundColor: '#f3d25b',
+            backgroundColor: '#fff',
           },
           title: 'Terms & Condition',
         }}
@@ -174,26 +174,32 @@ const MyStack = () => {
       />
       <Stack.Screen
         name="Help"
+        component={Help}
         options={{
           headerShown: true,
-          headerTintColor: 'white',
+          headerTintColor: '#f3d25b', // Text color for back button and title
           headerStyle: {
-            backgroundColor: '#f3d25b',
+            backgroundColor: '#fff', // Background color of header
           },
-          title: 'Contact Support',
+          headerTitleStyle: {
+            color: '#f3d25b', // Color of the title text
+          },
+          title: 'Contact Support', // Title text
         }}
-        component={Help}
       />
+
       <Stack.Screen
         name="Disclaimer"
         options={{
           headerShown: true,
-          headerTintColor: 'white',
+          headerTintColor: '#f3d25b',
           headerStyle: {
-            backgroundColor: '#f3d25b',
+            backgroundColor: '#fff',
           },
+          title: 'Disclaimer',
         }}
         component={Disclaimer}
+
       />
       <Stack.Screen
         name="Imagezoom"
@@ -225,7 +231,7 @@ const BottomTab = () => {
           tabBarActiveTintColor: '#feac03',
           tabBarInactiveTintColor: '#f3d25b',
           tabBarStyle: {
-            backgroundColor: '#080808',
+            backgroundColor: '#1a198c',
             borderColor: '#080808',
           },
           tabBarLabelStyle: {
@@ -270,7 +276,7 @@ const BottomTab = () => {
           headerShown: true,
           headerTintColor: 'black',
           headerStyle: {
-            backgroundColor: '#f3d25b',
+            backgroundColor: '#fff',
           },
           tabBarLabelStyle: {
             fontSize: 11,

@@ -195,44 +195,37 @@ const MyAccount = () => {
   const [updateProfile, setUpdateProfile] = useState(true);
 
   return (
-    <>
-      <StatusBar backgroundColor="#f3d25b" barStyle="light-content" />
+    <ScrollView style={{backgroundColor: '#2b2cd6'}}>
+      <StatusBar backgroundColor="#2b2cd6" barStyle="light-content" />
       {updateProfile ? (
         <>
           <View style={styles.conatiner}>
-            <ImageBackground
-              source={require('../../assets/images/app-bg.jpg')}
-              resizeMode="cover"
-              style={styles.image}>
-              <View style={[styles.account, {justifyContent: 'space-between'}]}>
-                <View style={styles.profiles}>
-                  {user?.profileimage ? (
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate('Imagezoom', {user})}>
-                      <Image
-                        source={{
-                          uri: `https://justbuygold.co.in/User/${user?.profileimage}`,
-                        }}
-                        resizeMode="cover"
-                        style={[
-                          styles.img,
-                          {borderRadius: 100, width: 70, height: 70},
-                        ]}
-                      />
-                    </TouchableOpacity>
-                  ) : (
-                    <>
-                      <Image
-                        source={require('../../assets/images/Buygold.jpg')}
-                        resizeMode="cover"
-                        style={[
-                          styles.img,
-                          {borderRadius: 100, width: 70, height: 70},
-                        ]}
-                      />
-                    </>
-                  )}
-                  {/* <Image
+            <View style={[styles.account, {justifyContent: 'space-between'}]}>
+              <View style={styles.profiles}>
+                {user?.profileimage ? (
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Imagezoom', {user})}>
+                    <Image
+                      source={{
+                        uri: `https://justbuygold.co.in/User/${user?.profileimage}`,
+                      }}
+                      resizeMode="cover"
+                      style={[
+                        styles.img,
+                        {borderRadius: 100, width: 70, height: 70},
+                      ]}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <>
+                    <Image
+                      source={require('../../assets/images/Buygold.jpg')}
+                      resizeMode="cover"
+                      style={[styles.img, {borderRadius: 100, width: 70}]}
+                    />
+                  </>
+                )}
+                {/* <Image
                     source={{
                       uri: `https://justbuygold.co.in/User/${user?.profileimage}`,
                     }}
@@ -242,36 +235,36 @@ const MyAccount = () => {
                       {borderRadius: 100, width: 70, height: 70},
                     ]}
                   /> */}
-                  <View style={styles.profile}>
-                    <Text
-                      style={[
-                        styles.textfont,
-                        {fontFamily: 'Poppins-ExtraBold'},
-                      ]}>
-                      {user?.name}
-                    </Text>
-                    <Text style={styles.textfont}>+91 {user?.phoneno}</Text>
-                    <Text style={[styles.textfont, {color: 'red'}]}>
-                      {user?.userId}
-                    </Text>
-                  </View>
+                <View style={styles.profile}>
+                  <Text
+                    style={[
+                      styles.textfont,
+                      {fontFamily: 'Poppins-ExtraBold'},
+                    ]}>
+                    {user?.name}
+                  </Text>
+                  <Text style={styles.textfont}>+91 {user?.phoneno}</Text>
+                  <Text style={[styles.textfont, {color: 'red'}]}>
+                    {user?.userId}
+                  </Text>
                 </View>
-                <TouchableOpacity
-                  style={{alignSelf: 'center'}}
-                  onPress={() => {
-                    // updateCustomer();
-                    setUpdateProfile(!updateProfile);
-                  }}>
-                  <FontAwesome5
-                    name="edit"
-                    size={28}
-                    style={{color: 'black'}}></FontAwesome5>
-                </TouchableOpacity>
               </View>
-              <ScrollView>
-                <View style={styles.container}>
-                  <View style={styles.reg}>
-                    {/* <View style={styles.updatepro}>
+              <TouchableOpacity
+                style={{alignSelf: 'center'}}
+                onPress={() => {
+                  // updateCustomer();
+                  setUpdateProfile(!updateProfile);
+                }}>
+                <FontAwesome5
+                  name="edit"
+                  size={28}
+                  style={{color: 'black'}}></FontAwesome5>
+              </TouchableOpacity>
+            </View>
+            <ScrollView>
+              <View style={styles.container}>
+                <View style={styles.reg}>
+                  {/* <View style={styles.updatepro}>
                   <TouchableOpacity
                     onPress={() => {
                       navigation.goBack();
@@ -284,8 +277,8 @@ const MyAccount = () => {
                   </TouchableOpacity>
                   <Text style={styles.cabs}>Profile</Text>
                 </View> */}
-                    <View style={[styles.profiles, {marginVertical: 30}]}>
-                      {/* {user?.profileimage ? (
+                  <View style={[styles.profiles, {marginVertical: 30}]}>
+                    {/* {user?.profileimage ? (
                         <Image
                           source={
                             imageSource
@@ -308,7 +301,7 @@ const MyAccount = () => {
                         />
                       )} */}
 
-                      {/* <TouchableOpacity
+                    {/* <TouchableOpacity
                         onPress={pickImage}
                         onPress={() => setModalVisible(true)}>
                         <FontAwesome6
@@ -322,35 +315,42 @@ const MyAccount = () => {
                           }}
                         />
                       </TouchableOpacity> */}
+                  </View>
+                  <View style={styles.back}>
+                    <Text style={styles.contant}>User Name</Text>
+                    <View style={styles.regback}>
+                      <Icon name="user" style={styles.icons} />
+                      <Text
+                        style={[styles.input, {paddingTop: 12}]}
+                        // value={username}
+                        // onChangeText={username => setusername(username)}
+                      >
+                        {user?.name}
+                      </Text>
                     </View>
-                    <View style={styles.back}>
-                      <Text style={styles.contant}>User Name</Text>
-                      <View style={styles.regback}>
-                        <Icon name="user" style={styles.icons} />
-                        <Text
-                          style={[styles.input, {paddingTop: 12}]}
-                          // value={username}
-                          // onChangeText={username => setusername(username)}
-                        >
-                          {user?.name}
-                        </Text>
-                      </View>
-                      <Text style={styles.contant}>Email</Text>
-                      <View style={styles.regback}>
-                        <Ionicons name="mail" style={styles.icons} />
-                        <Text style={[styles.input, {paddingTop: 12}]}>
-                          {user?.email}
-                        </Text>
-                      </View>
-                      <Text style={styles.contant}>Phone No</Text>
-                      <View style={styles.regback}>
-                        <FontAwesome6 name="phone" style={styles.icons} />
+                    <Text style={styles.contant}>Email</Text>
+                    <View style={styles.regback}>
+                      <Ionicons name="mail" style={styles.icons} />
+                      <Text style={[styles.input, {paddingTop: 12}]}>
+                        {user?.email}
+                      </Text>
+                    </View>
+                    <Text style={styles.contant}>Phone No</Text>
+                    <View style={styles.regback}>
+                      <FontAwesome6 name="phone" style={styles.icons} />
 
-                        <Text style={[styles.input, {paddingTop: 12}]}>
-                          +91-{user?.phoneno}
-                        </Text>
-                      </View>
-                      {/* <Text style={styles.contant}>Password</Text>
+                      <Text style={[styles.input, {paddingTop: 12}]}>
+                        +91-{user?.phoneno}
+                      </Text>
+                    </View>
+
+                    <Image
+                      source={require('../../assets/images/g9.png')}
+                      resizeMode="contain"
+                      style={styles.imgContainer}
+                    />
+
+                    {/* <Text style={styles.contant}>Password</Text>
                   <View style={styles.regback}>
                     <Icon name="lock" style={styles.icons} />
                     <TextInput
@@ -361,11 +361,11 @@ const MyAccount = () => {
                       keyboardType="number-pad"
                     />
                   </View> */}
-                    </View>
                   </View>
                 </View>
-              </ScrollView>
-            </ImageBackground>
+              </View>
+            </ScrollView>
+
             {/* modal */}
             <Modal
               animationType="slide"
@@ -414,49 +414,45 @@ const MyAccount = () => {
       ) : (
         <>
           <View style={styles.conatiner}>
-            <ImageBackground
-              source={require('../../assets/images/app-bg.jpg')}
-              resizeMode="cover"
-              style={styles.image}>
-              <View style={[styles.account, {justifyContent: 'space-between'}]}>
-                <View style={styles.profiles}>
-                  <Image
-                    source={{
-                      uri: `https://justbuygold.co.in/User/${user?.profileimage}`,
-                    }}
-                    resizeMode="cover"
+            <View style={[styles.account, {justifyContent: 'space-between'}]}>
+              <View style={styles.profiles}>
+                <Image
+                  source={{
+                    uri: `https://justbuygold.co.in/User/${user?.profileimage}`,
+                  }}
+                  resizeMode="cover"
+                  style={[
+                    styles.img,
+                    {borderRadius: 100, width: 70, height: 70},
+                  ]}
+                />
+                <View style={styles.profile}>
+                  <Text
                     style={[
-                      styles.img,
-                      {borderRadius: 100, width: 70, height: 70},
-                    ]}
-                  />
-                  <View style={styles.profile}>
-                    <Text
-                      style={[
-                        styles.textfont,
-                        {fontFamily: 'Poppins-ExtraBold'},
-                      ]}>
-                      {user?.name}
-                    </Text>
-                    <Text style={styles.textfont}>+91 {user?.phoneno}</Text>
-                    <Text style={[styles.textfont, {color: 'red'}]}>
-                      {user?.userId}
-                    </Text>
-                  </View>
+                      styles.textfont,
+                      {fontFamily: 'Poppins-ExtraBold'},
+                    ]}>
+                    {user?.name}
+                  </Text>
+                  <Text style={styles.textfont}>+91 {user?.phoneno}</Text>
+                  <Text style={[styles.textfont, {color: 'red'}]}>
+                    {user?.userId}
+                  </Text>
                 </View>
-                <TouchableOpacity
-                  style={{alignSelf: 'center'}}
-                  onPress={() => {
-                    updateCustomer();
-                    setUpdateProfile(!updateProfile);
-                  }}>
-                  <Text style={[styles.cabs, {color: 'black'}]}>Save</Text>
-                </TouchableOpacity>
               </View>
-              <ScrollView>
-                <View style={styles.container}>
-                  <View style={styles.reg}>
-                    {/* <View style={styles.updatepro}>
+              <TouchableOpacity
+                style={{alignSelf: 'center'}}
+                onPress={() => {
+                  updateCustomer();
+                  setUpdateProfile(!updateProfile);
+                }}>
+                <Text style={[styles.cabs, {color: 'black'}]}>Save</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView>
+              <View style={styles.container}>
+                <View style={styles.reg}>
+                  {/* <View style={styles.updatepro}>
                   <TouchableOpacity
                     onPress={() => {
                       navigation.goBack();
@@ -469,62 +465,62 @@ const MyAccount = () => {
                   </TouchableOpacity>
                   <Text style={styles.cabs}>Profile</Text>
                 </View> */}
-                    <View style={[styles.profiles, {marginVertical: 30}]}>
-                      <Image
-                        source={
-                          imageSource
-                            ? {uri: `${imageSource}?${new Date().getTime()}`}
-                            : {
-                                uri: `https://justbuygold.co.in/User/${user?.profileimage}`,
-                              }
-                        }
-                        resizeMode="cover"
-                        style={styles.img}
+                  <View style={[styles.profiles, {marginVertical: 30}]}>
+                    <Image
+                      source={
+                        imageSource
+                          ? {uri: `${imageSource}?${new Date().getTime()}`}
+                          : {
+                              uri: `https://justbuygold.co.in/User/${user?.profileimage}`,
+                            }
+                      }
+                      resizeMode="cover"
+                      style={styles.img}
+                    />
+
+                    <TouchableOpacity
+                      // onPress={pickImage}
+                      onPress={() => setModalVisible(true)}>
+                      <FontAwesome6
+                        name="camera"
+                        size={25}
+                        color="white"
+                        style={{
+                          position: 'absolute',
+                          top: '67%',
+                          right: '100%',
+                        }}
                       />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={[styles.back, {paddingTop: 60}]}>
+                    <Text style={styles.contant}>User Name</Text>
+                    <View style={styles.regback}>
+                      <Icon name="user" style={styles.icons} />
 
-                      <TouchableOpacity
-                        // onPress={pickImage}
-                        onPress={() => setModalVisible(true)}>
-                        <FontAwesome6
-                          name="camera"
-                          size={25}
-                          color="white"
-                          style={{
-                            position: 'absolute',
-                            top: '67%',
-                            right: '100%',
-                          }}
-                        />
-                      </TouchableOpacity>
+                      <TextInput
+                        style={styles.input}
+                        value={username}
+                        onChangeText={username => setusername(username)}
+                        placeholder={user?.name}
+                        keyboardType="default"
+                        placeholderTextColor={'black'}
+                      />
                     </View>
-                    <View style={[styles.back, {paddingTop: 60}]}>
-                      <Text style={styles.contant}>User Name</Text>
-                      <View style={styles.regback}>
-                        <Icon name="user" style={styles.icons} />
+                    <Text style={styles.contant}>Email</Text>
+                    <View style={styles.regback}>
+                      <Ionicons name="mail" style={styles.icons} />
 
-                        <TextInput
-                          style={styles.input}
-                          value={username}
-                          onChangeText={username => setusername(username)}
-                          placeholder={user?.name}
-                          keyboardType="default"
-                          placeholderTextColor={'black'}
-                        />
-                      </View>
-                      <Text style={styles.contant}>Email</Text>
-                      <View style={styles.regback}>
-                        <Ionicons name="mail" style={styles.icons} />
-
-                        <TextInput
-                          style={styles.input}
-                          value={email}
-                          onChangeText={email => setEmail(email)}
-                          placeholder={user?.email}
-                          keyboardType="email-address"
-                          placeholderTextColor={'black'}
-                        />
-                      </View>
-                      {/* <Text style={styles.contant}>Phone No</Text>
+                      <TextInput
+                        style={styles.input}
+                        value={email}
+                        onChangeText={email => setEmail(email)}
+                        placeholder={user?.email}
+                        keyboardType="email-address"
+                        placeholderTextColor={'black'}
+                      />
+                    </View>
+                    {/* <Text style={styles.contant}>Phone No</Text>
                       <View style={styles.regback}>
                         <FontAwesome6 name="phone" style={styles.icons} />
 
@@ -536,7 +532,7 @@ const MyAccount = () => {
                           keyboardType="number-pad"
                         />
                       </View> */}
-                      {/* <Text style={styles.contant}>Password</Text>
+                    {/* <Text style={styles.contant}>Password</Text>
                   <View style={styles.regback}>
                     <Icon name="lock" style={styles.icons} />
                     <TextInput
@@ -547,11 +543,10 @@ const MyAccount = () => {
                       keyboardType="number-pad"
                     />
                   </View> */}
-                    </View>
                   </View>
                 </View>
-              </ScrollView>
-            </ImageBackground>
+              </View>
+            </ScrollView>
             {/* modal */}
             <Modal
               animationType="slide"
@@ -598,7 +593,7 @@ const MyAccount = () => {
           </View>
         </>
       )}
-    </>
+    </ScrollView>
   );
 };
 
@@ -607,16 +602,26 @@ export default MyAccount;
 const styles = StyleSheet.create({
   conatiner: {
     flex: 1,
-    backgroundColor: '#f3d25b',
+    backgroundColor: '#2b2cd6',
+    height: '100%',
   },
   account: {
     padding: 8,
     flexDirection: 'row',
-    backgroundColor: '#f3d25b',
+    backgroundColor: '#fff',
   },
   img: {
     width: 60,
     height: 60,
+  },
+  img1: {
+    width: 30,
+    height: 30,
+  },
+  imgContainer: {
+    width: 'fit-content',
+    height: 200,
+    marginTop: 20,
   },
   profiles: {
     flexDirection: 'row',

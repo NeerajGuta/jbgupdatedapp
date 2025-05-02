@@ -68,6 +68,10 @@ function Home() {
         )
         .then(res => {
           if (res.status == 200) {
+            console.log(
+              'idddddddddddddddddddddddddddddddddddddddddd',
+              user?._id,
+            );
             setAlltransiction(res.data.success);
             // console.log(res.data.success);
             setLoading(true);
@@ -182,7 +186,16 @@ function Home() {
   // console.log('transicitionData', transicitionData);
 
   // All gold Store
+  // const coinsData = allcoin.reduce((a, i) => a + Number(i?.coins || 0), 0);
+
   const coinsData = allcoin.reduce((a, i) => a + Number(i?.coins || 0), 0);
+
+  console.log('coinsdata.................................', coinsData);
+  console.log(
+    'transicitionData.................................',
+    transicitionData,
+  );
+
   // console.log(allcoin, 'coinsData');
   // Total Store gold
   const totalgoldStore = transicitionData - coinsData;
@@ -409,32 +422,32 @@ function Home() {
       {loading ? (
         <>
           <View style={styles.container}>
-            <StatusBar backgroundColor="#f3d25b" barStyle="light-content" />
+            <StatusBar backgroundColor="#2b2cd6" barStyle="light-content" />
 
-            <ImageBackground
-              source={require('../../assets/images/app-bg.jpg')}
-              resizeMode="cover"
-              style={styles.image}>
-              <ScrollView>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    alignContent: 'center',
-                    paddingTop: 10,
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                  }}>
-                  <Image
-                    source={require('../../assets/images/jbg.png')}
-                    style={{height: 80, width: 80}}
-                  />
-                  <Image
-                    source={require('../../assets/images/JustbuyGold.jpg')}
-                    style={{height: 35, width: 200}}
-                  />
-                  {/* <Text
+            <ScrollView
+              style={{
+                backgroundColor: '#2b2cd6',
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  alignContent: 'center',
+                  paddingTop: 10,
+                  paddingLeft: 15,
+                  paddingRight: 15,
+                  backgroundColor: '#2b2cd6',
+                }}>
+                <Image
+                  source={require('../../assets/images/jbg.png')}
+                  style={{height: 80, width: 80}}
+                />
+                <Image
+                  source={require('../../assets/images/g5.png')}
+                  style={{height: 35, width: 250, objectFit: 'contain'}}
+                />
+                {/* <Text
                 style={{
                   color: '#FFD700',
                   fontSize: 25,
@@ -442,58 +455,76 @@ function Home() {
                 }}>
                 Just Buy Gold
               </Text> */}
-                </View>
-                {rate?.slice(0, 1)?.map((ele, index) => {
-                  // console.log('rate', ele.rate);
-                  return (
-                    <View style={styles.loan}>
-                      <View style={styles.content} key={ele?._id}>
+              </View>
+              {rate?.slice(0, 1)?.map((ele, index) => {
+                // console.log('rate', ele.rate);
+                return (
+                  <View style={styles.loan}>
+                    {/* with gst {NewGst} % */}
+                    {/* G = (15/100) * 115 = $17.25 */}
+
+                    {/* <View style={styles.content} key={ele?._id}>
                         <Text style={[styles.passage, {fontSize: 20}]}>
                           Gold Rate
-                          {/* with gst {NewGst} % */}
                         </Text>
                         <Text style={styles.passage}>
                           ₹{Number(ele.rate)?.toFixed(3)} / gm
                         </Text>
-                        {/* G = (15/100) * 115 = $17.25 */}
-                      </View>
+                      </View> */}
 
-                      <View style={styles.items}>
+                    <View style={styles.items}>
+                      <View
+                        style={{
+                          marginHorizontal: 30,
+                          marginVertical: 20,
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          gap: 10,
+                          padding: 4,
+                          borderWidth: 2,
+                          height: 85,
+                          borderColor: '#2b2cd6',
+                          borderRadius: 23,
+                          paddingHorizontal: 30,
+                        }}>
                         <View
                           style={{
                             marginHorizontal: 30,
-                            marginVertical: 20,
+                            // marginVertical: 20,
                             flexDirection: 'row',
                             justifyContent: 'center',
                             gap: 20,
                             padding: 4,
                             borderWidth: 2,
-                            height: 45,
-                            borderColor: '#feac03',
+                            height: 75,
+                            borderColor: '#2b2cd6',
                             borderRadius: 13,
                           }}>
-                          <Text style={styles.chip}>Gold</Text>
-                          <Text style={styles.chip}>{ele?.name}k</Text>
-                          <Text style={styles.chip}>999</Text>
-                          {/* <Text style={styles.chip}>999</Text> */}
+                          <View style={styles.chipContainer}>
+                            <Text style={styles.chip}>Gold</Text>
+                            <Text style={styles.chip}>{ele?.name}k</Text>
+                            <Text style={styles.chip}>999</Text>
+                          </View>
                         </View>
-                        <View style={styles.itemicon}>
-                          <TextInput
-                            style={styles.input}
-                            placeholder={gold ? `${gold} Grams` : 'Grams'}
-                            placeholderTextColor="#f3d25b"
-                            keyboardType="number-pad"
-                            value={gold}
-                            onChangeText={gold =>
-                              calculate2(
-                                // ele.rate*gold + NewGst*ele.rate*gold/100,
-                                (ele.rate * (100 + NewGst)) / 100,
-                                gold,
-                              )
-                            }
-                          />
-                          {/* (Number(ele.rate) +(ele.rate * (NewGst + ele?.percentage)) / 100) */}
-                          {/* <TextInput
+                        {/* <Text style={styles.chip}>999</Text> */}
+                      </View>
+                      <View style={styles.itemicon}>
+                        <TextInput
+                          style={styles.input}
+                          placeholder={gold ? `${gold} Grams` : 'Grams'}
+                          placeholderTextColor="#f3d25b"
+                          keyboardType="number-pad"
+                          value={gold}
+                          onChangeText={gold =>
+                            calculate2(
+                              // ele.rate*gold + NewGst*ele.rate*gold/100,
+                              (ele.rate * (100 + NewGst)) / 100,
+                              gold,
+                            )
+                          }
+                        />
+                        {/* (Number(ele.rate) +(ele.rate * (NewGst + ele?.percentage)) / 100) */}
+                        {/* <TextInput
                             style={styles.input}
                             placeholder={gold ? `${gold} Grams` : 'Grams'}
                             placeholderTextColor="#f3d25b"
@@ -513,10 +544,10 @@ function Home() {
                               }
                             }}
                           /> */}
-                          <Text>
-                            <FontAwesome name="exchange" style={styles.icons} />
-                          </Text>
-                          {/* <TextInput
+                        <Text>
+                          <FontAwesome name="exchange" style={styles.icons} />
+                        </Text>
+                        {/* <TextInput
                         style={styles.input}
                         placeholder={Amount ? `${Amount} Amount` : 'Amount'}
                         placeholderTextColor="#f3d25b"
@@ -530,114 +561,117 @@ function Home() {
                           )
                         }
                       /> */}
-                          <TextInput
-                            style={styles.input}
-                            placeholder={Amount ? `${Amount} Amount` : 'Amount'}
-                            placeholderTextColor="#f3d25b"
-                            keyboardType="number-pad"
-                            value={Amount}
-                            onChangeText={newAmount => {
-                              setamount(newAmount); // Update the Amount state
-                              if (!newAmount) {
-                                setgold(''); // Optionally reset gold when Amount is cleared
-                              } else {
-                                calculate(ele.rate, newAmount);
-                              }
-                            }}
-                          />
-                          {/* Number(ele.rate) +
+                        <TextInput
+                          style={styles.input}
+                          placeholder={Amount ? `${Amount} Amount` : 'Amount'}
+                          placeholderTextColor="#f3d25b"
+                          keyboardType="number-pad"
+                          value={Amount}
+                          onChangeText={newAmount => {
+                            setamount(newAmount); // Update the Amount state
+                            if (!newAmount) {
+                              setgold(''); // Optionally reset gold when Amount is cleared
+                            } else {
+                              calculate(ele.rate, newAmount);
+                            }
+                          }}
+                        />
+                        {/* Number(ele.rate) +
                                     (ele.rate * (NewGst + ele?.percentage)) /
                                       100, */}
-                        </View>
                       </View>
                     </View>
-                  );
-                })}
-                <View
-                  style={{
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: -35,
-                  }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (!isDisabled) {
-                        navigation.navigate('Pay', {
-                          Amount,
-                          gold,
-                          goldRate,
-                        });
-                      }
-                    }}
-                    disabled={isDisabled}
-                    style={{opacity: isDisabled ? 0.5 : 1}}
-                    // onPress={posttransaction}
-                    //  onPress={postTransaction}
-                  >
-                    <ImageBackground
-                      source={require('../../assets/images/buybg.png')}
-                      style={{height: 50, width: 300}}>
-                      <Text
-                        style={{
-                          color: 'black',
-                          fontSize: 25,
-                          fontFamily: 'Poppins-SemiBoldItalic',
-                          alignSelf: 'center',
-                        }}>
-                        Buy
-                      </Text>
-                    </ImageBackground>
+                  </View>
+                );
+              })}
+              <View
+                style={{
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: -35,
+                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (!isDisabled) {
+                      navigation.navigate('Pay', {
+                        Amount,
+                        gold,
+                        goldRate,
+                      });
+                    }
+                  }}
+                  disabled={isDisabled}
+                  style={{opacity: isDisabled ? 0.5 : 1}}
+                  // onPress={posttransaction}
+                  //  onPress={postTransaction}
+                >
+                  <ImageBackground
+                    source={require('../../assets/images/buybg.png')}
+                    style={{height: 50, width: 300}}>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontSize: 25,
+                        fontFamily: 'Poppins-SemiBoldItalic',
+                        alignSelf: 'center',
+                        zIndex: 999,
+                        fontWeight: '1000',
+                      }}>
+                      Buy
+                    </Text>
+                  </ImageBackground>
 
-                    {/* <LinearGradient
+                  {/* <LinearGradient
                   start={{x: 0.0, y: 1.25}}
                   end={{x: 1.5, y: 1.25}}
                   // locations={[0, 0.5, 0.6]}
                   colors={['#FFD700', '#FFD700', '#FFD700',]}
                   style={styles.linearGradient}> */}
-                    {/* <View style={styles.linearGradient}>
+                  {/* <View style={styles.linearGradient}>
                   <Text style={styles.btn}>Buy</Text>
                 </View> */}
-                    {/* </LinearGradient> */}
+                  {/* </LinearGradient> */}
+                </TouchableOpacity>
+              </View>
+
+              <View
+                style={{
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  backgroundColor: '#2b2cd6',
+                }}>
+                <ImageBackground
+                  source={require('../../assets/images/gold-coins.png')}
+                  // resizeMode="stretch"
+                  style={styles.images1}>
+                  {/* <Text
+                    style={{color: 'black', fontSize: 20, fontWeight: '700'}}>
+                    {(transicitionData - coinsData).toFixed(4)}
+                  </Text> */}
+                  {/* <Text
+                    style={{color: 'black', fontSize: 16, fontWeight: '600'}}>
+                    Grams
+                  </Text> */}
+                </ImageBackground>
+
+                {totalgoldStore >= 1 && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      toggleModal();
+                    }}>
+                    <View
+                      style={[
+                        styles.regback1,
+                        {flexDirection: 'row', justifyContent: 'center'},
+                      ]}>
+                      <Text style={styles.btn2}> Request For The Coins</Text>
+                    </View>
                   </TouchableOpacity>
-                </View>
+                )}
 
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                  }}>
-                  <ImageBackground
-                    source={require('../../assets/images/gold-coins.png')}
-                    // resizeMode="stretch"
-                    style={styles.images1}>
-                    <Text
-                      style={{color: 'black', fontSize: 20, fontWeight: '700'}}>
-                      {(transicitionData - coinsData).toFixed(4)}
-                    </Text>
-                    <Text
-                      style={{color: 'black', fontSize: 16, fontWeight: '600'}}>
-                      Grams
-                    </Text>
-                  </ImageBackground>
-
-                  {totalgoldStore >= 1 && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        toggleModal();
-                      }}>
-                      <View
-                        style={[
-                          styles.regback1,
-                          {flexDirection: 'row', justifyContent: 'center'},
-                        ]}>
-                        <Text style={styles.btn2}> Request For The Coins</Text>
-                      </View>
-                    </TouchableOpacity>
-                  )}
-
-                  {/* {gramCompleted && (
+                {/* {gramCompleted && (
                 <TouchableOpacity
                   onPress={() => {
                     toggleModal();
@@ -652,104 +686,179 @@ function Home() {
                   </View>
                 </TouchableOpacity>
               )} */}
+              </View>
+              {/* {video?.slice(0, 1)?.map((e, index) => {
+                const videoUrl = `${e?.video}`;
+                return (
+                  <View style={styles.containervideo}>
+                    <WebView
+                      source={{uri: videoUrl}}
+                      style={styles.videoPlayer}
+                      resizeMode="cover"
+                    />
+                  </View>
+                );
+              })} */}
+              <View style={styles.xyz}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderWidth: 4,
+                    borderColor: '#feac03',
+                    marginBottom: 13,
+                    borderRadius: 8,
+                    padding: 10,
+                  }}>
+                  <Text
+                    style={{
+                      textTransform: 'uppercase',
+                      width: '70%',
+                      fontSize: 16,
+                      fontWeight: '900',
+                    }}>
+                    Start saving today for better tomorrow
+                  </Text>
+
+                  <Image
+                    source={require('../../assets/images/g1.png')}
+                    style={{height: 50, width: 120}}
+                    resizeMode="contain"
+                  />
                 </View>
-                {video?.slice(0, 1)?.map((e, index) => {
-                  const videoUrl = `${e?.video}`;
-                  return (
-                    <View style={styles.containervideo}>
-                      <WebView
-                        source={{uri: videoUrl}}
-                        style={styles.videoPlayer}
-                        resizeMode="cover"
-                      />
-                    </View>
-                  );
-                })}
-              </ScrollView>
 
-              <View style={{flex: 1}}>
-                {/* <Button title="Show modal" onPress={toggleModal} /> */}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderWidth: 4,
+                    borderColor: '#feac03',
+                    marginBottom: 13,
+                    borderRadius: 8,
+                    padding: 10,
+                  }}>
+                  <Image
+                    source={require('../../assets/images/g2.png')}
+                    style={{height: 50, width: 120, marginLeft: -40}}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={{
+                      textTransform: 'uppercase',
+                      width: '70%',
+                    }}>
+                    Daily investing by small amount and get bigger value
+                  </Text>
+                </View>
 
-                <Modal isVisible={isModalVisible}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderWidth: 4,
+                    borderColor: '#feac03',
+                    marginBottom: 11,
+                    borderRadius: 8,
+                    padding: 7,
+                  }}>
+                  <Text style={{textTransform: 'uppercase'}}>
+                    Refer today for get more surprise
+                  </Text>
+                  <Image
+                    source={require('../../assets/images/g3.png')}
+                    style={{height: 50, width: 120}}
+                    resizeMode="contain"
+                  />
+                </View>
+              </View>
+            </ScrollView>
+
+            <View style={{flex: 1}}>
+              {/* <Button title="Show modal" onPress={toggleModal} /> */}
+
+              <Modal isVisible={isModalVisible}>
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    height: 320,
+                    borderRadius: 5,
+                  }}>
                   <View
                     style={{
-                      backgroundColor: 'white',
-                      height: 320,
-                      borderRadius: 5,
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     }}>
-                    <View
+                    <Text
                       style={{
                         flexDirection: 'column',
                         justifyContent: 'center',
+                        paddingTop: 20,
+                        paddingBottom: 10,
                         alignItems: 'center',
+                        fontSize: 20,
+                        fontWeight: '700',
+                        color: 'black',
                       }}>
+                      Gold in your pocket
+                    </Text>
+                  </View>
+                  <View style={styles.request}>
+                    <View style={styles.request}>
                       <Text
-                        style={{
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          paddingTop: 20,
-                          paddingBottom: 10,
-                          alignItems: 'center',
-                          fontSize: 20,
-                          fontWeight: '700',
-                          color: 'black',
-                        }}>
-                        Gold in your pocket
+                        style={[
+                          styles.input1,
+                          {
+                            fontSize: 20,
+                            height: 47,
+                            width: '50%',
+                            alignSelf: 'center',
+                            textAlign: 'center',
+                            fontWeight: '600',
+                            backgroundColor: '#f3d25b',
+                            borderColor: '#f3d25b',
+                          },
+                        ]}>
+                        {(transicitionData - coinsData).toFixed(4)} Grams
                       </Text>
                     </View>
+                    <Text
+                      style={{
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        paddingTop: 20,
+                        paddingBottom: 10,
+                        alignItems: 'center',
+                        fontSize: 20,
+                        fontWeight: '700',
+                        color: 'black',
+                        alignSelf: 'center',
+                      }}>
+                      Required Gold Coin
+                    </Text>
                     <View style={styles.request}>
-                      <View style={styles.request}>
-                        <Text
-                          style={[
-                            styles.input1,
-                            {
-                              fontSize: 20,
-                              height: 47,
-                              width: '50%',
-                              alignSelf: 'center',
-                              textAlign: 'center',
-                              fontWeight: '600',
-                              backgroundColor: '#f3d25b',
-                              borderColor: '#f3d25b',
-                            },
-                          ]}>
-                          {(transicitionData - coinsData).toFixed(4)} Grams
-                        </Text>
-                      </View>
-                      <Text
-                        style={{
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          paddingTop: 20,
-                          paddingBottom: 10,
-                          alignItems: 'center',
-                          fontSize: 20,
-                          fontWeight: '700',
-                          color: 'black',
-                          alignSelf: 'center',
-                        }}>
-                        Required Gold Coin
-                      </Text>
-                      <View style={styles.request}>
-                        <TextInput
-                          style={[
-                            styles.input1,
-                            {
-                              fontSize: 17,
-                              width: '50%',
-                              alignSelf: 'center',
-                              textAlign: 'center',
-                              color: 'black',
-                            },
-                          ]}
-                          placeholderTextColor={'black'}
-                          placeholder="Grams"
-                          value={mobile}
-                          keyboardType="number-pad"
-                          onChangeText={handleChange}
-                        />
-                      </View>
-                      {/* <View style={styles.request}>
+                      <TextInput
+                        style={[
+                          styles.input1,
+                          {
+                            fontSize: 17,
+                            width: '50%',
+                            alignSelf: 'center',
+                            textAlign: 'center',
+                            color: 'black',
+                          },
+                        ]}
+                        placeholderTextColor={'black'}
+                        placeholder="Grams"
+                        value={mobile}
+                        keyboardType="number-pad"
+                        onChangeText={handleChange}
+                      />
+                    </View>
+                    {/* <View style={styles.request}>
                     <TextInput
                       style={[styles.input1, {fontSize: 16}]}
                       placeholder={user?.name}
@@ -758,7 +867,7 @@ function Home() {
                       onChangeText={name => setName(name)}
                     />
                   </View> */}
-                      {/* <View style={styles.request}>
+                    {/* <View style={styles.request}>
                     <TextInput
                       style={[styles.input1, {fontSize: 16}]}
                       placeholder={user?.email}
@@ -767,7 +876,7 @@ function Home() {
                       onChangeText={email => setEmail(email)}
                     />
                   </View> */}
-                      {/* <View style={styles.request}>
+                    {/* <View style={styles.request}>
                     <TextInput
                       style={[styles.input1, {fontSize: 16}]}
                       value={mobile}
@@ -776,55 +885,61 @@ function Home() {
                       onChangeText={mobile => setMobile(mobile)}
                     />
                   </View> */}
-                    </View>
-
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        padding: 20,
-                      }}>
-                      <LinearGradient
-                        start={{x: 1, y: 0}}
-                        end={{x: 0, y: 0}}
-                        colors={['#874701', '#874701', '#874701']}
-                        style={styles.linearGradientmodel}>
-                        <TouchableOpacity onPress={toggleModal}>
-                          <Text style={{color: 'white', fontSize: 15}}>
-                            {' '}
-                            Cancel
-                          </Text>
-                        </TouchableOpacity>
-                      </LinearGradient>
-                      <LinearGradient
-                        start={{x: 1, y: 0}}
-                        end={{x: 0, y: 0}}
-                        colors={['#874701', '#874701', '#874701']}
-                        style={styles.linearGradientmodel}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            addRequest();
-                          }}>
-                          <Text style={{color: 'white', fontSize: 15}}>
-                            Send request
-                          </Text>
-                        </TouchableOpacity>
-                      </LinearGradient>
-                    </View>
                   </View>
-                </Modal>
-              </View>
-            </ImageBackground>
+
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: 20,
+                    }}>
+                    <LinearGradient
+                      start={{x: 1, y: 0}}
+                      end={{x: 0, y: 0}}
+                      colors={['#874701', '#874701', '#874701']}
+                      style={styles.linearGradientmodel}>
+                      <TouchableOpacity onPress={toggleModal}>
+                        <Text style={{color: 'white', fontSize: 15, width: 50}}>
+                          Cancel
+                        </Text>
+                      </TouchableOpacity>
+                    </LinearGradient>
+                    <LinearGradient
+                      start={{x: 1, y: 0}}
+                      end={{x: 0, y: 0}}
+                      colors={['#874701', '#874701', '#874701']}
+                      style={styles.linearGradientmodel}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          addRequest();
+                        }}>
+                        <Text
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            textAlign: 'center',
+                            color: 'white',
+                            fontSize: 15,
+                            width: 80,
+                          }}>
+                          Send request
+                        </Text>
+                      </TouchableOpacity>
+                    </LinearGradient>
+                  </View>
+                </View>
+              </Modal>
+            </View>
             {/* Modal */}
           </View>
         </>
       ) : (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text>
-            {' '}
+          {/* <Text>
             <ActivityIndicator size="big" color="#874701" />
-          </Text>
+          </Text> */}
         </View>
       )}
     </>
@@ -837,6 +952,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    // backgroundColor: '#2b2cd6',
   },
   image: {
     flex: 1,
@@ -844,6 +960,7 @@ const styles = StyleSheet.create({
   loan: {
     width: '100%',
     padding: 10,
+    // backgroundColor: '#2b2cd6',
   },
   content: {
     paddingTop: 4,
@@ -858,15 +975,32 @@ const styles = StyleSheet.create({
     // fontWeight: '500',
     fontFamily: 'Poppins-SemiBoldItalic',
   },
+  xyz: {
+    paddingHorizontal: 14,
+  },
   items: {
-    borderWidth: 5,
+    borderWidth: 4,
     borderColor: '#feac03',
     borderRadius: 10,
     width: '100%',
     paddingBottom: 16,
+    // backgroundColor: '#2b2cd6',
+  },
+  chipContainer: {
+    flexDirection: 'row',
+    borderColor: '#feac03',
+    borderWidth: 3,
+    borderRadius: 5,
+    paddingVertical: 1,
+    paddingHorizontal: 30,
+    backgroundColor: '#2b2cd6',
+    padding: 30,
+    gap: 25,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   chip: {
-    color: '#f3d25b',
+    color: '#fff',
     textAlign: 'center',
     fontSize: 22,
     fontFamily: 'Poppins-SemiBoldItalic',
@@ -874,15 +1008,15 @@ const styles = StyleSheet.create({
   input: {
     height: 45,
     marginVertical: 10,
-    borderWidth: 2,
+    borderWidth: 4,
     fontSize: 16,
     borderRadius: 13,
-    color: '#f3d25b',
+    color: '#fff',
     textAlign: 'center',
     fontWeight: '600',
     width: 130,
-    borderColor: '#f3d25b',
-    backgroundColor: 'black',
+    borderColor: '#feac03',
+    backgroundColor: 'transparent',
     // shadowColor: '#000',
     shadowOffset: {
       width: 0,

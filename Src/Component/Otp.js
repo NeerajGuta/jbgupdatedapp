@@ -134,7 +134,6 @@ const Otp = ({navigation, route}) => {
                 keyboardType="number-pad"
                 textContentType="oneTimeCode"
                 renderCell={renderCell}
-       
               />
               <Text style={styles.toggle} onPress={toggleMask}>
                 {enableMask ? (
@@ -227,7 +226,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderColor: 'blue',
     backgroundColor: 'white',
-    color:"black"
+    color: 'black',
   },
   toggle: {
     width: 45,

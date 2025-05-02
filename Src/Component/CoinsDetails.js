@@ -113,12 +113,14 @@ const CoinsDetails = () => {
                     <Text style={styles.passfont}>Payment Id</Text>
                     <Text style={styles.passfont1}>{ele?.PaymentId}</Text>
                   </View> */}
-                        <View style={styles.profiles1}>
+
+
+                        {/* <View style={styles.profiles1}>
                           <Text style={styles.passfont}>Pending Coin</Text>
                           <Text style={[styles.passfont1, {color: 'green'}]}>
                             {Number(ele?.requestedCoin || 0).toFixed(4)} gms
                           </Text>
-                        </View>
+                        </View> */}
 
                         <View style={styles.profiles1}>
                           <Text style={styles.passfont}>Status</Text>

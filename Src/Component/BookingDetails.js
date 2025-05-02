@@ -30,7 +30,7 @@ const BookingDetails = () => {
   );
 
   const [data, setData] = useState([]);
-  console.log('History', data);
+  console.log('History.................................', data);
   const userTransaction = async _id => {
     let user = await AsyncStorage.getItem('user');
     user = JSON.parse(user);
@@ -42,6 +42,10 @@ const BookingDetails = () => {
         )
         .then(res => {
           if (res.status == 200) {
+            console.log(
+              'transaction history...................................',
+              res,
+            );
             setData(res.data.success);
             console.log(res.data.success);
           } else {
@@ -64,6 +68,7 @@ const BookingDetails = () => {
         .get('https://justbuygold.co.in/api/v1/coins/singalcoins/' + user?._id)
         .then(res => {
           if (res.status == 200) {
+            console.log('allcoins...................................', res);
             setallcoin(res.data.success);
             console.log(res.data.success);
             setLoader(false);
@@ -87,11 +92,13 @@ const BookingDetails = () => {
   // console.log('transicitionData', transicitionData);
 
   // All gold Store
-  const coinsData = allcoin.reduce((a, i) => a + Number(i?.coinWeight || 0), 0);
+  const coinsData = allcoin.reduce((a, i) => a + Number(i?.coins || 0), 0);
   console.log('all coin', allcoin);
 
   // TotalGold
   // const totalGOld = data.reduce((acc, curr) => acc + curr?.totalCoin, 0);
+
+  console.log('data.....................................', data);
 
   return (
     <>
@@ -152,7 +159,28 @@ const BookingDetails = () => {
                     </View> */}
 
                     <View style={styles.profiles1}>
-                      <Text style={styles.passfont}>Amount Transaction</Text>
+                      <Text style={styles.passfont}>Gold Rate</Text>
+                      <Text style={styles.passfont1}>
+                        ₹ {ele?.goldRate}
+                      </Text>
+                    </View>
+
+                    <View style={styles.profiles1}>
+                      <Text style={styles.passfont}>Gold Value</Text>
+                      <Text style={styles.passfont1}>
+                        ₹ {ele?.goldValue}
+                      </Text>
+                    </View>
+
+                    <View style={styles.profiles1}>
+                      <Text style={styles.passfont}>Gst</Text>
+                      <Text style={styles.passfont1}>
+                        ₹ {ele?.gst}
+                      </Text>
+                    </View>
+
+                    <View style={styles.profiles1}>
+                      <Text style={styles.passfont}>Amount Paid</Text>
                       <Text style={styles.passfont1}>
                         ₹ {(ele?.amount).toFixed(2)}
                       </Text>
@@ -247,7 +275,7 @@ const styles = StyleSheet.create({
   passfont1: {
     fontSize: 14,
     fontWeight: '600',
-    color:"black"
+    color: 'black',
   },
   tab: {
     width: '100%',

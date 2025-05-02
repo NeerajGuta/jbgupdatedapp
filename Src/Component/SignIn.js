@@ -150,7 +150,7 @@ function SignIn() {
                       placeholder="Enter your password"
                       autoCapitalize="none"
                       autoCorrect={false}
-                       placeholderTextColor="black"
+                      placeholderTextColor="black"
                       secureTextEntry={passwordVisibility}
                       enablesReturnKeyAutomatically
                       onChangeText={password => setPassword(password)}
@@ -230,7 +230,7 @@ function SignIn() {
                       value={phoneno}
                       placeholder="+91"
                       keyboardType="number-pad"
-                       placeholderTextColor="black"
+                      placeholderTextColor="black"
                       onChangeText={phoneno => setPhoneno(phoneno)}
                     />
                   </View>

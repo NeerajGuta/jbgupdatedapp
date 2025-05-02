@@ -145,7 +145,7 @@ function SignUp() {
                 <TextInput
                   style={styles.input}
                   value={username}
-                   placeholderTextColor="black"
+                  placeholderTextColor="black"
                   placeholder="Enter your username"
                   keyboardType="default"
                   onChangeText={username => setusername(username)}
@@ -160,7 +160,7 @@ function SignUp() {
                   value={email}
                   placeholder="Enter your email"
                   keyboardType="email-address"
-                   placeholderTextColor="black"
+                  placeholderTextColor="black"
                   onChangeText={email => setEmail(email)}
                 />
               </View>
