@@ -76,7 +76,7 @@ const Disclaimer = () => {
         </Text>
       </View>
 
-      <View style={styles.section}>
+         <View style={styles.section}>
         <Text style={styles.subheading}>6. User Responsibility</Text>
         <Text style={styles.bulletPoint}>
           • Users are responsible for maintaining the confidentiality of their

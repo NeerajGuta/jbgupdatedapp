@@ -21,7 +21,7 @@ const ProfileUpdate = ({navigation}) => {
   const [username, setusername] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  // const [edit, setEdit] = useState('');
+
   const [photo, setPhoto] = useState('');
   const [imageSource, setImageSource] = useState(null);
 

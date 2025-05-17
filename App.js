@@ -199,7 +199,6 @@ const MyStack = () => {
           title: 'Disclaimer',
         }}
         component={Disclaimer}
-
       />
       <Stack.Screen
         name="Imagezoom"
@@ -231,7 +230,7 @@ const BottomTab = () => {
           tabBarActiveTintColor: '#feac03',
           tabBarInactiveTintColor: '#f3d25b',
           tabBarStyle: {
-            backgroundColor: '#1a198c',
+            backgroundColor: 'black',
             borderColor: '#080808',
           },
           tabBarLabelStyle: {
@@ -252,7 +251,7 @@ const BottomTab = () => {
         options={{
           tabBarActiveTintColor: '#feac03',
           tabBarInactiveTintColor: '#f3d25b',
-          tabBarStyle: {backgroundColor: '#080808', borderColor: '#080808'},
+          tabBarStyle: {backgroundColor: 'black', borderColor: 'black'},
           tabBarIcon: ({color, size}) => (
             <AntDesign name="user" color={color} size={25} />
           ),
@@ -276,7 +275,7 @@ const BottomTab = () => {
           headerShown: true,
           headerTintColor: 'black',
           headerStyle: {
-            backgroundColor: '#fff',
+            backgroundColor: '#f3d25b',
           },
           tabBarLabelStyle: {
             fontSize: 11,

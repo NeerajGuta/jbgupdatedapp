@@ -170,7 +170,7 @@ const Pay = ({navigation, route}) => {
           PaymentId: paymentid,
           totalCoin: Number(gold),
           goldRate: goldRate,
-          goldValue:goldValue*gold,
+          goldValue: goldValue * gold,
           gst: gstAmount,
           // totalCoin: totalgoldStore + Number(gold),
         },
@@ -312,9 +312,14 @@ const Pay = ({navigation, route}) => {
         </View>
         <View style={styles.detailItem}>
           <Text style={styles.label}>GST ({NewGst}%):</Text>
-          <Text style={styles.value}>₹{gstAmount?.toFixed(2)}</Text>
+          <Text style={styles.value}>
+            ₹{(TotalPayableAmount - baseGoldValue?.toFixed(2)).toFixed(2)}
+          </Text>
         </View>
-
+        {/* <View style={styles.detailItem}>
+          <Text style={styles.label}>GST ({NewGst}%):</Text>
+          <Text style={styles.value}>₹{goldWeight*goldRate}</Text>
+        </View> */}
         {/* {RedCodeID && RedCodeID.status == 'Active' ? (
           <>
             <View style={styles.detailItem}>
@@ -336,7 +341,6 @@ const Pay = ({navigation, route}) => {
             <Text style={styles.value}>- ₹{getUser?.totalEarnedMoney}</Text>
           </View>
         )}
-
         <View style={styles.detailItem}>
           <Text style={styles.label}>Total Payable Amount:</Text>
           <Text style={styles.value}>₹{TotalPayableAmount}</Text>

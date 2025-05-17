@@ -1,5 +1,3 @@
-
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback} from 'react';
@@ -27,12 +25,12 @@ function SlapScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <Video
-        source={require('../../assets/images/splash.mp4')} // Replace with your video path
+      {/* <Video
+        source={require('../../assets/images/splash.mp4')}
         style={styles.video}
-        resizeMode="cover" // Adjust how the video is scaled
-        repeat // Loops the video
-      />
+        resizeMode="cover"
+        repeat
+      /> */}
     </View>
   );
 }

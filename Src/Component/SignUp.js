@@ -31,12 +31,17 @@ function SignUp() {
 
   //Placeholder condition++++++++++++++++++++++++++++++++++++++
   // Mobile No==================
+  // function isValidMobile(phoneno) {
+  //   phoneno = phoneno?.trim();
+  //   if (phoneno?.match(/^[7-9]\d{9}$/)) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
   function isValidMobile(phoneno) {
     phoneno = phoneno?.trim();
-    if (phoneno?.match(/^[7-9]\d{9}$/)) {
-      return true;
-    }
-    return false;
+    return /^\d{10}$/.test(phoneno);
   }
 
   //Email==================
@@ -129,7 +134,7 @@ function SignUp() {
                 marginTop: 100,
               }}>
               <Image
-                source={require('../../assets/images/logo.png')}
+                source={require('../../assets/images/newlogo.png')}
                 style={{width: 100, height: 100}}
                 resizemode="cover"></Image>
             </View>

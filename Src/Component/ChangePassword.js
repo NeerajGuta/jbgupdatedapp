@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-} from 'react-native';
+} from 'react-native';     
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -31,12 +31,12 @@ const ChangePassword = ({navigation}) => {
       };
       let res = await axios(config);
       if (res.status === 200) {
-        // console.log(res.data.success);
+     
 
         navigation.navigate('EmailOtp', {email});
       } else {
         console.error('Request failed with status code:', res.status);
-        console.error('Response data:', res.data); // Log the response data for debugging
+        console.error('Response data:', res.data); 
       }
     } catch (error) {
       console.log(error);

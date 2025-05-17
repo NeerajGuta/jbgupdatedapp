@@ -118,7 +118,7 @@ function SignIn() {
                 marginTop: 50,
               }}>
               <Image
-                source={require('../../assets/images/logo.png')}
+                source={require('../../assets/images/newlogo.png')}
                 style={{width: 100, height: 100}}
                 resizemode="cover"></Image>
             </View>
@@ -228,7 +228,7 @@ function SignIn() {
                     <TextInput
                       style={styles.input}
                       value={phoneno}
-                      placeholder="+91"
+                      placeholder=""
                       keyboardType="number-pad"
                       placeholderTextColor="black"
                       onChangeText={phoneno => setPhoneno(phoneno)}

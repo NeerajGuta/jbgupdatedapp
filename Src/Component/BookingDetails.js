@@ -151,7 +151,7 @@ const BookingDetails = () => {
                     <View style={styles.profiles1}>
                       <Text style={styles.passfont}>Purchase Id</Text>
 
-                      <Text style={styles.passfont1}>{ele?.UserId?._id}</Text>
+                      <Text style={styles.passfont1}>{ele?._id}</Text>
                     </View>
                     {/* <View style={styles.profiles1}>
                       <Text style={styles.passfont}>User Name</Text>
@@ -160,22 +160,18 @@ const BookingDetails = () => {
 
                     <View style={styles.profiles1}>
                       <Text style={styles.passfont}>Gold Rate</Text>
-                      <Text style={styles.passfont1}>
-                        ₹ {ele?.goldRate}
-                      </Text>
+                      <Text style={styles.passfont1}>₹ {ele?.goldRate}</Text>
                     </View>
 
                     <View style={styles.profiles1}>
                       <Text style={styles.passfont}>Gold Value</Text>
-                      <Text style={styles.passfont1}>
-                        ₹ {ele?.goldValue}
-                      </Text>
+                      <Text style={styles.passfont1}>₹ {ele?.goldValue}</Text>
                     </View>
 
                     <View style={styles.profiles1}>
                       <Text style={styles.passfont}>Gst</Text>
                       <Text style={styles.passfont1}>
-                        ₹ {ele?.gst}
+                        ₹ {ele?.gst.toFixed(2)}
                       </Text>
                     </View>
 
