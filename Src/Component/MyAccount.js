@@ -734,6 +734,7 @@ import {
   Dimensions,
   ImageBackground,
   PanResponder,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -757,6 +758,7 @@ const MyAccount = () => {
   const [tempImage, setTempImage] = useState(null);
   const [user, setUser] = useState(null);
   const [updateProfile, setUpdateProfile] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
   const [cropRect, setCropRect] = useState({
     x: 50,
     y: 50,
@@ -817,7 +819,6 @@ const MyAccount = () => {
       onStartShouldSetPanResponder: () => true,
 
       onPanResponderGrant: () => {
-        // Save the current cropRect position
         startPos.current = {x: cropRect.x, y: cropRect.y};
       },
 
@@ -885,6 +886,8 @@ const MyAccount = () => {
         return;
       }
 
+      setIsLoading(true); // Start loading
+
       const imageSourceUri = imageSource
         ? Platform.OS === 'android'
           ? `file://${imageSource}`
@@ -923,12 +926,14 @@ const MyAccount = () => {
         userData();
         setImageSource(null);
         setUpdateProfile(true);
-        Alert.alert('Updated successfully');
+        Alert.alert('Success', 'Profile updated successfully!');
       } else {
         Alert.alert('Update failed', result?.message || 'Server Error');
       }
     } catch (error) {
       Alert.alert('Update failed', error.message || 'Network Error');
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -936,6 +941,22 @@ const MyAccount = () => {
     React.useCallback(() => {
       userData();
     }, []),
+  );
+
+  // Loading Modal Component
+  const LoadingModal = () => (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={isLoading}
+      onRequestClose={() => {}}>
+      <View style={styles.loadingContainer}>
+        <View style={styles.loadingContent}>
+          <ActivityIndicator size="large" color="#feac03" />
+          <Text style={styles.loadingText}>Updating Profile...</Text>
+        </View>
+      </View>
+    </Modal>
   );
 
   return (
@@ -983,100 +1004,22 @@ const MyAccount = () => {
 
               <View style={styles.infoContainer}>
                 <View style={styles.infoSection}>
-                  {/* User Name */}
-                  <Text
-                    style={{
-                      color: '#000',
-                      fontWeight: 'bold',
-                      fontSize: 14,
-                      marginBottom: 8,
-                    }}>
-                    User Name
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: '#feac03',
-                      borderRadius: 10,
-                      backgroundColor: '#f5f5f5',
-                      marginBottom: 15,
-                      height: 55,
-                      paddingHorizontal: 10,
-                    }}>
-                    <Icon
-                      name="user"
-                      style={{fontSize: 18, marginRight: 10, color: '#feac03'}}
-                    />
-                    <Text
-                      style={{fontSize: 16, color: '#333', fontWeight: '500'}}>
-                      {user?.name}
-                    </Text>
+                  <Text style={styles.label}>User Name</Text>
+                  <View style={styles.displayContainer}>
+                    <Icon name="user" style={styles.icon} />
+                    <Text style={styles.displayText}>{user?.name}</Text>
                   </View>
 
-                  {/* Email */}
-                  <Text
-                    style={{
-                      color: '#000',
-                      fontWeight: 'bold',
-                      fontSize: 14,
-                      marginBottom: 8,
-                    }}>
-                    Email
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: '#feac03',
-                      borderRadius: 10,
-                      backgroundColor: '#f5f5f5',
-                      marginBottom: 15,
-                      height: 55,
-                      paddingHorizontal: 10,
-                    }}>
-                    <Ionicons
-                      name="mail"
-                      style={{fontSize: 18, marginRight: 10, color: '#feac03'}}
-                    />
-                    <Text
-                      style={{fontSize: 16, color: '#333', fontWeight: '500'}}>
-                      {user?.email}
-                    </Text>
+                  <Text style={styles.label}>Email</Text>
+                  <View style={styles.displayContainer}>
+                    <Ionicons name="mail" style={styles.icon} />
+                    <Text style={styles.displayText}>{user?.email}</Text>
                   </View>
 
-                  {/* Phone No */}
-                  <Text
-                    style={{
-                      color: '#000',
-                      fontWeight: 'bold',
-                      fontSize: 14,
-                      marginBottom: 8,
-                    }}>
-                    Phone No
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: '#feac03',
-                      borderRadius: 10,
-                      backgroundColor: '#f5f5f5',
-                      marginBottom: 15,
-                      height: 55,
-                      paddingHorizontal: 10,
-                    }}>
-                    <FontAwesome6
-                      name="phone"
-                      style={{fontSize: 18, marginRight: 10, color: '#feac03'}}
-                    />
-                    <Text
-                      style={{fontSize: 16, color: '#333', fontWeight: '500'}}>
-                      +91-{user?.phoneno}
-                    </Text>
+                  <Text style={styles.label}>Phone No</Text>
+                  <View style={styles.displayContainer}>
+                    <FontAwesome6 name="phone" style={styles.icon} />
+                    <Text style={styles.displayText}>+91-{user?.phoneno}</Text>
                   </View>
                 </View>
               </View>
@@ -1102,12 +1045,18 @@ const MyAccount = () => {
                   </View>
                 </View>
                 <TouchableOpacity
-                  style={styles.saveButton}
+                  style={[styles.saveButton, isLoading && styles.disabledButton]}
                   onPress={() => {
-                    updateCustomer();
-                    setUpdateProfile(true);
-                  }}>
-                  <Text style={styles.saveButtonText}>Save</Text>
+                    if (!isLoading) {
+                      updateCustomer();
+                    }
+                  }}
+                  disabled={isLoading}>
+                  {isLoading ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text style={styles.saveButtonText}>Save</Text>
+                  )}
                 </TouchableOpacity>
               </View>
 
@@ -1124,14 +1073,14 @@ const MyAccount = () => {
                     />
                     <TouchableOpacity
                       style={styles.cameraButton}
-                      onPress={() => setModalVisible(true)}>
+                      onPress={() => setModalVisible(true)}
+                      disabled={isLoading}>
                       <FontAwesome6 name="camera" size={20} color="#fff" />
                     </TouchableOpacity>
                   </View>
 
                   <Text style={styles.label}>User Name</Text>
-                  <View
-                    style={[styles.inputContainer, {backgroundColor: '#fff'}]}>
+                  <View style={styles.inputContainer}>
                     <Icon name="user" style={styles.icon} />
                     <TextInput
                       style={styles.input}
@@ -1139,11 +1088,12 @@ const MyAccount = () => {
                       onChangeText={setUsername}
                       placeholder={user?.name}
                       placeholderTextColor="#666"
+                      editable={!isLoading}
                     />
                   </View>
+
                   <Text style={styles.label}>Email</Text>
-                  <View
-                    style={[styles.inputContainer, {backgroundColor: '#fff'}]}>
+                  <View style={styles.inputContainer}>
                     <Ionicons name="mail" style={styles.icon} />
                     <TextInput
                       style={styles.input}
@@ -1152,11 +1102,12 @@ const MyAccount = () => {
                       placeholder={user?.email}
                       keyboardType="email-address"
                       placeholderTextColor="#666"
+                      editable={!isLoading}
                     />
                   </View>
+
                   <Text style={styles.label}>Phone No</Text>
-                  <View
-                    style={[styles.inputContainer, {backgroundColor: '#fff'}]}>
+                  <View style={styles.inputContainer}>
                     <FontAwesome6 name="phone" style={styles.icon} />
                     <TextInput
                       style={styles.input}
@@ -1165,6 +1116,7 @@ const MyAccount = () => {
                       placeholder={user?.phoneno}
                       keyboardType="phone-pad"
                       placeholderTextColor="#666"
+                      editable={!isLoading}
                     />
                   </View>
                 </View>
@@ -1258,112 +1210,40 @@ const MyAccount = () => {
             </View>
           </Modal>
 
+          {/* Loading Modal */}
+          <LoadingModal />
+
           {updateProfile && (
             <View style={styles.xyz}>
-              {/* 1st: Text then Image */}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  borderWidth: 4,
-                  borderColor: '#feac03',
-                  marginBottom: 13,
-                  borderRadius: 35,
-                  paddingHorizontal: 15,
-                  paddingVertical: 10,
-                  backgroundColor: '#f3d25b',
-                  width: '90%',
-                  marginLeft: 17,
-                  height: 100,
-                }}>
-                <Text
-                  style={{
-                    textTransform: 'uppercase',
-                    width: '68%',
-                    fontSize: 18,
-                    fontWeight: 'bold',
-                    fontFamily: 'Poppins-SemiBoldItalic',
-                    color: 'black',
-                    marginLeft: 25,
-                  }}>
+              <View style={styles.promotionCard}>
+                <Text style={styles.promotionText}>
                   Start saving today for better tomorrow
                 </Text>
-
                 <Image
                   source={require('../../assets/images/g1.png')}
-                  style={{height: 60, width: 90}}
+                  style={styles.promotionImage}
                   resizeMode="contain"
                 />
               </View>
 
-              {/* 2nd: Image then Text */}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  borderWidth: 4,
-                  borderColor: '#feac03',
-                  marginBottom: 13,
-                  borderRadius: 35,
-                  paddingHorizontal: 15,
-                  paddingVertical: 10,
-                  backgroundColor: '#f3d25b',
-                  width: '90%',
-                  marginLeft: 17,
-                  height: 100,
-                }}>
+              <View style={styles.promotionCard}>
                 <Image
                   source={require('../../assets/images/g2.png')}
-                  style={{height: 60, width: 110, marginLeft: -25}}
+                  style={styles.promotionImage}
                   resizeMode="contain"
                 />
-                <Text
-                  style={{
-                    textTransform: 'uppercase',
-                    width: '68%',
-                    fontSize: 18,
-                    fontWeight: 'bold',
-                    fontFamily: 'Poppins-SemiBoldItalic',
-                    color: 'black',
-                    marginRight: 20,
-                  }}>
+                <Text style={styles.promotionText}>
                   Daily investing by small amount and get bigger value
                 </Text>
               </View>
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  borderWidth: 4,
-                  borderColor: '#feac03',
-                  marginBottom: 13,
-                  borderRadius: 35,
-                  paddingHorizontal: 15,
-                  paddingVertical: 10,
-                  backgroundColor: '#f3d25b',
-                  width: '90%',
-                  marginLeft: 17,
-                  height: 100,
-                }}>
-                <Text
-                  style={{
-                    textTransform: 'uppercase',
-                    width: '68%',
-                    fontSize: 18,
-                    fontWeight: 'bold',
-                    fontFamily: 'Poppins-SemiBoldItalic',
-                    color: 'black',
-                    marginLeft: 20,
-                  }}>
+              <View style={styles.promotionCard}>
+                <Text style={styles.promotionText}>
                   Refer today for get more surprise
                 </Text>
                 <Image
                   source={require('../../assets/images/g3.png')}
-                  style={{height: 60, width: 110, marginRight: -18}}
+                  style={styles.promotionImage}
                   resizeMode="contain"
                 />
               </View>
@@ -1437,6 +1317,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 8,
     borderRadius: 15,
+    minWidth: 60,
+    alignItems: 'center',
+  },
+  disabledButton: {
+    backgroundColor: '#ccc',
   },
   saveButtonText: {
     color: '#fff',
@@ -1481,11 +1366,19 @@ const styles = StyleSheet.create({
     borderColor: '#feac03',
     borderRadius: 10,
     marginBottom: 15,
-    backgroundColor: '#f5f5f5',
-    fontSize: 14,
-    fontWeight: '500',
+    backgroundColor: '#fff',
   },
-
+  displayContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#feac03',
+    borderRadius: 10,
+    backgroundColor: '#f5f5f5',
+    marginBottom: 15,
+    height: 55,
+    paddingHorizontal: 10,
+  },
   icon: {
     fontSize: 20,
     color: '#feac03',
@@ -1499,13 +1392,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 14,
   },
-  inputText: {
+  displayText: {
     flex: 1,
-    padding: 15,
+    fontSize: 16,
     color: '#333',
-    fontFamily: 'Poppins-Medium',
-    fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '500',
+    marginLeft: 10,
   },
   modalContainer: {
     flex: 1,
@@ -1519,10 +1411,6 @@ const styles = StyleSheet.create({
     padding: 25,
     width: width - 40,
     alignItems: 'center',
-  },
-  xyz: {
-    color: '#fff',
-    fontWeight: '600',
   },
   modalTitle: {
     fontSize: 18,
@@ -1608,37 +1496,63 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Poppins-SemiBold',
   },
-  promotionContainer: {
+  xyz: {
     padding: 15,
   },
   promotionCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    borderWidth: 2,
+    borderWidth: 4,
     borderColor: '#feac03',
-    padding: 15,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-    paddingVertical: 20,
+    marginBottom: 13,
+    borderRadius: 35,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    backgroundColor: '#f3d25b',
+    height: 100,
   },
   promotionText: {
-    flex: 1,
-    fontSize: 14,
-    fontFamily: 'Poppins-SemiBold',
-    color: '#333',
     textTransform: 'uppercase',
-    marginRight: 10,
+    width: '68%',
+    fontSize: 18,
+    fontWeight: 'bold',
+    fontFamily: 'Poppins-SemiBoldItalic',
+    color: 'black',
+    marginHorizontal: 15,
   },
   promotionImage: {
-    width: 80,
-    height: 40,
+    height: 60,
+    width: 90,
+  },
+  // Loading Modal Styles
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  loadingContent: {
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 30,
+    alignItems: 'center',
+    minWidth: 150,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  loadingText: {
+    marginTop: 15,
+    fontSize: 16,
+    fontFamily: 'Poppins-Medium',
+    color: '#333',
+    textAlign: 'center',
   },
 });
 

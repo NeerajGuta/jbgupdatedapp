@@ -971,14 +971,30 @@ const More = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const removeUser = async () => {
+  /* const removeUser = async () => {
     try {
       await AsyncStorage.removeItem('user');
       navigation.navigate('SignIn');
     } catch (error) {
       console.error('Error removing user:', error);
     }
-  };
+  }; */
+
+
+
+const removeUser = async () => {
+  try {
+    await AsyncStorage.removeItem("user")
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "SignIn" }],
+    })
+  } catch (error) {
+    console.error("Error removing user:", error)
+  }
+}
+
+
 
   const [loader, setLoader] = useState(true);
 

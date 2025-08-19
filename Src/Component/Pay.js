@@ -1,58 +1,46 @@
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import { Alert, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from "react-native"
+import React, { useEffect, useState } from "react"
 
-import LinearGradient from 'react-native-linear-gradient';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useFocusEffect} from '@react-navigation/native';
-import RazorpayCheckout from 'react-native-razorpay';
-import RNRestart from 'react-native-restart';
+import LinearGradient from "react-native-linear-gradient"
+import axios from "axios"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useFocusEffect } from "@react-navigation/native"
+import RazorpayCheckout from "react-native-razorpay"
+import RNRestart from "react-native-restart"
 
-const Pay = ({navigation, route}) => {
-  const {Amount, gold, goldRate} = route.params;
+const Pay = ({ navigation, route }) => {
+  const { Amount, gold, goldRate } = route.params
   // console.log('checkkk-->', Amount, gold, goldRate);
 
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState("")
   // console.log(user, user?.totalEarnedMoney, 'user');
 
-  const [data, setData] = useState([]);
-  //   console.log(data, 'data');
-  // const getPrice = async () => {
-  //   try {
-  //     let res = await axios.get(
-  //       'https://justbuygold.co.in/api/v1/referralprices',
-  //     );
-  //     if (res.status == 200) {
-  //       setData(res?.data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const [data, setData] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   // userGetAPi
-  const [getUser, setGetuser] = useState(null); // Initialize with null or an empty object
+  const [getUser, setGetuser] = useState(null) // Initialize with null or an empty object
 
-  const userID = async userId => {
+  const userID = async (userId) => {
     try {
-      const response = await axios.get(
-        `https://justbuygold.co.in/api/v1/user/auth/user/${userId}`,
-      );
+      const response = await axios.get(`https://justbuygold.co.in/api/v1/user/auth/user/${userId}`)
 
       if (response.status === 200) {
-        setGetuser(response.data.user);
+        setGetuser(response.data.user)
       } else {
-        console.error('Unexpected response status:', response.status);
+        console.error("Unexpected response status:", response.status)
       }
     } catch (error) {
-      console.log('Error fetching user:', error);
+      console.log("Error fetching user:", error)
     }
-  };
+  }
 
   // console.log(user);
 
-  const [RedCodeID, setRedCodeID] = useState({});
-  const [ActiveStatus, setActiveStatus] = useState({});
+  const [RedCodeID, setRedCodeID] = useState({})
+  const [ActiveStatus, setActiveStatus] = useState({})
+  const [referralCode, setReferralCode] = useState("") // Declare setReferralCode
+  const [error, setError] = useState("") // Declare setError
 
   const getrefCode = async () => {
     try {
@@ -60,42 +48,40 @@ const Pay = ({navigation, route}) => {
       //   throw new Error('User ID is not available');
       // }
 
-      const res = await axios.get(
-        `https://justbuygold.co.in/api/v1/refCode/${user._id}`,
-      );
+      const res = await axios.get(`https://justbuygold.co.in/api/v1/refCode/${user._id}`)
 
       // console.log('referalcode', res);
 
       if (res.status === 200) {
-        setRedCodeID(res.data);
-        setActiveStatus(res.data.status === 'Inactive');
+        setRedCodeID(res.data)
+        setActiveStatus(res.data.status === "Inactive")
       } else {
-        console.error(`Unexpected response status: ${res.status}`);
+        console.error(`Unexpected response status: ${res.status}`)
       }
     } catch (error) {
-      console.error('Error fetching referral code:', error?.message);
+      console.error("Error fetching referral code:", error?.message)
     }
-  };
+  }
 
   // console.log('user?._id', user?._id);
 
   const userData = async () => {
     try {
-      const storedUser = await AsyncStorage.getItem('user');
+      const storedUser = await AsyncStorage.getItem("user")
       if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-        userID(parsedUser._id);
+        const parsedUser = JSON.parse(storedUser)
+        setUser(parsedUser)
+        userID(parsedUser._id)
       }
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error("Error fetching user data:", error)
     }
-  };
+  }
   useFocusEffect(
     React.useCallback(() => {
-      userData();
+      userData()
     }, []),
-  );
+  )
 
   // let referralprice;
   // if (ActiveStatus === true) {
@@ -111,20 +97,17 @@ const Pay = ({navigation, route}) => {
 
   const handleReferralSubmit = async () => {
     try {
-      const response = await axios.put(
-        'https://justbuygold.co.in/api/v1/changestatus',
-        {
-          receiverId: user?._id,
-        },
-      );
-      console('Success', response.data.message);
+      const response = await axios.put("https://justbuygold.co.in/api/v1/changestatus", {
+        receiverId: user?._id,
+      })
+      console.log("Success", response.data.message)
       // navigation.navigate('Home1');
-      setReferralCode(' ');
+      setReferralCode(" ")
     } catch (error) {
       // Alert.alert(error.response?.data?.message || 'An error occurred');
       // console.log(error, 'errorggggg');
     }
-  };
+  }
   // handleReferralSubmit('credit');
 
   // // For debit operation
@@ -133,36 +116,31 @@ const Pay = ({navigation, route}) => {
   // Earned Bonus Amount
   // const [datas, setDatas] = useState([]);
   // console.log(datas, 'dstsss');
-  const fetchUserReferralStats = async userId => {
+  const fetchUserReferralStats = async (userId) => {
     try {
-      const response = await axios.get(
-        `https://justbuygold.co.in/api/v1/user/${userId}`,
-      );
+      const response = await axios.get(`https://justbuygold.co.in/api/v1/user/${userId}`)
       if (response.status === 200) {
-        setData(response.data.totalRupeesEarned);
+        setData(response.data.totalRupeesEarned)
       } else {
-        console.error('Unexpected response status:', response.status);
-        setError('Unexpected response status.');
+        console.error("Unexpected response status:", response.status)
+        setError("Unexpected response status.")
       }
     } catch (error) {
-      console.error(
-        'Error fetching referral stats:',
-        error?.response ? error?.response?.data?.message : error?.message,
-      );
+      console.error("Error fetching referral stats:", error?.response ? error?.response?.data?.message : error?.message)
     }
-  };
+  }
 
   // total
 
   // Payment
-  const [paymentid, setpaymentId] = useState('');
-  const placeorder = async paymentid => {
+  const [paymentid, setpaymentId] = useState("")
+  const placeorder = async (paymentid) => {
     try {
       const config = {
-        url: '/transaction',
-        method: 'post',
-        baseURL: 'https://justbuygold.co.in/api/v1/transactions',
-        headers: {'content-type': 'application/json'},
+        url: "/transaction",
+        method: "post",
+        baseURL: "https://justbuygold.co.in/api/v1/transactions",
+        headers: { "content-type": "application/json" },
         data: {
           UserId: user?._id,
           amount: TotalPayableAmount,
@@ -174,38 +152,40 @@ const Pay = ({navigation, route}) => {
           gst: gstAmount,
           // totalCoin: totalgoldStore + Number(gold),
         },
-      };
-      console.log('user', user._id, Amount, gold);
-      await axios(config).then(function (res) {
+      }
+      console.log("user", user._id, Amount, gold)
+      await axios(config).then((res) => {
         if (res.status == 200) {
           // console.log('success');
           // Alert.alert('Successfully');
           // userTransaction();
-          handleReferralSubmit();
+          handleReferralSubmit()
           setTimeout(() => {
-            RNRestart.restart();
-          }, 100);
+            RNRestart.restart()
+          }, 100)
         }
-      });
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
+      setIsLoading(false)
     }
-  };
+  }
 
   const posttransaction = async () => {
+    setIsLoading(true)
     try {
       var options = {
-        key: 'rzp_test_FAe0X6xLYXaXHe',
+        key: "rzp_test_FAe0X6xLYXaXHe",
         amount: TotalPayableAmount * 100,
         // amount: '500',
-        currency: 'INR',
-        name: 'JustBuyGold',
-        description: 'Order Amount',
-        image: './assets/images/app-logo.jpg',
+        currency: "INR",
+        name: "JustBuyGold",
+        description: "Order Amount",
+        image: "./assets/images/app-logo.jpg",
         customerId: user?._id,
-        handler: function (response) {
+        handler: (response) => {
           // Alert.alert(response.razorpay_payment_id);
-          setpaymentId(response.razorpay_payment_id);
+          setpaymentId(response.razorpay_payment_id)
         },
 
         prefill: {
@@ -213,89 +193,87 @@ const Pay = ({navigation, route}) => {
           email: user?.email,
           contact: user?.phoneno,
         },
-        theme: {color: '#F37254'},
-      };
+        theme: { color: "#F37254" },
+      }
       RazorpayCheckout.open(options)
-        .then(data => {
+        .then((data) => {
           // handle success
-          Alert.alert(`Success: ${data.razorpay_payment_id}`);
-          placeorder(data.razorpay_payment_id);
+          Alert.alert(`Success: ${data.razorpay_payment_id}`)
+          placeorder(data.razorpay_payment_id)
         })
-        .catch(error => {
+        .catch((error) => {
           // handle failure
-          Alert.alert(`Error: ${error.code} | ${error.description}`);
-        });
+          Alert.alert(`Error: ${error.code} | ${error.description}`)
+          setIsLoading(false)
+        })
     } catch (error) {
-      console.log(error);
+      console.log(error)
+      setIsLoading(false)
     }
-  };
+  }
   // Get Gst+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  const [datagst, setDatagst] = useState({});
+  const [datagst, setDatagst] = useState({})
   const getGst = async () => {
     const config = {
-      url: '/getGst',
-      method: 'get',
-      baseURL: 'https://justbuygold.co.in/api/v1/gst',
-      headers: {'conttent-type': 'application/json'},
-    };
+      url: "/getGst",
+      method: "get",
+      baseURL: "https://justbuygold.co.in/api/v1/gst",
+      headers: { "conttent-type": "application/json" },
+    }
     try {
-      const result = await axios(config);
+      const result = await axios(config)
       if (result.status === 200) {
-        setDatagst(result.data.success);
+        setDatagst(result.data.success)
       } else {
-        Alert.alert('Something went wrong');
+        Alert.alert("Something went wrong")
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
   // ferngfernvnernfv
-  const [rate, setRate] = useState([]);
-  const [objRate, setObjRate] = useState({});
+  const [rate, setRate] = useState([])
+  const [objRate, setObjRate] = useState({})
   // console.log(objRate, 'objRate>>>>>>>>>>>>>>>>...');
   const getRate = async () => {
     try {
-      await axios
-        .get('https://justbuygold.co.in/api/v1/rate/allrate')
-        .then(res => {
-          if (res.status === 200) {
-            setRate(res.data.success);
-            setObjRate(res.data.success[0]);
-            // setLoading(true);
-          } else {
-            console.log(res.error);
-          }
-        });
+      await axios.get("https://justbuygold.co.in/api/v1/rate/allrate").then((res) => {
+        if (res.status === 200) {
+          setRate(res.data.success)
+          setObjRate(res.data.success[0])
+          // setLoading(true);
+        } else {
+          console.log(res.error)
+        }
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
   useEffect(() => {
-    getRate();
-    getGst();
-  }, []);
+    getRate()
+    getGst()
+  }, [])
 
-  const NewGst = Number(datagst?.Sgst || 0) + Number(datagst?.Cgst || 0);
-  const goldValue = Number(rate[0]?.rate || 0); // Rate per gram
-  const goldWeight = Number(gold || 0); // Gold quantity in grams
-  const baseGoldValue = Number(goldValue * goldWeight || 0);
-  const gstAmount = (baseGoldValue * NewGst) / 100;
+  const NewGst = Number(datagst?.Sgst || 0) + Number(datagst?.Cgst || 0)
+  const goldValue = Number(rate[0]?.rate || 0) // Rate per gram
+  const goldWeight = Number(gold || 0) // Gold quantity in grams
+  const baseGoldValue = Number(goldValue * goldWeight || 0)
+  const gstAmount = (baseGoldValue * NewGst) / 100
 
-  console.log(NewGst, goldValue, goldWeight, baseGoldValue, gstAmount);
+  console.log(NewGst, goldValue, goldWeight, baseGoldValue, gstAmount)
 
   // Ensure getUser is properly handled
-  const userTotalEarnedMoney = Number(getUser?.totalEarnedMoney || 0);
+  const userTotalEarnedMoney = Number(getUser?.totalEarnedMoney || 0)
 
   // Total Payable Amount Calculation
-  const TotalPayableAmount = Math.round(
-    baseGoldValue + gstAmount - userTotalEarnedMoney,
-  );
+  const TotalPayableAmount = Math.round(baseGoldValue + gstAmount - userTotalEarnedMoney)
 
-  console.log(TotalPayableAmount);
+  console.log(TotalPayableAmount)
 
   // console.log(allCalulation, gstwithPrice, 'jefowej');
   return (
-    <View style={{flex: 1, justifyContent: 'center', backgroundColor: '#ffff'}}>
+    <View style={{ flex: 1, justifyContent: "center", backgroundColor: "#ffff" }}>
       <View style={styles.container}>
         <Text style={styles.heading}>Payment Details</Text>
         <View style={styles.detailItem}>
@@ -312,9 +290,7 @@ const Pay = ({navigation, route}) => {
         </View>
         <View style={styles.detailItem}>
           <Text style={styles.label}>GST ({NewGst}%):</Text>
-          <Text style={styles.value}>
-            ₹{(TotalPayableAmount - baseGoldValue?.toFixed(2)).toFixed(2)}
-          </Text>
+          <Text style={styles.value}>₹{(TotalPayableAmount - baseGoldValue?.toFixed(2)).toFixed(2)}</Text>
         </View>
         {/* <View style={styles.detailItem}>
           <Text style={styles.label}>GST ({NewGst}%):</Text>
@@ -345,63 +321,102 @@ const Pay = ({navigation, route}) => {
           <Text style={styles.label}>Total Payable Amount:</Text>
           <Text style={styles.value}>₹{TotalPayableAmount}</Text>
         </View>
-        <TouchableOpacity style={{marginTop: 20}} onPress={posttransaction}>
+        <TouchableOpacity style={{ marginTop: 20 }} onPress={posttransaction} disabled={isLoading}>
           <LinearGradient
-            colors={['#874701', '#874701']}
-            style={styles.linearGradientmodel}>
-            <Text style={styles.btn}>Pay Now</Text>
+            colors={["#874701", "#874701"]}
+            style={[styles.linearGradientmodel, isLoading && { opacity: 0.7 }]}
+          >
+            <Text style={styles.btn}>{isLoading ? "Processing..." : "Pay Now"}</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
-    </View>
-  );
-};
 
-export default Pay;
+      {isLoading && (
+        <View style={styles.loadingOverlay}>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#874701" />
+            <Text style={styles.loadingText}>Processing Payment...</Text>
+          </View>
+        </View>
+      )}
+    </View>
+  )
+}
+
+export default Pay
 
 const styles = StyleSheet.create({
   container: {
     maxWidth: 400,
-    margin: 'auto',
+    margin: "auto",
     padding: 20,
     // borderRadius: 8,
     // backgroundColor: '#fff',
   },
   heading: {
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 24,
-    fontWeight: 'bold',
-    color: 'black',
+    fontWeight: "bold",
+    color: "black",
   },
   detailItem: {
     marginBottom: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   label: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 16,
-    color: 'black',
+    color: "black",
   },
   value: {
-    color: '#333',
+    color: "#333",
     fontSize: 16,
   },
   btn: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 17,
-    backgroundColor: '#874701',
-    color: 'white',
-    fontWeight: '700',
+    backgroundColor: "#874701",
+    color: "white",
+    fontWeight: "700",
     padding: 2,
     marginTop: 12,
     marginBottom: 10,
     borderRadius: 100,
-
-    alignContent: 'center',
+    alignContent: "center",
   },
   linearGradientmodel: {
     borderRadius: 100,
   },
-});
+  loadingOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingContainer: {
+    backgroundColor: "white",
+    padding: 30,
+    borderRadius: 10,
+    alignItems: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  loadingText: {
+    marginTop: 15,
+    fontSize: 16,
+    color: "#874701",
+    fontWeight: "600",
+  },
+})

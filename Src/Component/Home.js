@@ -2360,7 +2360,7 @@ function Home() {
   };
   const carouselImages = [
     require('../../assets/images/g9.png'),
-    require('../../assets/images/g10.png'),
+    require('../../assets/images/g9.png'),
   ];
 
   // Get Gst+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

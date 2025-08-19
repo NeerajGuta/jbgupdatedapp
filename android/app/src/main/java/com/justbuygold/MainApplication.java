@@ -50,13 +50,18 @@ public class MainApplication extends Application implements ReactApplication {
   }
 
   @Override
-  public void onCreate() {
+public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    
+    // If you have any ImagePerfDataListener related code around line 60, remove it
+    
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       DefaultNewArchitectureEntryPoint.load();
     }
-    ReactNativeFlipper.initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
-  }
+    
+    // ReactNativeFlipper.initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+}
+
 }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import { useState } from "react"
 import {
   StyleSheet,
   View,
@@ -7,238 +7,216 @@ import {
   ScrollView,
   StatusBar,
   TouchableOpacity,
-  Alert,
-  alert,
-} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Entypo from 'react-native-vector-icons/Entypo';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import {useNavigation} from '@react-navigation/native';
-import axios from 'axios';
-import {Image} from 'react-native-animatable';
+  ActivityIndicator,
+  Image,
+} from "react-native"
+import LinearGradient from "react-native-linear-gradient"
+import Icon from "react-native-vector-icons/FontAwesome"
+import Ionicons from "react-native-vector-icons/Ionicons"
+import FontAwesome6 from "react-native-vector-icons/FontAwesome6"
+import { useNavigation } from "@react-navigation/native"
+import axios from "axios"
+import Toast from "./Toast"
+import useToast from "../hooks/useToast"
 
 function SignUp() {
-  const [username, setusername] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneno, setPhoneno] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordVisibility, setPasswordVisibility] = useState(true);
-  const [rightIcon, setRightIcon] = useState('eye-with-line');
+  const [username, setusername] = useState("")
+  const [email, setEmail] = useState("")
+  const [phoneno, setPhoneno] = useState("")
+  const [password, setPassword] = useState("")
+  const [passwordVisibility, setPasswordVisibility] = useState(true)
+  const [rightIcon, setRightIcon] = useState("eye-with-line")
+  const [isLoading, setIsLoading] = useState(false)
+  const navigation = useNavigation("")
 
-  const navigation = useNavigation('');
-
-  //Placeholder condition++++++++++++++++++++++++++++++++++++++
-  // Mobile No==================
-  // function isValidMobile(phoneno) {
-  //   phoneno = phoneno?.trim();
-  //   if (phoneno?.match(/^[7-9]\d{9}$/)) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  const { toastConfig, showSuccess, showError, hideToast } = useToast()
 
   function isValidMobile(phoneno) {
-    phoneno = phoneno?.trim();
-    return /^\d{10}$/.test(phoneno);
+    phoneno = phoneno?.trim()
+    return /^\d{10}$/.test(phoneno)
   }
 
-  //Email==================
   function isValidEmail(email) {
-    email = email?.trim();
-    if (email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
-      return true;
+    email = email?.trim()
+    if (email?.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+      return true
     }
-    return false;
+    return false
   }
 
-  // Password========================
   function isValidPwd(password) {
     if (password?.length < 8 || password?.length > 15) {
-      return false;
+      return false
     }
-    return true;
+    return true
   }
 
   const handlePasswordVisibility = () => {
-    if (rightIcon === 'eye') {
-      setRightIcon('eye-with-line');
-      setPasswordVisibility(!passwordVisibility);
-    } else if (rightIcon === 'eye-with-line') {
-      setRightIcon('eye');
-      setPasswordVisibility(!passwordVisibility);
+    if (rightIcon === "eye") {
+      setRightIcon("eye-with-line")
+      setPasswordVisibility(!passwordVisibility)
+    } else if (rightIcon === "eye-with-line") {
+      setRightIcon("eye")
+      setPasswordVisibility(!passwordVisibility)
     }
-  };
+  }
 
   const Signup = async () => {
+    setIsLoading(true)
     try {
       if (!username) {
-        return Alert.alert('Name Required !');
+        return showError("Name Required !")
       }
       if (!email) {
-        return Alert.alert('Email Required !');
+        return showError("Email Required !")
       }
       if (!isValidEmail(email)) {
-        return Alert.alert('Invalid your Email Id!');
+        return showError("Invalid your Email Id!")
       }
       if (!phoneno) {
-        return Alert.alert('Phone No Required !');
+        return showError("Phone No Required !")
       }
       if (!isValidMobile(phoneno)) {
-        return Alert.alert('Invalid mobile number!');
+        return showError("Invalid mobile number!")
       }
-      // if (!password) {
-      //   return Alert.alert('Password Required !');
-      // }
-      // if (!isValidPwd(password)) {
-      //   return Alert.alert('Password between 8 to 15 characters !');
-      // }
+
       const config = {
-        url: '/signup',
-        method: 'post',
-        baseURL: 'https://justbuygold.co.in/api/v1/user/auth',
-        headers: {'content-type': 'application/json'},
+        url: "/signup",
+        method: "post",
+        baseURL: "https://justbuygold.co.in/api/v1/user/auth",
+        headers: { "content-type": "application/json" },
         data: {
           name: username,
           email: email,
           phoneno: phoneno,
-          password: 'Raghav@123',
+          password: "Raghav@123",
         },
-      };
-      let res = await axios(config);
+      }
+      const res = await axios(config)
       if (res.status === 200) {
-        console.log(res.data.success);
-        Alert.alert('Signup Success');
-        navigation.navigate('SignIn');
+        console.log(res.data.success)
+        showSuccess("Signup Done")
+        setTimeout(() => {
+          navigation.navigate("SignIn")
+        }, 500)
       }
     } catch (error) {
-      console.log(error.response);
+      console.log(error.response)
       if (error.response) {
-        Alert.alert(error.response.data.error);
+        showError(error.response.data.error)
+      } else {
+        showError("An error occurred. Please try again.")
       }
+    } finally {
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <>
       <StatusBar backgroundColor="#f3d25b" barStyle="light-content" />
       <View style={styles.container}>
+        <Toast
+          visible={toastConfig.visible}
+          message={toastConfig.message}
+          type={toastConfig.type}
+          duration={toastConfig.duration}
+          onHide={hideToast}
+        />
+        {isLoading && (
+          <View style={styles.loadingOverlay}>
+            <ActivityIndicator size="large" color="#874701" />
+          </View>
+        )}
         <ScrollView>
           <View style={styles.reg}>
             <View
               style={{
                 flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
+                justifyContent: "center",
+                alignItems: "center",
                 marginTop: 100,
-              }}>
+              }}
+            >
               <Image
-                source={require('../../assets/images/newlogo.png')}
-                style={{width: 100, height: 100}}
-                resizemode="cover"></Image>
+                source={require("../../assets/images/newlogo.png")}
+                style={{ width: 100, height: 100 }}
+                resizeMode="cover"
+              ></Image>
             </View>
             <View style={styles.register}>
               <Text style={styles.text1}>Register Now !</Text>
             </View>
-
             <View style={styles.back}>
               <Text style={styles.contant}>User Name</Text>
               <View style={styles.regback}>
                 <Icon name="user" style={styles.icons} />
-
                 <TextInput
                   style={styles.input}
                   value={username}
                   placeholderTextColor="black"
                   placeholder="Enter your username"
                   keyboardType="default"
-                  onChangeText={username => setusername(username)}
+                  onChangeText={(username) => setusername(username)}
                 />
               </View>
               <Text style={styles.contant}>Email</Text>
               <View style={styles.regback}>
                 <Ionicons name="mail" style={styles.icons} />
-
                 <TextInput
                   style={styles.input}
                   value={email}
                   placeholder="Enter your email"
                   keyboardType="email-address"
                   placeholderTextColor="black"
-                  onChangeText={email => setEmail(email)}
+                  onChangeText={(email) => setEmail(email)}
                 />
               </View>
               <Text style={styles.contant}>Phone No</Text>
               <View style={styles.regback}>
                 <FontAwesome6 name="phone" style={styles.icons} />
-
                 <TextInput
                   style={styles.input}
                   value={phoneno}
                   placeholder="Enter your phone no"
                   keyboardType="number-pad"
                   placeholderTextColor="black"
-                  onChangeText={phoneno => setPhoneno(phoneno)}
+                  onChangeText={(phoneno) => setPhoneno(phoneno.replace(/[^0-9]/g, "").slice(0, 10))}
+                  maxLength={10}
                 />
               </View>
-              {/* <Text style={styles.contant}>Password</Text>
-              <View style={styles.regback}>
-                <Icon name="lock" style={styles.icons} />
-
-                <TextInput
-                  style={styles.input}
-                  value={password}
-                  placeholder="Enter your password"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  secureTextEntry={passwordVisibility}
-                  enablesReturnKeyAutomatically
-                  onChangeText={password => setPassword(password)}
-                />
-                <TouchableOpacity onPress={handlePasswordVisibility}>
-                  <Entypo
-                    name="eye-with-line"
-                    style={[styles.icons2, {marginTop: -10, fontSize: 18}]}
-                  />
-                </TouchableOpacity>
-              </View> */}
               <View
                 style={[
                   styles.regback1,
                   {
-                    flexDirection: 'row',
-                    justifyContent: 'center',
+                    flexDirection: "row",
+                    justifyContent: "center",
                     marginVertical: 20,
                   },
-                ]}>
+                ]}
+              >
                 <TouchableOpacity onPress={Signup}>
-                  <LinearGradient
-                    colors={['#874701', '#874701']}
-                    style={styles.linearGradient}>
+                  <LinearGradient colors={["#874701", "#874701"]} style={styles.linearGradient}>
                     <Text style={styles.btn}>Sign Up</Text>
                   </LinearGradient>
                 </TouchableOpacity>
               </View>
               <Text
                 style={{
-                  textAlign: 'center',
+                  textAlign: "center",
                   fontSize: 16,
-                  fontWeight: '800',
-                  color: 'black',
-                }}>
+                  fontWeight: "800",
+                  color: "black",
+                }}
+              >
                 OR
               </Text>
-
-              <View
-                style={[
-                  styles.regback1,
-                  {flexDirection: 'row', justifyContent: 'center'},
-                ]}>
+              <View style={[styles.regback1, { flexDirection: "row", justifyContent: "center" }]}>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('SignIn');
-                  }}>
+                    navigation.navigate("SignIn")
+                  }}
+                >
                   <Text style={styles.btn2}>Sign In</Text>
                 </TouchableOpacity>
               </View>
@@ -247,56 +225,62 @@ function SignUp() {
         </ScrollView>
       </View>
     </>
-  );
+  )
 }
-
-export default SignUp;
+export default SignUp
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    backgroundColor: '#f3d25b',
+    flex: 1,
+    backgroundColor: "#f3d25b",
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10,
   },
   reg: {
-    width: '100%',
+    width: "100%",
   },
   register: {
-    position: 'relative',
+    position: "relative",
     marginTop: 20,
   },
   text1: {
-    color: 'white',
+    color: "white",
     fontSize: 25,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     padding: 10,
   },
   back: {
-    height: '100%',
-    backgroundColor: 'white',
+    flex: 1,
+    backgroundColor: "white",
     padding: 20,
     paddingBottom: 60,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-    position: 'relative',
+    position: "relative",
   },
   regback: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'relative',
+    flexDirection: "row",
+    alignItems: "center",
+    position: "relative",
   },
   icons: {
-    position: 'absolute',
+    position: "absolute",
     zIndex: 999,
     left: 8,
     fontSize: 22,
-    color: '#874701',
+    color: "#874701",
   },
   icons2: {
-    position: 'absolute',
+    position: "absolute",
     zIndex: 999,
     right: 8,
     fontSize: 22,
-    color: '#874701',
+    color: "#874701",
   },
   input: {
     height: 45,
@@ -304,13 +288,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 1,
     borderRadius: 6,
-    color: 'black',
-    // padding: 15,
+    color: "black",
     paddingLeft: 33,
-    width: '100%',
-    borderColor: '#874701',
-    backgroundColor: 'white',
-    // shadowColor: '#000',
+    width: "100%",
+    borderColor: "#874701",
+    backgroundColor: "white",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -318,19 +300,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 2,
-    fontFamily: 'Poppins-MediumItalic',
+    fontFamily: "Poppins-MediumItalic",
   },
   contant: {
     fontSize: 15,
-    color: 'black',
-    fontWeight: '700',
+    color: "black",
+    fontWeight: "700",
   },
   btn: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 17,
-    backgroundColor: '#874701',
-    color: 'white',
-    fontWeight: '700',
+    backgroundColor: "#874701",
+    color: "white",
+    fontWeight: "700",
     padding: 2,
     marginTop: 12,
     marginBottom: 10,
@@ -338,12 +320,12 @@ const styles = StyleSheet.create({
     width: 250,
   },
   btn2: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 17,
-    borderColor: '#874701',
+    borderColor: "#874701",
     borderWidth: 2,
-    color: 'black',
-    fontWeight: '700',
+    color: "black",
+    fontWeight: "700",
     padding: 8,
     marginTop: 12,
     marginBottom: 10,
@@ -353,8 +335,6 @@ const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
     width: 250,
-    // paddingLeft: 15,
-    // paddingRight: 15,
     borderRadius: 100,
   },
-});
+})
