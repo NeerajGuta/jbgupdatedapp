@@ -11,7 +11,7 @@ import useToast from "../hooks/useToast"
 
 const CELL_COUNT = 6
 const Otp = ({ navigation, route }) => {
-  const { phoneno } = route.params
+  const { phoneno, resetPin } = route.params || {}
   const [enableMask, setEnableMask] = useState(true)
   const [value, setValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -23,7 +23,6 @@ const Otp = ({ navigation, route }) => {
 
   const { toastConfig, showSuccess, showError, hideToast } = useToast()
 
-  console.log(value, "rii32")
   const toggleMask = () => setEnableMask((f) => !f)
 
   const renderCell = ({ index, symbol, isFocused }) => {
@@ -42,6 +41,59 @@ const Otp = ({ navigation, route }) => {
     )
   }
 
+  const checkUserOnboardingStatus = async (userDetails) => {
+    try {
+      const userId = userDetails.id || userDetails._id || userDetails.phoneno
+
+      // Check user-specific onboarding data
+      const userPinKey = `userPin_${userId}`
+      const userTermsKey = `termsAccepted_${userId}`
+      const userOnboardingKey = `onboardingCompleted_${userId}`
+
+      const existingPin = await AsyncStorage.getItem(userPinKey)
+      const termsAccepted = await AsyncStorage.getItem(userTermsKey)
+      const onboardingCompleted = await AsyncStorage.getItem(userOnboardingKey)
+
+      console.log("User onboarding status:", {
+        userId,
+        hasPin: !!existingPin,
+        termsAccepted: termsAccepted === "true",
+        onboardingCompleted: onboardingCompleted === "true",
+        resetPin,
+      })
+
+      // If this is a PIN reset request, go to PIN creation
+      if (resetPin) {
+        console.log("PIN reset requested, going to PIN creation")
+        return "PinCreation"
+      }
+
+      // If user has completed full onboarding, go to PIN verification
+      if (existingPin && termsAccepted === "true" && onboardingCompleted === "true") {
+        console.log("Returning user - going to PIN verification")
+        return "PinVerification"
+      }
+
+      // If user has PIN but not terms, go to terms
+      if (existingPin && termsAccepted !== "true") {
+        console.log("User has PIN but not accepted terms, going to Terms")
+        return "TermsConditions"
+      }
+
+      // If user doesn't have PIN, go to PIN creation (new user)
+      if (!existingPin) {
+        console.log("New user - going to PIN creation")
+        return "PinCreation"
+      }
+
+      // Default fallback
+      return "PinCreation"
+    } catch (error) {
+      console.error("Error checking user onboarding status:", error)
+      return "PinCreation"
+    }
+  }
+
   const VerfiyOtp = async () => {
     if (!value) return showError("Please enter OTP to continue")
 
@@ -50,7 +102,7 @@ const Otp = ({ navigation, route }) => {
       const config = {
         url: "/otpVarification",
         method: "post",
-        baseURL: "https://justbuygold.co.in/api/v1/user/auth",
+        baseURL: "http://192.168.1.26:3034/api/v1/user/auth",
         headers: { "content-type": "application/json" },
         data: {
           phoneno: phoneno,
@@ -60,9 +112,18 @@ const Otp = ({ navigation, route }) => {
 
       const res = await axios(config)
       if (res.status === 200) {
-        showSuccess("OTP verified successfully! Welcome to the app.")
+        showSuccess("OTP verified successfully!")
+
+        // Save user details
         await AsyncStorage.setItem("user", JSON.stringify(res.data.details))
-        navigation.navigate("ReferralScreen")
+
+        // Check user's onboarding status and navigate accordingly
+        const nextScreen = await checkUserOnboardingStatus(res.data.details)
+
+        setTimeout(() => {
+          navigation.navigate(nextScreen)
+        }, 1000)
+
         setValue("")
       }
     } catch (error) {
@@ -121,7 +182,7 @@ const Otp = ({ navigation, route }) => {
                 resizemode="cover"
               ></Image>
             </View>
-            <Text style={styles.title}>Enter Your Verification Code </Text>
+            <Text style={styles.title}>{resetPin ? "Reset PIN - Verify OTP" : "Enter Your Verification Code"}</Text>
             <Text style={styles.addtitle}>OTP Sent To +91-{phoneno} </Text>
             <View style={styles.fieldRow}>
               <CodeField

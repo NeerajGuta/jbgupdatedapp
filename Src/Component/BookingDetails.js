@@ -37,7 +37,7 @@ const BookingDetails = () => {
     try {
       await axios
         .get(
-          'https://justbuygold.co.in/api/v1/transactions/transactionhistory/' +
+          'http://192.168.1.26:3034/api/v1/transactions/transactionhistory/' +
             user?._id,
         )
         .then(res => {
@@ -65,7 +65,7 @@ const BookingDetails = () => {
     setLoader(true);
     try {
       await axios
-        .get('https://justbuygold.co.in/api/v1/coins/singalcoins/' + user?._id)
+        .get('http://192.168.1.26:3034/api/v1/coins/singalcoins/' + user?._id)
         .then(res => {
           if (res.status == 200) {
             console.log('allcoins...................................', res);

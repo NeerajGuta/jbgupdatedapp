@@ -83,7 +83,7 @@ function SignUp() {
       const config = {
         url: "/signup",
         method: "post",
-        baseURL: "https://justbuygold.co.in/api/v1/user/auth",
+        baseURL: "http://192.168.1.26:3034/api/v1/user/auth",
         headers: { "content-type": "application/json" },
         data: {
           name: username,

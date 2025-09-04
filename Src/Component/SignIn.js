@@ -56,7 +56,7 @@ function SignIn() {
       const config = {
         url: "/signin",
         method: "post",
-        baseURL: "https://justbuygold.co.in/api/v1/user/auth",
+        baseURL: "http://192.168.1.26:3034/api/v1/user/auth",
         headers: { "content-type": "application/json" },
         data: {
           email: email,
@@ -97,13 +97,14 @@ function SignIn() {
       const config = {
         url: "/otp",
         method: "post",
-        baseURL: "https://justbuygold.co.in/api/v1/user/auth",
+        baseURL: "http://192.168.1.26:3034/api/v1/user/auth",
         headers: { "content-type": "application/json" },
         data: {
           phoneno: phoneno,
         },
       }
       const res = await axios(config)
+      console.log(res,"..........................")
       if (res.status === 200) {
         console.log(res.data.success)
         showSuccess("OTP sent to your mobile number successfully!")
@@ -415,4 +416,4 @@ const styles = StyleSheet.create({
     width: 250,
     borderRadius: 100,
   },
-})
+})    

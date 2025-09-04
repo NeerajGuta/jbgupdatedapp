@@ -28,7 +28,7 @@
 //     setLoader(true);
 //     try {
 //       await axios
-//         .get('https://justbuygold.co.in/api/v1/coins/singalcoins/' + user?._id)
+//         .get('http://192.168.1.26:3034/api/v1/coins/singalcoins/' + user?._id)
 //         .then(res => {
 //           if (res.status == 200) {
 //             setData(res.data.success);
@@ -252,7 +252,7 @@ const CoinsDetails = () => {
     try {
       await axios
         .get(
-          'https://justbuygold.co.in/api/v1/transactions/transactionhistory/' +
+          'http://192.168.1.26:3034/api/v1/transactions/transactionhistory/' +
             user?._id,
         )
         .then(res => {
@@ -285,7 +285,7 @@ const CoinsDetails = () => {
     setLoader(true);
     try {
       await axios
-        .get('https://justbuygold.co.in/api/v1/coins/singalcoins/' + user?._id)
+        .get('http://192.168.1.26:3034/api/v1/coins/singalcoins/' + user?._id)
         .then(res => {
           if (res.status == 200) {
             setData(res.data.success);

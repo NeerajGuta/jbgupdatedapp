@@ -17,7 +17,7 @@ const Paymentpage = ({navigation, route}) => {
       const config = {
         url: '/transaction',
         method: 'post',
-        baseURL: 'https://justbuygold.co.in/api/v1/transactions',
+        baseURL: 'http://192.168.1.26:3034/api/v1/transactions',
         headers: {'content-type': 'application/json'},
         data: {
           UserId: user?._id,

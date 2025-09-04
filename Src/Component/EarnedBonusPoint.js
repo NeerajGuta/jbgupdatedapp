@@ -24,7 +24,7 @@ const EarnedBonusPoints = ({}) => {
   const userID = async userId => {
     try {
       const response = await axios.get(
-        `https://justbuygold.co.in/api/v1/user/auth/user/${userId}`,
+        `http://192.168.1.26:3034/api/v1/user/auth/user/${userId}`,
       );
       if (response.status === 200) {
         setGetuser(response.data.user);
@@ -39,7 +39,7 @@ const EarnedBonusPoints = ({}) => {
   const fetchUserReferralStats = async userId => {
     try {
       const response = await axios.get(
-        `https://justbuygold.co.in/api/v1/user/${userId}`,
+        `http://192.168.1.26:3034/api/v1/user/${userId}`,
       );
       if (response.status === 200) {
         setData(response.data.totalRupeesEarned);
@@ -62,7 +62,7 @@ const EarnedBonusPoints = ({}) => {
     setLoader(true);
     try {
       const response = await axios.get(
-        `https://justbuygold.co.in/api/v1/wallet-history/${userId}`,
+        `http://192.168.1.26:3034/api/v1/wallet-history/${userId}`,
       );
       if (response.status === 200) {
         setWalletData(response.data);

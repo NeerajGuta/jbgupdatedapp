@@ -43,7 +43,7 @@
 //   const handleReferralShare = async referralCode => {
 //     try {
 //       const response = await axios.post(
-//         'https://justbuygold.co.in/api/v1/referral',
+//         'http://192.168.1.26:3034/api/v1/referral',
 //         {
 //           userId: user?._id,
 //           referral: referralCode,
@@ -542,7 +542,7 @@
 //   const handleReferralShare = async referralCode => {
 //     try {
 //       const response = await axios.post(
-//         'https://justbuygold.co.in/api/v1/referral',
+//         'http://192.168.1.26:3034/api/v1/referral',
 //         {
 //           userId: user?._id,
 //           referral: referralCode,
@@ -873,6 +873,9 @@
 //   },
 // });
 
+
+
+
 import {
   StatusBar,
   StyleSheet,
@@ -883,208 +886,241 @@ import {
   ImageBackground,
   Dimensions,
   SafeAreaView,
-  Platform,
   Alert,
-} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Animatable from 'react-native-animatable';
-import {Share} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import Modal from 'react-native-modal';
-import axios from 'axios';
-import LoaderKit from 'react-native-loader-kit';
+} from "react-native"
+import React, { useEffect, useState } from "react"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import * as Animatable from "react-native-animatable"
+import { Share } from "react-native"
+import LinearGradient from "react-native-linear-gradient"
+import Modal from "react-native-modal"
+import axios from "axios"
+import LoaderKit from "react-native-loader-kit"
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get("window")
 
 const More = () => {
-  const navigation = useNavigation('');
+  const navigation = useNavigation("")
 
   // Get User++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({})
   const userData = async () => {
     try {
-      let userData = await AsyncStorage.getItem('user');
+      const userData = await AsyncStorage.getItem("user")
       if (userData) {
-        setUser(JSON.parse(userData));
+        setUser(JSON.parse(userData))
       }
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error("Error fetching user data:", error)
     }
-  };
+  }
 
   useFocusEffect(
     React.useCallback(() => {
-      userData();
+      userData()
     }, []),
-  );
+  )
 
   const generateReferralCode = () => {
-    return Math.random().toString(36).substring(2, 8).toUpperCase();
-  };
+    return Math.random().toString(36).substring(2, 8).toUpperCase()
+  }
 
-  const handleReferralShare = async referralCode => {
+  const handleReferralShare = async (referralCode) => {
     try {
-      const response = await axios.post(
-        'https://justbuygold.co.in/api/v1/referral',
-        {
-          userId: user?._id,
-          referral: referralCode,
-        },
-      );
-      console.log('Referral code shared successfully:', referralCode);
+      const response = await axios.post("http://192.168.1.26:3034/api/v1/referral", {
+        userId: user?._id,
+        referral: referralCode,
+      })
+      console.log("Referral code shared successfully:", referralCode)
     } catch (error) {
-      Alert.alert(error.response?.data?.message || 'An error occurred');
-      console.error('Error sharing referral code:', error);
+      Alert.alert(error.response?.data?.message || "An error occurred")
+      console.error("Error sharing referral code:", error)
     }
-  };
+  }
 
   const shareApp = async () => {
     try {
-      const referralCode = generateReferralCode(); // Generate the referral code once
-      await handleReferralShare(referralCode); // Use the same code in the API request
+      const referralCode = generateReferralCode() // Generate the referral code once
+      await handleReferralShare(referralCode) // Use the same code in the API request
 
-      const deepLinkURL =
-        'https://play.google.com/store/apps/details?id=com.nskparent/' +
-        referralCode; // Use the same code in the share message
+      const deepLinkURL = "https://play.google.com/store/apps/details?id=com.nskparent/" + referralCode // Use the same code in the share message
 
       // Share the deep link with referral code in the message
       Share.share({
         message: `Use my referral code: ${referralCode} . Download here: ${deepLinkURL}`,
         url: deepLinkURL, // This might be ignored depending on platform
       })
-        .then(result => console.log('Shared successfully:', result))
-        .catch(error => console.error('Error sharing:', error));
+        .then((result) => console.log("Shared successfully:", result))
+        .catch((error) => console.error("Error sharing:", error))
     } catch (error) {
-      console.error('Error sharing app:', error);
+      console.error("Error sharing app:", error)
     }
-  };
+  }
 
   useEffect(() => {
-    userData();
-  }, []);
+    userData()
+  }, [])
 
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
-
-  /* const removeUser = async () => {
-    try {
-      await AsyncStorage.removeItem('user');
-      navigation.navigate('SignIn');
-    } catch (error) {
-      console.error('Error removing user:', error);
-    }
-  }; */
-
-
-
-const removeUser = async () => {
-  try {
-    await AsyncStorage.removeItem("user")
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "SignIn" }],
-    })
-  } catch (error) {
-    console.error("Error removing user:", error)
+    setModalVisible(!isModalVisible)
   }
-}
 
+  // Updated logout function with proper data management and app security
+  const removeUser = async () => {
+    setIsLoggingOut(true)
+    try {
+      // Get current user details before clearing
+      const userDetails = await AsyncStorage.getItem("user")
+      const parsedUser = userDetails ? JSON.parse(userDetails) : null
 
+      console.log("Starting logout process for user:", parsedUser?.phoneno || "unknown")
 
-  const [loader, setLoader] = useState(true);
+      // Clear general login state and session data
+      await AsyncStorage.removeItem("userLoggedIn")
+      await AsyncStorage.removeItem("userPhone")
+      await AsyncStorage.removeItem("user")
+      await AsyncStorage.removeItem("staffData")
+
+      // Clear app security flag - important for PIN verification flow
+      await AsyncStorage.removeItem("pinVerificationNeeded")
+      console.log("Cleared PIN verification needed flag during logout")
+
+      // Clear session-specific data but preserve user-specific onboarding data
+      const keys = await AsyncStorage.getAllKeys()
+      const sessionKeys = keys.filter(
+        (key) =>
+          key.startsWith("selectedRestaurant_") ||
+          key.startsWith("selectedTable_") ||
+          key.includes("session") ||
+          key.includes("temp") ||
+          // Clear old global keys if they exist
+          key === "userPin" ||
+          key === "pinCreated" ||
+          key === "termsAccepted" ||
+          key === "onboardingCompleted",
+      )
+
+      if (sessionKeys.length > 0) {
+        await AsyncStorage.multiRemove(sessionKeys)
+        console.log("Cleared session keys:", sessionKeys)
+      }
+
+      // DO NOT clear user-specific PIN and terms data:
+      // - userPin_${userId}
+      // - termsAccepted_${userId}
+      // - onboardingCompleted_${userId}
+      // - pinCreated_${userId}
+
+      console.log("Logout completed - PIN and terms data preserved for user, security flags cleared")
+
+      // Close modal and navigate
+      setModalVisible(false)
+
+      // Small delay to ensure modal closes smoothly
+      setTimeout(() => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "SignIn" }],
+        })
+      }, 300)
+    } catch (error) {
+      console.error("Error during logout:", error)
+      Alert.alert("Logout Error", "There was an error logging out. Please try again.")
+    } finally {
+      setIsLoggingOut(false)
+    }
+  }
+
+  const [loader, setLoader] = useState(true)
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLoader(false);
-    }, 1000);
+      setLoader(false)
+    }, 1000)
 
-    return () => clearTimeout(timer);
-  }, []);
+    return () => clearTimeout(timer)
+  }, [])
 
   const menuItems = [
     {
-      icon: require('../../assets/images/choices.png'),
-      text: 'Purchase History',
-      route: 'BookingDetails',
-      animation: 'fadeInLeft',
+      icon: require("../../assets/images/choices.png"),
+      text: "Purchase History",
+      route: "BookingDetails",
+      animation: "fadeInLeft",
     },
     {
-      icon: require('../../assets/images/choices.png'),
-      text: 'Withdraw History',
-      route: 'CoinDetails',
-      animation: 'fadeInRight',
+      icon: require("../../assets/images/choices.png"),
+      text: "Withdraw History",
+      route: "CoinDetails",
+      animation: "fadeInRight",
     },
     {
-      icon: require('../../assets/images/padlock.png'),
-      text: 'Just buy gold Balance',
-      route: 'EarnedBonusPoint',
-      animation: 'fadeInRight',
+      icon: require("../../assets/images/padlock.png"),
+      text: "Just buy gold Balance",
+      route: "EarnedBonusPoint",
+      animation: "fadeInRight",
     },
     {
-      icon: require('../../assets/images/share.png'),
-      text: 'Share and Earn',
+      icon: require("../../assets/images/share.png"),
+      text: "Share and Earn",
       action: shareApp,
-      animation: 'fadeInLeft',
+      animation: "fadeInLeft",
     },
     {
-      icon: require('../../assets/images/information.png'),
-      text: 'About Us',
-      route: 'AboutUs',
-      animation: 'fadeInLeft',
+      icon: require("../../assets/images/information.png"),
+      text: "About Us",
+      route: "AboutUs",
+      animation: "fadeInLeft",
     },
     {
-      icon: require('../../assets/images/terms-and-conditions.png'),
-      text: 'Terms & Condition',
-      route: 'TermsCondition',
-      animation: 'fadeInRight',
+      icon: require("../../assets/images/terms-and-conditions.png"),
+      text: "Terms & Condition",
+      route: "TermsCondition",
+      animation: "fadeInRight",
     },
     {
-      icon: require('../../assets/images/insurance.png'),
-      text: 'Privacy policy',
-      route: 'PrivacyPolicy',
-      animation: 'fadeInLeft',
+      icon: require("../../assets/images/insurance.png"),
+      text: "Privacy policy",
+      route: "PrivacyPolicy",
+      animation: "fadeInLeft",
     },
     {
-      icon: require('../../assets/images/file.png'),
-      text: 'Disclaimer',
-      route: 'Disclaimer',
-      animation: 'fadeInRight',
+      icon: require("../../assets/images/file.png"),
+      text: "Disclaimer",
+      route: "Disclaimer",
+      animation: "fadeInRight",
     },
     {
-      icon: require('../../assets/images/terms-and-conditions.png'),
-      text: 'Help',
-      route: 'Help',
-      animation: 'fadeInRight',
+      icon: require("../../assets/images/terms-and-conditions.png"),
+      text: "Help",
+      route: "Help",
+      animation: "fadeInRight",
     },
     {
-      icon: require('../../assets/images/logout.png'),
-      text: 'Sign Out',
+      icon: require("../../assets/images/logout.png"),
+      text: "Sign Out",
       action: toggleModal,
-      animation: 'fadeInRight',
-      textStyle: {color: 'red'},
+      animation: "fadeInRight",
+      textStyle: { color: "red" },
     },
-  ];
+  ]
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ImageBackground
-        source={require('../../assets/images/app-bg.jpg')}
+        source={require("../../assets/images/app-bg.jpg")}
         style={styles.backgroundImage}
-        resizeMode="cover">
+        resizeMode="cover"
+      >
         <StatusBar backgroundColor="#f3d25b" barStyle="light-content" />
 
         {loader ? (
           <View style={styles.loaderContainer}>
-            <LoaderKit
-              style={{width: 50, height: 50}}
-              name={'LineSpinFadeLoader'}
-              color={'#f3d25b'}
-            />
+            <LoaderKit style={{ width: 50, height: 50 }} name={"LineSpinFadeLoader"} color={"#f3d25b"} />
           </View>
         ) : (
           <View style={styles.contentContainer}>
@@ -1095,77 +1131,77 @@ const removeUser = async () => {
                   style={styles.menuItemTouchable}
                   onPress={() => {
                     if (item.action) {
-                      item.action();
+                      item.action()
                     } else if (item.route) {
-                      navigation.navigate(item.route);
+                      navigation.navigate(item.route)
                     }
-                  }}>
-                  <Animatable.View
-                    animation={item.animation}
-                    style={styles.menuItem}>
+                  }}
+                >
+                  <Animatable.View animation={item.animation} style={styles.menuItem}>
                     <Image
                       source={item.icon}
                       resizeMode="cover"
                       style={[
                         styles.menuIcon,
                         {
-                          backgroundColor:
-                            item.text === 'Sign Out'
-                              ? 'transparent'
-                              : '#f3d25b',
+                          backgroundColor: item.text === "Sign Out" ? "transparent" : "#f3d25b",
                         },
                       ]}
                     />
-                    <Text style={[styles.menuText, item.textStyle]}>
-                      {item.text}
-                    </Text>
+                    <Text style={[styles.menuText, item.textStyle]}>{item.text}</Text>
                   </Animatable.View>
                 </TouchableOpacity>
               ))}
             </View>
 
             <View style={styles.footerImageContainer}>
-              <Image
-                source={require('../../assets/images/gg12.png')}
-                resizeMode="contain"
-                style={styles.footerImage}
-              />
+              <Image source={require("../../assets/images/gg12.png")} resizeMode="contain" style={styles.footerImage} />
             </View>
           </View>
         )}
 
-        {/* Logout Modal */}
+        {/* Updated Logout Modal with loading state */}
         <Modal isVisible={isModalVisible} backdropOpacity={0.7}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Are you sure want logout?</Text>
-            <View style={styles.modalButtonsContainer}>
-              <LinearGradient
-                start={{x: 1, y: 0}}
-                end={{x: 0, y: 0}}
-                colors={['#874701', '#874701', '#874701']}
-                style={styles.modalButton}>
-                <TouchableOpacity onPress={toggleModal}>
-                  <Text style={styles.modalButtonText}>Cancel</Text>
-                </TouchableOpacity>
-              </LinearGradient>
-              <LinearGradient
-                start={{x: 1, y: 0}}
-                end={{x: 0, y: 0}}
-                colors={['#874701', '#874701', '#874701']}
-                style={styles.modalButton}>
-                <TouchableOpacity onPress={removeUser}>
-                  <Text style={styles.modalButtonText}>Yes</Text>
-                </TouchableOpacity>
-              </LinearGradient>
-            </View>
+
+            {isLoggingOut ? (
+              <View style={styles.loadingContainer}>
+                <LoaderKit style={{ width: 30, height: 30 }} name={"LineSpinFadeLoader"} color={"#874701"} />
+                <Text style={styles.loadingText}>Logging out...</Text>
+              </View>
+            ) : (
+              <View style={styles.modalButtonsContainer}>
+                <LinearGradient
+                  start={{ x: 1, y: 0 }}
+                  end={{ x: 0, y: 0 }}
+                  colors={["#874701", "#874701", "#874701"]}
+                  style={styles.modalButton}
+                >
+                  <TouchableOpacity onPress={toggleModal}>
+                    <Text style={styles.modalButtonText}>Cancel</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+                <LinearGradient
+                  start={{ x: 1, y: 0 }}
+                  end={{ x: 0, y: 0 }}
+                  colors={["#874701", "#874701", "#874701"]}
+                  style={styles.modalButton}
+                >
+                  <TouchableOpacity onPress={removeUser}>
+                    <Text style={styles.modalButtonText}>Yes</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+              </View>
+            )}
           </View>
         </Modal>
       </ImageBackground>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default More;
+export default More
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -1173,37 +1209,37 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     paddingHorizontal: 10,
     paddingTop: 10,
   },
   loaderContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   menuContainer: {
-    width: '100%',
+    width: "100%",
   },
   menuItemTouchable: {
     marginBottom: 5,
   },
   menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 13,
     paddingHorizontal: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderBottomWidth: 1,
-    borderColor: '#f3d25b',
+    borderColor: "#f3d25b",
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -1217,48 +1253,58 @@ const styles = StyleSheet.create({
     height: 25,
   },
   menuText: {
-    color: 'black',
+    color: "black",
     fontSize: 16,
     paddingLeft: 10,
-    fontFamily: 'Poppins-ExtraBold',
+    fontFamily: "Poppins-ExtraBold",
   },
   footerImageContainer: {
-    width: '100%',
+    width: "100%",
     height: 100,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   footerImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   modalContainer: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
     padding: 20,
   },
   modalTitle: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 17,
-    fontWeight: '600',
-    color: 'black',
-    fontFamily: 'Poppins-SemiBoldItalic',
+    fontWeight: "600",
+    color: "black",
+    fontFamily: "Poppins-SemiBoldItalic",
     marginBottom: 20,
   },
   modalButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   modalButton: {
     height: 40,
     width: 100,
     borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 15,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: "Poppins-Regular",
   },
-});
+  loadingContainer: {
+    alignItems: "center",
+    paddingVertical: 10,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: "#874701",
+    fontFamily: "Poppins-Regular",
+  },
+})

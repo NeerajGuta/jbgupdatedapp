@@ -23,7 +23,7 @@ const Pay = ({ navigation, route }) => {
 
   const userID = async (userId) => {
     try {
-      const response = await axios.get(`https://justbuygold.co.in/api/v1/user/auth/user/${userId}`)
+      const response = await axios.get(`http://192.168.1.26:3034/api/v1/user/auth/user/${userId}`)
 
       if (response.status === 200) {
         setGetuser(response.data.user)
@@ -48,7 +48,7 @@ const Pay = ({ navigation, route }) => {
       //   throw new Error('User ID is not available');
       // }
 
-      const res = await axios.get(`https://justbuygold.co.in/api/v1/refCode/${user._id}`)
+      const res = await axios.get(`http://192.168.1.26:3034/api/v1/refCode/${user._id}`)
 
       // console.log('referalcode', res);
 
@@ -97,7 +97,7 @@ const Pay = ({ navigation, route }) => {
 
   const handleReferralSubmit = async () => {
     try {
-      const response = await axios.put("https://justbuygold.co.in/api/v1/changestatus", {
+      const response = await axios.put("http://192.168.1.26:3034/api/v1/changestatus", {
         receiverId: user?._id,
       })
       console.log("Success", response.data.message)
@@ -118,7 +118,7 @@ const Pay = ({ navigation, route }) => {
   // console.log(datas, 'dstsss');
   const fetchUserReferralStats = async (userId) => {
     try {
-      const response = await axios.get(`https://justbuygold.co.in/api/v1/user/${userId}`)
+      const response = await axios.get(`http://192.168.1.26:3034/api/v1/user/${userId}`)
       if (response.status === 200) {
         setData(response.data.totalRupeesEarned)
       } else {
@@ -139,7 +139,7 @@ const Pay = ({ navigation, route }) => {
       const config = {
         url: "/transaction",
         method: "post",
-        baseURL: "https://justbuygold.co.in/api/v1/transactions",
+        baseURL: "http://192.168.1.26:3034/api/v1/transactions",
         headers: { "content-type": "application/json" },
         data: {
           UserId: user?._id,
@@ -217,7 +217,7 @@ const Pay = ({ navigation, route }) => {
     const config = {
       url: "/getGst",
       method: "get",
-      baseURL: "https://justbuygold.co.in/api/v1/gst",
+      baseURL: "http://192.168.1.26:3034/api/v1/gst",
       headers: { "conttent-type": "application/json" },
     }
     try {
@@ -237,7 +237,7 @@ const Pay = ({ navigation, route }) => {
   // console.log(objRate, 'objRate>>>>>>>>>>>>>>>>...');
   const getRate = async () => {
     try {
-      await axios.get("https://justbuygold.co.in/api/v1/rate/allrate").then((res) => {
+      await axios.get("http://192.168.1.26:3034/api/v1/rate/allrate").then((res) => {
         if (res.status === 200) {
           setRate(res.data.success)
           setObjRate(res.data.success[0])

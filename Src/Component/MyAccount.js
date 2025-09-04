@@ -114,7 +114,7 @@
 //       });
 
 //       const response = await fetch(
-//         'https://justbuygold.co.in/api/v1/user/auth/updateuser',
+//         'http://192.168.1.26:3034/api/v1/user/auth/updateuser',
 //         {
 //           method: 'PUT',
 //           headers: {
@@ -173,7 +173,7 @@
 //                     onPress={() => navigation.navigate('Imagezoom', {user})}>
 //                     <Image
 //                       source={{
-//                         uri: `https://justbuygold.co.in/User/${user?.profileimage}`,
+//                         uri: `http://192.168.1.26:3034/User/${user?.profileimage}`,
 //                       }}
 //                       resizeMode="cover"
 //                       style={[
@@ -315,7 +315,7 @@
 //               <View style={styles.profiles}>
 //                 <Image
 //                   source={{
-//                     uri: `https://justbuygold.co.in/User/${user?.profileimage}`,
+//                     uri: `http://192.168.1.26:3034/User/${user?.profileimage}`,
 //                   }}
 //                   resizeMode="cover"
 //                   style={[
@@ -356,7 +356,7 @@
 //                         imageSource
 //                           ? {uri: `${imageSource}?${new Date().getTime()}`}
 //                           : {
-//                               uri: `https://justbuygold.co.in/User/${user?.profileimage}`,
+//                               uri: `http://192.168.1.26:3034/User/${user?.profileimage}`,
 //                             }
 //                       }
 //                       resizeMode="cover"
@@ -909,7 +909,7 @@ const MyAccount = () => {
       }
 
       const response = await fetch(
-        'https://justbuygold.co.in/api/v1/user/auth/updateuser',
+        'http://192.168.1.26:3034/api/v1/user/auth/updateuser',
         {
           method: 'PUT',
           headers: {
@@ -976,7 +976,7 @@ const MyAccount = () => {
                       onPress={() => navigation.navigate('Imagezoom', {user})}>
                       <Image
                         source={{
-                          uri: `https://justbuygold.co.in/User/${user?.profileimage}`,
+                          uri: `http://192.168.1.26:3034/User/${user?.profileimage}`,
                         }}
                         style={styles.profileImage}
                       />
@@ -1032,7 +1032,7 @@ const MyAccount = () => {
                     source={{
                       uri: imageSource
                         ? `${imageSource}?${new Date().getTime()}`
-                        : `https://justbuygold.co.in/User/${user?.profileimage}`,
+                        : `http://192.168.1.26:3034/User/${user?.profileimage}`,
                     }}
                     style={styles.profileImage}
                   />
@@ -1067,7 +1067,7 @@ const MyAccount = () => {
                       source={{
                         uri: imageSource
                           ? `${imageSource}?${new Date().getTime()}`
-                          : `https://justbuygold.co.in/User/${user?.profileimage}`,
+                          : `http://192.168.1.26:3034/User/${user?.profileimage}`,
                       }}
                       style={styles.largerProfileImage}
                     />

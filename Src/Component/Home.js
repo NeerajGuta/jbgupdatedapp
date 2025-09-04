@@ -44,7 +44,7 @@
 //     const config = {
 //       url: '/getGst',
 //       method: 'get',
-//       baseURL: 'https://justbuygold.co.in/api/v1/gst',
+//       baseURL: 'http://192.168.1.26:3034/api/v1/gst',
 //       headers: {'conttent-type': 'application/json'},
 //     };
 //     try {
@@ -69,7 +69,7 @@
 //     try {
 //       await axios
 //         .get(
-//           'https://justbuygold.co.in/api/v1/transactions/transactionhistory/' +
+//           'http://192.168.1.26:3034/api/v1/transactions/transactionhistory/' +
 //             user?._id,
 //         )
 //         .then(res => {
@@ -99,7 +99,7 @@
 
 //       setLoading(false); // Start loading before fetching
 //       const res = await axios.get(
-//         `https://justbuygold.co.in/api/v1/coins/singalcoins/${parsedUser?._id}`,
+//         `http://192.168.1.26:3034/api/v1/coins/singalcoins/${parsedUser?._id}`,
 //       );
 
 //       if (res.status === 200) {
@@ -128,7 +128,7 @@
 //   const getRate = async () => {
 //     try {
 //       await axios
-//         .get('https://justbuygold.co.in/api/v1/rate/allrate')
+//         .get('http://192.168.1.26:3034/api/v1/rate/allrate')
 //         .then(res => {
 //           if (res.status === 200) {
 //             setRate(res.data.success);
@@ -154,7 +154,7 @@
 //   const getVideo = async () => {
 //     try {
 //       await axios
-//         .get('https://justbuygold.co.in/api/v1/video/allvideo')
+//         .get('http://192.168.1.26:3034/api/v1/video/allvideo')
 //         .then(res => {
 //           if (res.status === 200) {
 //             setvideo(res.data.success);
@@ -227,7 +227,7 @@
 //       const config = {
 //         url: '/addCoins',
 //         method: 'post',
-//         baseURL: 'https://justbuygold.co.in/api/v1/coins',
+//         baseURL: 'http://192.168.1.26:3034/api/v1/coins',
 //         headers: {'content-type': 'application/json'},
 //         data: {
 //           UserId: user?._id,
@@ -308,7 +308,7 @@
 //       const config = {
 //         url: '/transaction',
 //         method: 'post',
-//         baseURL: 'https://justbuygold.co.in/api/v1/transactions',
+//         baseURL: 'http://192.168.1.26:3034/api/v1/transactions',
 //         headers: {'content-type': 'application/json'},
 //         data: {
 //           UserId: user?._id,
@@ -349,7 +349,7 @@
 //   //     const config = {
 //   //       url: '/makepayment',
 //   //       method: 'post',
-//   //       baseURL: 'https://justbuygold.co.in/api/v1/transactions',
+//   //       baseURL: 'http://192.168.1.26:3034/api/v1/transactions',
 //   //       data: {
 //   //         merchantTransactionId: newMerchantTransactionId,
 //   //         merchantUserId: '2342343',
@@ -1167,7 +1167,7 @@
 //     const config = {
 //       url: '/getGst',
 //       method: 'get',
-//       baseURL: 'https://justbuygold.co.in/api/v1/gst',
+//       baseURL: 'http://192.168.1.26:3034/api/v1/gst',
 //       headers: {'conttent-type': 'application/json'},
 //     };
 //     try {
@@ -1192,7 +1192,7 @@
 //     try {
 //       await axios
 //         .get(
-//           'https://justbuygold.co.in/api/v1/transactions/transactionhistory/' +
+//           'http://192.168.1.26:3034/api/v1/transactions/transactionhistory/' +
 //             user?._id,
 //         )
 //         .then(res => {
@@ -1222,7 +1222,7 @@
 
 //       setLoading(false); // Start loading before fetching
 //       const res = await axios.get(
-//         `https://justbuygold.co.in/api/v1/coins/singalcoins/${parsedUser?._id}`,
+//         `http://192.168.1.26:3034/api/v1/coins/singalcoins/${parsedUser?._id}`,
 //       );
 
 //       if (res.status === 200) {
@@ -1251,7 +1251,7 @@
 //   const getRate = async () => {
 //     try {
 //       await axios
-//         .get('https://justbuygold.co.in/api/v1/rate/allrate')
+//         .get('http://192.168.1.26:3034/api/v1/rate/allrate')
 //         .then(res => {
 //           if (res.status === 200) {
 //             setRate(res.data.success);
@@ -1277,7 +1277,7 @@
 //   const getVideo = async () => {
 //     try {
 //       await axios
-//         .get('https://justbuygold.co.in/api/v1/video/allvideo')
+//         .get('http://192.168.1.26:3034/api/v1/video/allvideo')
 //         .then(res => {
 //           if (res.status === 200) {
 //             setvideo(res.data.success);
@@ -1350,7 +1350,7 @@
 //       const config = {
 //         url: '/addCoins',
 //         method: 'post',
-//         baseURL: 'https://justbuygold.co.in/api/v1/coins',
+//         baseURL: 'http://192.168.1.26:3034/api/v1/coins',
 //         headers: {'content-type': 'application/json'},
 //         data: {
 //           UserId: user?._id,
@@ -1434,7 +1434,7 @@
 //       const config = {
 //         url: '/transaction',
 //         method: 'post',
-//         baseURL: 'https://justbuygold.co.in/api/v1/transactions',
+//         baseURL: 'http://192.168.1.26:3034/api/v1/transactions',
 //         headers: {'content-type': 'application/json'},
 //         data: {
 //           UserId: user?._id,
@@ -1475,7 +1475,7 @@
 //   //     const config = {
 //   //       url: '/makepayment',
 //   //       method: 'post',
-//   //       baseURL: 'https://justbuygold.co.in/api/v1/transactions',
+//   //       baseURL: 'http://192.168.1.26:3034/api/v1/transactions',
 //   //       data: {
 //   //         merchantTransactionId: newMerchantTransactionId,
 //   //         merchantUserId: '2342343',
@@ -2369,7 +2369,7 @@ function Home() {
     const config = {
       url: '/getGst',
       method: 'get',
-      baseURL: 'https://justbuygold.co.in/api/v1/gst',
+      baseURL: 'http://192.168.1.26:3034/api/v1/gst',
       headers: {'conttent-type': 'application/json'},
     };
     try {
@@ -2394,7 +2394,7 @@ function Home() {
     try {
       await axios
         .get(
-          'https://justbuygold.co.in/api/v1/transactions/transactionhistory/' +
+          'http://192.168.1.26:3034/api/v1/transactions/transactionhistory/' +
             user?._id,
         )
         .then(res => {
@@ -2424,7 +2424,7 @@ function Home() {
 
       setLoading(false); // Start loading before fetching
       const res = await axios.get(
-        `https://justbuygold.co.in/api/v1/coins/singalcoins/${parsedUser?._id}`,
+        `http://192.168.1.26:3034/api/v1/coins/singalcoins/${parsedUser?._id}`,
       );
 
       if (res.status === 200) {
@@ -2453,7 +2453,7 @@ function Home() {
   const getRate = async () => {
     try {
       await axios
-        .get('https://justbuygold.co.in/api/v1/rate/allrate')
+        .get('http://192.168.1.26:3034/api/v1/rate/allrate')
         .then(res => {
           if (res.status === 200) {
             setRate(res.data.success);
@@ -2479,7 +2479,7 @@ function Home() {
   const getVideo = async () => {
     try {
       await axios
-        .get('https://justbuygold.co.in/api/v1/video/allvideo')
+        .get('http://192.168.1.26:3034/api/v1/video/allvideo')
         .then(res => {
           if (res.status === 200) {
             setvideo(res.data.success);
@@ -2552,7 +2552,7 @@ function Home() {
       const config = {
         url: '/addCoins',
         method: 'post',
-        baseURL: 'https://justbuygold.co.in/api/v1/coins',
+        baseURL: 'http://192.168.1.26:3034/api/v1/coins',
         headers: {'content-type': 'application/json'},
         data: {
           UserId: user?._id,
@@ -2636,7 +2636,7 @@ function Home() {
       const config = {
         url: '/transaction',
         method: 'post',
-        baseURL: 'https://justbuygold.co.in/api/v1/transactions',
+        baseURL: 'http://192.168.1.26:3034/api/v1/transactions',
         headers: {'content-type': 'application/json'},
         data: {
           UserId: user?._id,
@@ -2677,7 +2677,7 @@ function Home() {
   //     const config = {
   //       url: '/makepayment',
   //       method: 'post',
-  //       baseURL: 'https://justbuygold.co.in/api/v1/transactions',
+  //       baseURL: 'http://192.168.1.26:3034/api/v1/transactions',
   //       data: {
   //         merchantTransactionId: newMerchantTransactionId,
   //         merchantUserId: '2342343',
