@@ -122,48 +122,51 @@
 //   },
 // });
 
-import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ImageBackground,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Image} from 'react-native-animatable';
+import { StyleSheet, Text, View, ScrollView, Dimensions, TouchableOpacity, StatusBar, Platform } from "react-native"
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
+import FontAwesome6 from "react-native-vector-icons/FontAwesome6"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import { Image } from "react-native-animatable"
+import LinearGradient from "react-native-linear-gradient"
+import { useNavigation } from "@react-navigation/native"
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get("window")
 
 const Help = () => {
+  const navigation = useNavigation()
+
   return (
-    <ImageBackground
-      source={require('../../assets/images/app-bg.jpg')}
-      style={styles.background}
-      resizeMode="cover">
-      <SafeAreaView style={styles.safeArea}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <View style={styles.container}>
+      <StatusBar backgroundColor="#f3d25b" barStyle="dark-content" />
+
+     {/*  <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.headerGradient}>
+        <View style={styles.headerContent}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <MaterialIcons name="arrow-back" size={20} color="#874701" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Help & Support</Text>
+          <View style={styles.headerSpacer} />
+        </View>
+      </LinearGradient> */}
+
+      <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+        <View style={styles.contentContainer}>
           <View style={styles.container1}>
             <View style={styles.contact}>
-              <FontAwesome5 name="phone-alt" size={22} style={styles.service} />
+              <View style={styles.iconContainer}>
+                <FontAwesome5 name="phone-alt" size={20} color="#874701" />
+              </View>
               <View style={styles.textContainer}>
                 <Text style={styles.textfont}>Our 24x7 Customer Service</Text>
-                <Text style={styles.textfont1}>
-                  +91 9019095596 / 9019070105
-                </Text>
+                <Text style={styles.textfont1}>+91 9019095596 / 9019070105</Text>
               </View>
             </View>
 
             <View style={styles.contact}>
-              <MaterialCommunityIcons
-                name="email-outline"
-                size={22}
-                style={styles.service}
-              />
+              <View style={styles.iconContainer}>
+                <MaterialCommunityIcons name="email-outline" size={20} color="#874701" />
+              </View>
               <View style={styles.textContainer}>
                 <Text style={styles.textfont}>Write us at</Text>
                 <Text style={styles.textfont1}>justbuygold100@gmail.com</Text>
@@ -171,93 +174,145 @@ const Help = () => {
             </View>
 
             <View style={styles.contact}>
-              <FontAwesome6
-                name="location-dot"
-                size={22}
-                style={styles.service}
-              />
+              <View style={styles.iconContainer}>
+                <FontAwesome6 name="location-dot" size={20} color="#874701" />
+              </View>
               <View style={styles.textContainer}>
                 <Text style={styles.textfont}>Location</Text>
                 <Text style={styles.textfont1}>
-                  Ground Floor, No 3, 9th A Main Road, Byraweshwara Nagar,
-                  Nagarbhavi, Bengaluru Karnataka{'\n'}560072
+                  Ground Floor, No 3, 9th A Main Road, Byraweshwara Nagar, Nagarbhavi, Bengaluru Karnataka{"\n"}560072
                 </Text>
               </View>
             </View>
 
-            <Image
-              source={require('../../assets/images/g11.png')}
-              resizeMode="contain"
-              style={styles.image}
-            />
+           {/*  <View style={styles.imageCard}>
+              <Image source={require("../../assets/images/g11.png")} resizeMode="contain" style={styles.image} />
+            </View> */}
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </ImageBackground>
-  );
-};
+        </View>
+      </ScrollView>
+    </View>
+  )
+}
 
-export default Help;
+export default Help
 
 const styles = StyleSheet.create({
-  background: {
+  container: {
     flex: 1,
-  },
-  safeArea: {
-    flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: "#ffffff",
   },
   scrollContainer: {
-    paddingBottom: 20,
+    backgroundColor: "#f8f9fa",
+  },
+
+  headerGradient: {
+    paddingTop: Platform.OS === "ios" ? 50 : 20,
+    paddingBottom: 15,
+  },
+  headerContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+  },
+  backButton: {
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#874701",
+    fontFamily: "Poppins-SemiBoldItalic",
+  },
+  headerSpacer: {
+    width: 36,
+  },
+
+  contentContainer: {
+    padding: 15,
   },
   container1: {
     flex: 1,
-    padding: 10,
   },
+
   contact: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 20,
-    padding: 15,
-    marginVertical: 10,
-    marginHorizontal: 10,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  service: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    paddingVertical: 22,
+    paddingHorizontal: 24,
+    marginBottom: 16,
+    backgroundColor: "#ffffff",
+    borderRadius: 18,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 8,
     borderWidth: 1,
-    height: 50,
-    width: 50,
-    padding: 11,
-    textAlign: 'center',
-    borderRadius: 50,
-    borderColor: 'white',
-    backgroundColor: 'white',
-    color: '#feac03',
-    textAlignVertical: 'center',
+    borderColor: "#f0f0f0",
   },
+
+  iconContainer: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: "#f3d25b",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 18,
+    shadowColor: "#f3d25b",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+
   textContainer: {
     flex: 1,
   },
+
   textfont: {
-    color: 'black',
+    color: "#1a1a1a",
     fontSize: 17,
-    fontFamily: 'Poppins-ExtraBoldItalic',
+    fontWeight: "700",
+    fontFamily: "Poppins-SemiBoldItalic",
+    marginBottom: 6,
+    letterSpacing: 0.3,
   },
   textfont1: {
-    color: 'black',
+    color: "#4a5568",
     fontSize: 15,
-    fontFamily: 'Poppins-SemiBoldItalic',
+    fontFamily: "Poppins-Regular",
+    lineHeight: 22,
+    letterSpacing: 0.2,
+  },
+
+  imageCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 24,
+    marginTop: 24,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 10,
+    overflow: "hidden",
+    borderWidth: 2,
+    borderColor: "#f3d25b20",
   },
   image: {
-    width: width - 40,
-    height: 300,
-    alignSelf: 'center',
-    marginTop: 20,
+    width: "100%",
+    height: 320,
   },
-});
+})

@@ -1,24 +1,25 @@
+"use client"
+
 import { useState, useEffect } from "react"
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   StatusBar,
   ActivityIndicator,
-  Image,
   Animated,
   Platform,
   Alert,
+  Dimensions,
 } from "react-native"
-import FontAwesome6 from "react-native-vector-icons/FontAwesome6"
-import Ionicons from "react-native-vector-icons/Ionicons"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import { useNavigation } from "@react-navigation/native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Toast from "./Toast"
 import useToast from "../hooks/useToast"
+
+const { width: screenWidth } = Dimensions.get("window")
 
 const PinVerification = ({ route }) => {
   const navigation = useNavigation()
@@ -36,25 +37,17 @@ const PinVerification = ({ route }) => {
   const MAX_ATTEMPTS = 5
   const LOCK_DURATION = 300 // 5 minutes in seconds
 
-  // Safe vibration function that handles permission issues
+  // Safe vibration function
   const safeVibrate = (pattern = [0, 100]) => {
     try {
       if (Platform.OS === "android") {
-        // For Android, we'll use a visual shake instead of vibration
-        // to avoid permission issues
         console.log("Vibration requested but using visual feedback instead")
-      } else {
-        // iOS doesn't require permission for basic vibration
+      } else if (Platform.OS === "ios") {
         const { Vibration } = require("react-native")
-        if (Array.isArray(pattern)) {
-          Vibration.vibrate(pattern)
-        } else {
-          Vibration.vibrate(pattern)
-        }
+        Vibration.vibrate()
       }
     } catch (error) {
       console.log("Vibration not available:", error.message)
-      // Fallback to visual feedback only
     }
   }
 
@@ -91,11 +84,10 @@ const PinVerification = ({ route }) => {
   const handleBackspace = () => {
     if (isLocked) return
     setPin(pin.slice(0, -1))
-    setShowWrongPin(false) // Hide wrong pin message when user starts correcting
+    setShowWrongPin(false)
   }
 
   const shakeError = () => {
-    // Safe vibration with fallback
     safeVibrate([0, 100, 50, 100])
 
     // Visual shake animation
@@ -111,7 +103,6 @@ const PinVerification = ({ route }) => {
   const showWrongPinMessage = () => {
     setShowWrongPin(true)
 
-    // Animate wrong pin message
     Animated.sequence([
       Animated.timing(wrongPinAnimation, { toValue: 1, duration: 300, useNativeDriver: true }),
       Animated.delay(2000),
@@ -202,9 +193,6 @@ const PinVerification = ({ route }) => {
           setIsLocked(true)
           setLockTimer(LOCK_DURATION)
           showError(`Account locked. Try again in ${formatTime(LOCK_DURATION)}.`)
-        } else {
-          // Don't show toast, use the visual wrong pin message instead
-          console.log(`Wrong PIN. ${MAX_ATTEMPTS - newAttemptCount} attempts remaining.`)
         }
 
         // Clear PIN after a short delay
@@ -257,7 +245,7 @@ const PinVerification = ({ route }) => {
       [1, 2, 3],
       [4, 5, 6],
       [7, 8, 9],
-      ["", 0, "backspace"],
+      [null, 0, "backspace"],
     ]
 
     return (
@@ -265,8 +253,8 @@ const PinVerification = ({ route }) => {
         {numbers.map((row, rowIndex) => (
           <View key={rowIndex} style={styles.numberRow}>
             {row.map((item, colIndex) => {
-              if (item === "") {
-                return <View key={colIndex} style={styles.numberButton} />
+              if (item === null) {
+                return <View key={colIndex} style={styles.emptyButton} />
               }
 
               if (item === "backspace") {
@@ -278,7 +266,7 @@ const PinVerification = ({ route }) => {
                     activeOpacity={0.7}
                     disabled={isLocked}
                   >
-                    <Ionicons name="backspace-outline" size={24} color={isLocked ? "#ccc" : "#874701"} />
+                    <MaterialIcons name="backspace" size={24} color={isLocked ? "#ccc" : "#874701"} />
                   </TouchableOpacity>
                 )
               }
@@ -304,7 +292,7 @@ const PinVerification = ({ route }) => {
   return (
     <>
       <StatusBar backgroundColor="#f3d25b" barStyle="light-content" />
-      <View style={styles.container}>
+      <View style={styles.fullScreenContainer}>
         <Toast
           visible={toastConfig.visible}
           message={toastConfig.message}
@@ -318,72 +306,57 @@ const PinVerification = ({ route }) => {
           </View>
         )}
 
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-              <FontAwesome6 name="arrow-left-long" size={20} color="white" />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.logoContainer}>
-            <Image source={require("../../assets/images/newlogo.png")} style={styles.logo} resizeMode="cover" />
-          </View>
-
-          <View style={styles.contentContainer}>
+        {/* FULL SCREEN CONTENT */}
+        <View style={styles.fullScreenContent}>
+          <View style={styles.headerSection}>
             <Text style={styles.title}>Enter Your PIN</Text>
-
             <Text style={styles.subtitle}>
               {isLocked
                 ? `Account locked. Try again in ${formatTime(lockTimer)}`
                 : "Please enter your 4-digit PIN to continue"}
             </Text>
+          </View>
 
-            {/* Professional Wrong PIN Message */}
-            {showWrongPin && (
-              <Animated.View
-                style={[
-                  styles.wrongPinContainer,
-                  { opacity: wrongPinAnimation, transform: [{ scale: wrongPinAnimation }] },
-                ]}
-              >
-                <MaterialIcons name="error" size={20} color="#FF4444" />
-                <Text style={styles.wrongPinText}>Wrong PIN</Text>
-              </Animated.View>
-            )}
-
-            {/* Attempt Warning */}
-            {attemptCount > 0 && !isLocked && !showWrongPin && (
-              <View style={styles.attemptWarningContainer}>
-                <MaterialIcons name="warning" size={16} color="#FF8C00" />
-                <Text style={styles.attemptWarning}>{MAX_ATTEMPTS - attemptCount} attempts remaining</Text>
-              </View>
-            )}
-
-            {/* Locked Warning */}
-            {isLocked && (
-              <View style={styles.lockedContainer}>
-                <MaterialIcons name="lock" size={20} color="#FF4444" />
-                <Text style={styles.lockedText}>Account temporarily locked</Text>
-              </View>
-            )}
-
-            {renderPinDots()}
-            {renderNumberPad()}
-
-            {/* <TouchableOpacity
-              style={[styles.forgotPinButton, isLocked && styles.disabledButton]}
-              onPress={handleForgotPin}
-              disabled={isLocked}
+          {/* Professional Wrong PIN Message */}
+          {showWrongPin && (
+            <Animated.View
+              style={[
+                styles.wrongPinContainer,
+                { opacity: wrongPinAnimation, transform: [{ scale: wrongPinAnimation }] },
+              ]}
             >
-              <Text style={[styles.forgotPinText, isLocked && styles.disabledText]}>Forgot PIN?</Text>
-            </TouchableOpacity> */}
+              <MaterialIcons name="error" size={20} color="#FF4444" />
+              <Text style={styles.wrongPinText}>Wrong PIN</Text>
+            </Animated.View>
+          )}
 
+          {/* Attempt Warning */}
+          {attemptCount > 0 && !isLocked && !showWrongPin && (
+            <View style={styles.attemptWarningContainer}>
+              <MaterialIcons name="warning" size={16} color="#FF8C00" />
+              <Text style={styles.attemptWarning}>{MAX_ATTEMPTS - attemptCount} attempts remaining</Text>
+            </View>
+          )}
+
+          {/* Locked Warning */}
+          {isLocked && (
+            <View style={styles.lockedContainer}>
+              <MaterialIcons name="lock" size={20} color="#FF4444" />
+              <Text style={styles.lockedText}>Account temporarily locked</Text>
+            </View>
+          )}
+
+          <View style={styles.pinSection}>{renderPinDots()}</View>
+
+          <View style={styles.keypadSection}>{renderNumberPad()}</View>
+
+          <View style={styles.footerSection}>
             <View style={styles.securityNote}>
-              <Ionicons name="shield-checkmark" size={20} color="#874701" />
+              <MaterialIcons name="security" size={20} color="#874701" />
               <Text style={styles.securityText}>Your PIN keeps your account secure</Text>
             </View>
           </View>
-        </ScrollView>
+        </View>
       </View>
     </>
   )
@@ -392,7 +365,8 @@ const PinVerification = ({ route }) => {
 export default PinVerification
 
 const styles = StyleSheet.create({
-  container: {
+  // FULL SCREEN STYLES
+  fullScreenContainer: {
     flex: 1,
     backgroundColor: "#f3d25b",
   },
@@ -403,116 +377,104 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 10,
   },
-  scrollContainer: {
-    flexGrow: 1,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    paddingHorizontal: 20,
-    paddingTop: 20,
-  },
-  backButton: {
-    padding: 10,
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginTop: 30,
-    marginBottom: 40,
-  },
-  logo: {
-    width: 100,
-    height: 100,
-  },
-  contentContainer: {
+  fullScreenContent: {
     flex: 1,
     backgroundColor: "white",
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    justifyContent: "space-between",
+  },
+  headerSection: {
+    alignItems: "center",
     paddingTop: 40,
-    paddingBottom: 60,
+    flex: 0.25,
+    justifyContent: "center",
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
     color: "#333",
     textAlign: "center",
-    marginBottom: 10,
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
     color: "#666",
     textAlign: "center",
-    marginBottom: 20,
   },
   wrongPinContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FFE6E6",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    marginBottom: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    marginBottom: 15,
     borderWidth: 1,
     borderColor: "#FF4444",
+    alignSelf: "center",
   },
   wrongPinText: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#FF4444",
     fontWeight: "600",
-    marginLeft: 8,
+    marginLeft: 6,
   },
   attemptWarningContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FFF3E0",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    marginBottom: 20,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 15,
+    marginBottom: 15,
     borderWidth: 1,
     borderColor: "#FF8C00",
+    alignSelf: "center",
   },
   attemptWarning: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#FF8C00",
     fontWeight: "600",
-    marginLeft: 6,
+    marginLeft: 4,
   },
   lockedContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FFE6E6",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    marginBottom: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    marginBottom: 15,
     borderWidth: 1,
     borderColor: "#FF4444",
+    alignSelf: "center",
   },
   lockedText: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#FF4444",
     fontWeight: "600",
-    marginLeft: 8,
+    marginLeft: 6,
+  },
+  pinSection: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 0.2,
   },
   pinDotsContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 50,
   },
   pinDot: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    marginHorizontal: 15,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    marginHorizontal: 12,
     borderWidth: 2,
-    transition: "all 0.3s ease",
   },
   pinDotEmpty: {
     backgroundColor: "transparent",
@@ -526,22 +488,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF4444",
     borderColor: "#FF4444",
   },
+  keypadSection: {
+    flex: 0.45,
+    justifyContent: "center",
+  },
   numberPadContainer: {
     alignItems: "center",
-    marginBottom: 30,
+    paddingVertical: 10,
   },
   numberRow: {
     flexDirection: "row",
-    marginBottom: 20,
-  },
-  numberButton: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: "#f8f9fa",
+    marginBottom: 16,
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 20,
+  },
+  numberButton: {
+    width: screenWidth * 0.2,
+    height: screenWidth * 0.2,
+    borderRadius: screenWidth * 0.1,
+    backgroundColor: "#ffffff",
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: screenWidth * 0.05,
     borderWidth: 1,
     borderColor: "#e9ecef",
     shadowColor: "#000",
@@ -549,6 +517,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+  },
+  emptyButton: {
+    width: screenWidth * 0.2,
+    height: screenWidth * 0.2,
+    marginHorizontal: screenWidth * 0.05,
   },
   backspaceButton: {
     backgroundColor: "#fff5f5",
@@ -560,23 +533,20 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   numberText: {
-    fontSize: 24,
+    fontSize: screenWidth * 0.06,
     fontWeight: "600",
     color: "#333",
+    textAlign: "center",
+    includeFontPadding: false,
+    textAlignVertical: "center",
   },
   disabledText: {
     color: "#ccc",
   },
-  forgotPinButton: {
+  footerSection: {
     alignItems: "center",
-    marginBottom: 30,
-    paddingVertical: 10,
-  },
-  forgotPinText: {
-    fontSize: 16,
-    color: "#874701",
-    fontWeight: "600",
-    textDecorationLine: "underline",
+    flex: 0.1,
+    justifyContent: "center",
   },
   securityNote: {
     flexDirection: "row",
@@ -585,8 +555,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   securityText: {
-    marginLeft: 8,
-    fontSize: 14,
+    marginLeft: 6,
+    fontSize: 12,
     color: "#666",
     textAlign: "center",
   },

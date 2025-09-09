@@ -4,20 +4,18 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   StatusBar,
   ActivityIndicator,
-  Image,
   Animated,
-  Vibration,
+  Dimensions,
 } from "react-native"
-import LinearGradient from "react-native-linear-gradient"
-import FontAwesome6 from "react-native-vector-icons/FontAwesome6"
-import Ionicons from "react-native-vector-icons/Ionicons"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import { useNavigation } from "@react-navigation/native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Toast from "./Toast"
 import useToast from "../hooks/useToast"
+
+const { width: screenWidth } = Dimensions.get("window")
 
 const PinCreation = ({ route }) => {
   const navigation = useNavigation()
@@ -49,7 +47,6 @@ const PinCreation = ({ route }) => {
   }
 
   const shakeError = () => {
-    Vibration.vibrate(100)
     Animated.sequence([
       Animated.timing(shakeAnimation, { toValue: 10, duration: 50, useNativeDriver: true }),
       Animated.timing(shakeAnimation, { toValue: -10, duration: 50, useNativeDriver: true }),
@@ -134,7 +131,7 @@ const PinCreation = ({ route }) => {
       [1, 2, 3],
       [4, 5, 6],
       [7, 8, 9],
-      ["", 0, "backspace"],
+      [null, 0, "backspace"],
     ]
 
     return (
@@ -142,8 +139,8 @@ const PinCreation = ({ route }) => {
         {numbers.map((row, rowIndex) => (
           <View key={rowIndex} style={styles.numberRow}>
             {row.map((item, colIndex) => {
-              if (item === "") {
-                return <View key={colIndex} style={styles.numberButton} />
+              if (item === null) {
+                return <View key={colIndex} style={styles.emptyButton} />
               }
 
               if (item === "backspace") {
@@ -154,7 +151,7 @@ const PinCreation = ({ route }) => {
                     onPress={handleBackspace}
                     activeOpacity={0.7}
                   >
-                    <Ionicons name="backspace-outline" size={24} color="#874701" />
+                    <MaterialIcons name="backspace" size={24} color="#874701" />
                   </TouchableOpacity>
                 )
               }
@@ -179,7 +176,7 @@ const PinCreation = ({ route }) => {
   return (
     <>
       <StatusBar backgroundColor="#f3d25b" barStyle="light-content" />
-      <View style={styles.container}>
+      <View style={styles.fullScreenContainer}>
         <Toast
           visible={toastConfig.visible}
           message={toastConfig.message}
@@ -193,61 +190,32 @@ const PinCreation = ({ route }) => {
           </View>
         )}
 
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-              <FontAwesome6 name="arrow-left-long" size={20} color="white" />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.logoContainer}>
-            <Image source={require("../../assets/images/newlogo.png")} style={styles.logo} resizeMode="cover" />
-          </View>
-
-          <View style={styles.contentContainer}>
-            <Text style={styles.title}>{step === 1 ? "Create new PIN for continue." : "Confirm your PIN"}</Text>
-
+        {/* FULL SCREEN CONTENT */}
+        <View style={styles.fullScreenContent}>
+          <View style={styles.headerSection}>
+            <Text style={styles.title}>{step === 1 ? "Create Your PIN" : "Confirm Your PIN"}</Text>
             <Text style={styles.subtitle}>
-              {step === 1 ? "Please enter your PIN to continue" : "Please re-enter your PIN to confirm"}
+              {step === 1
+                ? "Please create a 4-digit PIN to secure your account"
+                : "Please re-enter your PIN to confirm"}
             </Text>
+          </View>
 
+          <View style={styles.pinSection}>
             <Animated.View style={[styles.pinContainer, { transform: [{ translateX: shakeAnimation }] }]}>
               {renderPinDots(step === 1 ? pin : confirmPin)}
             </Animated.View>
+          </View>
 
-            {renderNumberPad()}
+          <View style={styles.keypadSection}>{renderNumberPad()}</View>
 
-            <View style={styles.proceedContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.proceedButton,
-                  (step === 1 ? pin.length === 4 : confirmPin.length === 4) && styles.proceedButtonActive,
-                ]}
-                onPress={() => {
-                  if (step === 1 && pin.length === 4) {
-                    setStep(2)
-                    showSuccess("Great! Now confirm your PIN")
-                  } else if (step === 2 && confirmPin.length === 4) {
-                    if (pin === confirmPin) {
-                      handlePinCreation()
-                    }
-                  }
-                }}
-                disabled={step === 1 ? pin.length !== 4 : confirmPin.length !== 4}
-                activeOpacity={0.8}
-              >
-                <LinearGradient colors={["#4CAF50", "#45a049"]} style={styles.proceedGradient}>
-                  <Text style={styles.proceedText}>Proceed</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
-
+          <View style={styles.footerSection}>
             <View style={styles.securityNote}>
-              <Ionicons name="shield-checkmark" size={20} color="#874701" />
+              <MaterialIcons name="security" size={20} color="#874701" />
               <Text style={styles.securityText}>Your PIN will be used to secure your account</Text>
             </View>
           </View>
-        </ScrollView>
+        </View>
       </View>
     </>
   )
@@ -256,7 +224,8 @@ const PinCreation = ({ route }) => {
 export default PinCreation
 
 const styles = StyleSheet.create({
-  container: {
+  // FULL SCREEN STYLES
+  fullScreenContainer: {
     flex: 1,
     backgroundColor: "#f3d25b",
   },
@@ -267,52 +236,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 10,
   },
-  scrollContainer: {
-    flexGrow: 1,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    paddingHorizontal: 20,
-    paddingTop: 20,
-  },
-  backButton: {
-    padding: 10,
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginTop: 30,
-    marginBottom: 40,
-  },
-  logo: {
-    width: 100,
-    height: 100,
-  },
-  contentContainer: {
+  fullScreenContent: {
     flex: 1,
     backgroundColor: "white",
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    justifyContent: "space-between",
+  },
+  headerSection: {
+    alignItems: "center",
     paddingTop: 40,
-    paddingBottom: 60,
+    flex: 0.25,
+    justifyContent: "center",
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
     color: "#333",
     textAlign: "center",
-    marginBottom: 10,
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
     color: "#666",
     textAlign: "center",
-    marginBottom: 40,
+  },
+  pinSection: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 0.2,
   },
   pinContainer: {
     alignItems: "center",
-    marginBottom: 50,
   },
   pinDotsContainer: {
     flexDirection: "row",
@@ -320,10 +275,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   pinDot: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    marginHorizontal: 15,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    marginHorizontal: 12,
     borderWidth: 2,
   },
   pinDotEmpty: {
@@ -334,22 +289,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#874701",
     borderColor: "#874701",
   },
+  keypadSection: {
+    flex: 0.45,
+    justifyContent: "center",
+  },
   numberPadContainer: {
     alignItems: "center",
-    marginBottom: 40,
+    paddingVertical: 10,
   },
   numberRow: {
     flexDirection: "row",
-    marginBottom: 20,
-  },
-  numberButton: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: "#f8f9fa",
+    marginBottom: 16,
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 20,
+  },
+  numberButton: {
+    width: screenWidth * 0.2,
+    height: screenWidth * 0.2,
+    borderRadius: screenWidth * 0.1,
+    backgroundColor: "#ffffff",
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: screenWidth * 0.05,
     borderWidth: 1,
     borderColor: "#e9ecef",
     shadowColor: "#000",
@@ -358,38 +319,27 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  emptyButton: {
+    width: screenWidth * 0.2,
+    height: screenWidth * 0.2,
+    marginHorizontal: screenWidth * 0.05,
+  },
   backspaceButton: {
     backgroundColor: "#fff5f5",
     borderColor: "#fed7d7",
   },
   numberText: {
-    fontSize: 24,
+    fontSize: screenWidth * 0.06,
     fontWeight: "600",
     color: "#333",
+    textAlign: "center",
+    includeFontPadding: false,
+    textAlignVertical: "center",
   },
-  proceedContainer: {
+  footerSection: {
     alignItems: "center",
-    marginBottom: 30,
-  },
-  proceedButton: {
-    width: "100%",
-    height: 50,
-    borderRadius: 25,
-    overflow: "hidden",
-    opacity: 0.5,
-  },
-  proceedButtonActive: {
-    opacity: 1,
-  },
-  proceedGradient: {
-    flex: 1,
+    flex: 0.1,
     justifyContent: "center",
-    alignItems: "center",
-  },
-  proceedText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
   },
   securityNote: {
     flexDirection: "row",
@@ -398,8 +348,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   securityText: {
-    marginLeft: 8,
-    fontSize: 14,
+    marginLeft: 6,
+    fontSize: 12,
     color: "#666",
     textAlign: "center",
   },

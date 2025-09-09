@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useState, useRef } from "react"
 import {
   Text,
@@ -9,10 +7,8 @@ import {
   AppState,
   TouchableOpacity,
   StatusBar,
-  Image,
   Animated,
   Platform,
-  ScrollView,
   Dimensions,
 } from "react-native"
 import Home from "./Src/Component/Home"
@@ -54,22 +50,30 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
-const { height: screenHeight } = Dimensions.get('window')
+const { height: screenHeight, width: screenWidth } = Dimensions.get("window")
 
-// App State Manager Hook - FIXED VERSION
+// FIXED App State Manager - Proper fresh start detection
 const useAppStateManager = () => {
   const [appState, setAppState] = useState(AppState.currentState)
   const [needsPinVerification, setNeedsPinVerification] = useState(false)
   const [isCheckingAuth, setIsCheckingAuth] = useState(true)
   const [isFirstLaunch, setIsFirstLaunch] = useState(true)
-  const appLaunchTime = useRef(Date.now())
+  const [splashCompleted, setSplashCompleted] = useState(false)
+  const [navigationTarget, setNavigationTarget] = useState(null)
+
+  // Track app session and background time
   const backgroundTime = useRef(null)
+  const appStartTime = useRef(Date.now()) // When this JS context started
+  const isFreshAppStart = useRef(null) // Will be set during initialization
 
   useEffect(() => {
-    // Only check authentication on the very first app launch
-    if (isFirstLaunch) {
-      console.log("🚀 FIRST APP LAUNCH - Checking if PIN needed")
-      checkAuthenticationForFreshLaunch()
+    // Initialize session tracking
+    initializeSession()
+
+    // Only check authentication AFTER splash is completed
+    if (isFirstLaunch && splashCompleted) {
+      console.log("🚀 SPLASH COMPLETED - Now checking authentication and navigation")
+      checkAuthenticationAndSetTarget()
       setIsFirstLaunch(false)
     }
 
@@ -81,9 +85,11 @@ const useAppStateManager = () => {
         const timeInBackground = backgroundTime.current ? Date.now() - backgroundTime.current : 0
         console.log(`🔄 App returned to foreground after ${timeInBackground}ms in background`)
 
-        // If PIN verification was already needed, keep it needed
-        // Only clear if user was already authenticated before going to background
-        console.log("📱 App returned from background - maintaining current PIN state")
+        // Only check PIN if splash was completed
+        if (splashCompleted) {
+          console.log("🔒 App resumed from background - checking if PIN is needed")
+          checkAuthenticationForAppResume()
+        }
       }
 
       // When app goes to background/inactive from active
@@ -91,8 +97,8 @@ const useAppStateManager = () => {
         backgroundTime.current = Date.now()
         console.log("📱 App went to background at:", new Date(backgroundTime.current).toLocaleTimeString())
 
-        // DO NOT set PIN verification needed for background transitions
-        // PIN is ONLY needed for fresh app launches
+        // Save session timestamp
+        saveBackgroundTimestamp()
       }
 
       setAppState(nextAppState)
@@ -101,71 +107,204 @@ const useAppStateManager = () => {
     const subscription = AppState.addEventListener("change", handleAppStateChange)
 
     return () => subscription?.remove()
-  }, [appState, isFirstLaunch])
+  }, [appState, isFirstLaunch, splashCompleted])
 
-  const checkAuthenticationForFreshLaunch = async () => {
+  // Initialize session tracking - FIXED to properly detect fresh starts
+  const initializeSession = async () => {
+    try {
+      // Check if there's a previous session timestamp
+      const lastBackgroundTime = await AsyncStorage.getItem("lastBackgroundTime")
+      const appSessionId = await AsyncStorage.getItem("appSessionId")
+      const currentSessionId = appStartTime.current.toString()
+
+      console.log("🔍 Session Check:")
+      console.log("  - Current session ID:", currentSessionId)
+      console.log("  - Stored session ID:", appSessionId)
+      console.log("  - Last background time:", lastBackgroundTime)
+
+      // Determine if this is a fresh start BEFORE updating session ID
+      if (appSessionId !== currentSessionId) {
+        console.log("🆕 NEW APP SESSION DETECTED - This is a fresh app start")
+        isFreshAppStart.current = true
+
+        // Clear old background timestamp since this is a new session
+        if (lastBackgroundTime) {
+          await AsyncStorage.removeItem("lastBackgroundTime")
+          console.log("🧹 Cleared old background timestamp for new session")
+        }
+
+        // Update session ID AFTER determining it's fresh
+        await AsyncStorage.setItem("appSessionId", currentSessionId)
+      } else {
+        console.log("🔄 SAME SESSION - This is app resume")
+        isFreshAppStart.current = false
+      }
+    } catch (error) {
+      console.error("Error initializing session:", error)
+      isFreshAppStart.current = true // Default to fresh start on error
+    }
+  }
+
+  // Save timestamp when app goes to background
+  const saveBackgroundTimestamp = async () => {
+    try {
+      const currentTime = Date.now()
+      await AsyncStorage.setItem("lastBackgroundTime", currentTime.toString())
+      console.log("💾 Saved background timestamp:", currentTime)
+    } catch (error) {
+      console.error("Error saving background timestamp:", error)
+    }
+  }
+
+  const checkAuthenticationAndSetTarget = async () => {
     try {
       setIsCheckingAuth(true)
-      console.log("🔍 Checking authentication for FRESH app launch")
+      console.log("🔍 Checking authentication and setting navigation target")
 
       // Check if user is logged in
-      const userLoggedIn = await AsyncStorage.getItem("userLoggedIn")
       const userDetails = await AsyncStorage.getItem("user")
+      const lastBackgroundTime = await AsyncStorage.getItem("lastBackgroundTime")
 
-      console.log("👤 User logged in flag:", userLoggedIn)
       console.log("📄 User details exist:", !!userDetails)
+      console.log("⏰ Last background time:", lastBackgroundTime)
+      console.log("🆔 Is fresh app start:", isFreshAppStart.current)
 
       // User is considered logged in if they have user details
       const isUserLoggedIn = userDetails !== null && userDetails !== undefined
 
       if (isUserLoggedIn) {
-        console.log("✅ User is logged in - checking if PIN exists")
-        const parsedUser = JSON.parse(userDetails)
-        const userId = parsedUser.id || parsedUser._id || parsedUser.phoneno
+        // Use the pre-determined fresh start flag
+        const isFreshStart = isFreshAppStart.current
 
-        // Check if user has a PIN
-        const userPinKey = `userPin_${userId}`
-        const storedPin = await AsyncStorage.getItem(userPinKey)
+        console.log("🔍 App start type:", isFreshStart ? "FRESH START" : "RESUME")
 
-        console.log("🔐 User has PIN:", !!storedPin)
+        if (isFreshStart) {
+          // This is a fresh app start - check if user has PIN
+          const parsedUser = JSON.parse(userDetails)
+          const userId = parsedUser.id || parsedUser._id || parsedUser.phoneno
+          const userPinKey = `userPin_${userId}`
+          const storedPin = await AsyncStorage.getItem(userPinKey)
 
-        if (storedPin) {
-          console.log("🔒 FRESH LAUNCH + PIN EXISTS = PIN VERIFICATION REQUIRED")
-          setNeedsPinVerification(true)
+          console.log("🔐 User has PIN:", !!storedPin)
+
+          if (storedPin) {
+            console.log("🔒 FRESH START + PIN EXISTS = PIN VERIFICATION REQUIRED")
+            setNeedsPinVerification(true)
+            setNavigationTarget("Home1")
+          } else {
+            console.log("🔓 Fresh start but no PIN set - going directly to Home1")
+            setNeedsPinVerification(false)
+            setNavigationTarget("Home1")
+          }
         } else {
-          console.log("🔓 No PIN found - no verification needed")
-          setNeedsPinVerification(false)
+          // This is app resume - check background time
+          if (lastBackgroundTime) {
+            const currentTime = Date.now()
+            const timeSinceBackground = currentTime - Number.parseInt(lastBackgroundTime)
+            const BACKGROUND_THRESHOLD = 5 * 60 * 1000 // 5 minutes
+
+            console.log(`⏰ Time since background: ${Math.round(timeSinceBackground / 1000)}s`)
+
+            if (timeSinceBackground > BACKGROUND_THRESHOLD) {
+              console.log("🔒 Long background time - PIN required")
+              const parsedUser = JSON.parse(userDetails)
+              const userId = parsedUser.id || parsedUser._id || parsedUser.phoneno
+              const userPinKey = `userPin_${userId}`
+              const storedPin = await AsyncStorage.getItem(userPinKey)
+
+              if (storedPin) {
+                setNeedsPinVerification(true)
+                setNavigationTarget("Home1")
+              } else {
+                setNeedsPinVerification(false)
+                setNavigationTarget("Home1")
+              }
+            } else {
+              console.log("🔓 Short background time - no PIN required")
+              setNeedsPinVerification(false)
+              setNavigationTarget("Home1")
+            }
+          } else {
+            console.log("🔓 No background time - no PIN required")
+            setNeedsPinVerification(false)
+            setNavigationTarget("Home1")
+          }
         }
       } else {
-        console.log("❌ User not logged in - no PIN verification needed")
+        console.log("❌ User not logged in - going to SignIn")
         setNeedsPinVerification(false)
+        setNavigationTarget("SignIn")
+        // Clear any session data
+        await AsyncStorage.removeItem("lastBackgroundTime")
+        await AsyncStorage.removeItem("appSessionId")
       }
     } catch (error) {
       console.error("❌ Error checking authentication status:", error)
       setNeedsPinVerification(false)
+      setNavigationTarget("SignIn")
     } finally {
       setIsCheckingAuth(false)
     }
   }
 
+  const checkAuthenticationForAppResume = async () => {
+    try {
+      // This is only called when app state changes (not on fresh start)
+      const userDetails = await AsyncStorage.getItem("user")
+      const lastBackgroundTime = await AsyncStorage.getItem("lastBackgroundTime")
+
+      if (userDetails && lastBackgroundTime) {
+        const currentTime = Date.now()
+        const timeSinceBackground = currentTime - Number.parseInt(lastBackgroundTime)
+        const BACKGROUND_THRESHOLD = 5 * 60 * 1000 // 5 minutes
+
+        console.log(`⏰ Resume check - Time since background: ${Math.round(timeSinceBackground / 1000)}s`)
+
+        if (timeSinceBackground > BACKGROUND_THRESHOLD) {
+          const parsedUser = JSON.parse(userDetails)
+          const userId = parsedUser.id || parsedUser._id || parsedUser.phoneno
+          const userPinKey = `userPin_${userId}`
+          const storedPin = await AsyncStorage.getItem(userPinKey)
+
+          if (storedPin) {
+            console.log("🔒 Long background + PIN exists - PIN required")
+            setNeedsPinVerification(true)
+          } else {
+            console.log("🔓 Long background but no PIN - no verification needed")
+            setNeedsPinVerification(false)
+          }
+        } else {
+          console.log("🔓 Short background time - no PIN required")
+          setNeedsPinVerification(false)
+        }
+      }
+    } catch (error) {
+      console.error("❌ Error checking authentication on app resume:", error)
+    }
+  }
+
   const clearPinVerificationNeeded = async () => {
     try {
-      await AsyncStorage.removeItem("pinVerificationNeeded")
-      console.log("🧹 Cleared PIN verification needed flag")
+      // Clear the background timestamp when PIN is successfully verified
+      await AsyncStorage.removeItem("lastBackgroundTime")
+      console.log("🧹 Cleared background timestamp after successful PIN verification")
     } catch (error) {
-      console.error("❌ Error clearing PIN verification needed:", error)
+      console.error("❌ Error clearing background timestamp:", error)
     }
   }
 
   return {
     needsPinVerification,
     isCheckingAuth,
+    splashCompleted,
+    navigationTarget,
+    setSplashCompleted,
     setNeedsPinVerification,
     clearPinVerificationNeeded,
   }
 }
 
-// App Security Screen Component - handles PIN verification when app is reopened
+// App Security Screen Component - FULL SCREEN PIN (NO LOGO)
 const AppSecurityScreen = ({ onSuccess }) => {
   const [pin, setPin] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -287,10 +426,6 @@ const AppSecurityScreen = ({ onSuccess }) => {
           }).start()
         })
 
-        // Clear PIN verification needed flag
-        await AsyncStorage.removeItem("pinVerificationNeeded")
-        console.log("🧹 Cleared PIN verification flag - user can access app")
-
         setTimeout(() => {
           onSuccess()
         }, 1000)
@@ -350,7 +485,7 @@ const AppSecurityScreen = ({ onSuccess }) => {
       [1, 2, 3],
       [4, 5, 6],
       [7, 8, 9],
-      [" ", 0, "backspace"],
+      [null, 0, "backspace"],
     ]
 
     return (
@@ -358,7 +493,7 @@ const AppSecurityScreen = ({ onSuccess }) => {
         {numbers.map((row, rowIndex) => (
           <View key={rowIndex} style={securityStyles.numberRow}>
             {row.map((item, colIndex) => {
-              if (item === "") {
+              if (item === null) {
                 return <View key={colIndex} style={securityStyles.emptyButton} />
               }
 
@@ -370,7 +505,7 @@ const AppSecurityScreen = ({ onSuccess }) => {
                     onPress={handleBackspace}
                     activeOpacity={0.7}
                   >
-                    <Text style={securityStyles.backspaceText}>⌫</Text>
+                    <MaterialIcons name="backspace" size={24} color="#874701" />
                   </TouchableOpacity>
                 )
               }
@@ -395,25 +530,19 @@ const AppSecurityScreen = ({ onSuccess }) => {
   return (
     <>
       <StatusBar backgroundColor="#f3d25b" barStyle="light-content" />
-      <ScrollView 
-        style={securityStyles.container}
-        contentContainerStyle={securityStyles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        bounces={false}
-      >
+      <View style={securityStyles.fullScreenContainer}>
         {isLoading && (
           <View style={securityStyles.loadingOverlay}>
             <ActivityIndicator size="large" color="#874701" />
           </View>
         )}
 
-        <View style={securityStyles.logoContainer}>
-          <Image source={require("./assets/images/newlogo.png")} style={securityStyles.logo} resizeMode="cover" />
-        </View>
-
-        <View style={securityStyles.contentContainer}>
-          <Text style={securityStyles.title}>Welcome Back!</Text>
-          <Text style={securityStyles.subtitle}>Please enter your PIN to continue</Text>
+        {/* FULL SCREEN CONTENT - NO LOGO */}
+        <View style={securityStyles.fullScreenContent}>
+          <View style={securityStyles.headerSection}>
+            <Text style={securityStyles.title}>Welcome Back!</Text>
+            <Text style={securityStyles.subtitle}>Please enter your PIN to continue</Text>
+          </View>
 
           {/* Professional Wrong PIN Message */}
           {showWrongPin && (
@@ -436,15 +565,18 @@ const AppSecurityScreen = ({ onSuccess }) => {
             </View>
           )}
 
-          {renderPinDots()}
-          {renderNumberPad()}
+          <View style={securityStyles.pinSection}>{renderPinDots()}</View>
 
-          <View style={securityStyles.securityNote}>
-            <MaterialIcons name="security" size={20} color="#874701" />
-            <Text style={securityStyles.securityText}>Your PIN keeps your account secure</Text>
+          <View style={securityStyles.keypadSection}>{renderNumberPad()}</View>
+
+          <View style={securityStyles.footerSection}>
+            <View style={securityStyles.securityNote}>
+              <MaterialIcons name="security" size={20} color="#874701" />
+              <Text style={securityStyles.securityText}>Your PIN keeps your account secure</Text>
+            </View>
           </View>
         </View>
-      </ScrollView>
+      </View>
     </>
   )
 }
@@ -461,12 +593,30 @@ export default function App() {
 
 // App Wrapper - controls the main app flow based on security needs
 const AppWrapper = () => {
-  const { needsPinVerification, isCheckingAuth, setNeedsPinVerification, clearPinVerificationNeeded } =
-    useAppStateManager()
+  const {
+    needsPinVerification,
+    isCheckingAuth,
+    splashCompleted,
+    navigationTarget,
+    setSplashCompleted,
+    setNeedsPinVerification,
+    clearPinVerificationNeeded,
+  } = useAppStateManager()
 
-  console.log("🎯 AppWrapper - needsPinVerification:", needsPinVerification, "isCheckingAuth:", isCheckingAuth)
+  console.log("🎯 AppWrapper State:", {
+    needsPinVerification,
+    isCheckingAuth,
+    splashCompleted,
+    navigationTarget,
+  })
 
-  // Show loading while checking authentication status
+  // ALWAYS show splash screen first if not completed
+  if (!splashCompleted) {
+    console.log("🎬 Showing initial splash screen")
+    return <MyStack setSplashCompleted={setSplashCompleted} />
+  }
+
+  // Show loading while checking authentication status (only after splash)
   if (isCheckingAuth) {
     return (
       <View style={styles.loadingContainer}>
@@ -476,7 +626,7 @@ const AppWrapper = () => {
     )
   }
 
-  // Show PIN verification screen if needed
+  // Show PIN verification screen if needed (only after splash)
   if (needsPinVerification) {
     console.log("🔒 Showing PIN verification screen")
     return (
@@ -490,15 +640,27 @@ const AppWrapper = () => {
     )
   }
 
-  // Show normal app flow
-  console.log("🏠 Showing normal app flow")
-  return <MyStack />
+  // Show normal app flow with proper navigation target
+  console.log("🏠 Showing normal app flow, navigating to:", navigationTarget)
+  return <MyStack initialRoute={navigationTarget} />
 }
 
-const MyStack = () => {
+const MyStack = ({ setSplashCompleted, initialRoute }) => {
+  // Determine the initial route
+  const getInitialRouteName = () => {
+    if (setSplashCompleted) {
+      // This is the initial splash flow
+      return "SlapScreen"
+    }
+    // This is after authentication check
+    return initialRoute || "SignIn"
+  }
+
   return (
-    <Stack.Navigator independent={true}>
-      <Stack.Screen name="SlapScreen" options={{ headerShown: false }} component={SpasssSc} />
+    <Stack.Navigator initialRouteName={getInitialRouteName()} independent={true}>
+      <Stack.Screen name="SlapScreen" options={{ headerShown: false }}>
+        {(props) => <SpasssSc {...props} setSplashCompleted={setSplashCompleted} />}
+      </Stack.Screen>
       <Stack.Screen name="SlapScreen2" options={{ headerShown: false }} component={SlapScreen} />
       <Stack.Screen name="SignUp" options={{ headerShown: false }} component={SignUp} />
       <Stack.Screen name="SignIn" options={{ headerShown: false }} component={SignIn} />
@@ -629,22 +791,43 @@ const MyStack = () => {
 
 const BottomTab = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: "#ffffff",
+          borderTopWidth: 1,
+          borderTopColor: "#f0f0f0",
+          paddingBottom: Platform.OS === "ios" ? 20 : 5,
+          paddingTop: 5,
+          height: Platform.OS === "ios" ? 85 : 65,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: -2,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+          elevation: 8,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "600",
+          fontFamily: "Poppins-SemiBold",
+          marginTop: 2,
+        },
+        tabBarActiveTintColor: "#f3d25b",
+        tabBarInactiveTintColor: "#999999",
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
-          tabBarActiveTintColor: "#feac03",
-          tabBarInactiveTintColor: "#f3d25b",
-          tabBarStyle: {
-            backgroundColor: "black",
-            borderColor: "#080808",
-          },
-          tabBarLabelStyle: {
-            fontSize: 11,
-            fontFamily: "Poppins-ExtraBoldItalic",
-          },
-          tabBarIcon: ({ color, size }) => <Ionicons name="home" color={color} size={25} />,
+          tabBarIcon: ({ color, focused }) => (
+            <View style={[styles.tabIconContainer, focused && styles.activeTabIconContainer]}>
+              <Ionicons name="home" color={color} size={24} />
+            </View>
+          ),
           headerShown: false,
         }}
       />
@@ -652,14 +835,11 @@ const BottomTab = () => {
         name="MyAccount"
         component={MyAccount}
         options={{
-          tabBarActiveTintColor: "#feac03",
-          tabBarInactiveTintColor: "#f3d25b",
-          tabBarStyle: { backgroundColor: "black", borderColor: "black" },
-          tabBarIcon: ({ color, size }) => <AntDesign name="user" color={color} size={25} />,
-          tabBarLabelStyle: {
-            fontSize: 11,
-            fontFamily: "Poppins-ExtraBoldItalic",
-          },
+          tabBarIcon: ({ color, focused }) => (
+            <View style={[styles.tabIconContainer, focused && styles.activeTabIconContainer]}>
+              <AntDesign name="user" color={color} size={24} />
+            </View>
+          ),
           headerShown: false,
         }}
       />
@@ -667,19 +847,12 @@ const BottomTab = () => {
         name="More"
         component={More}
         options={{
-          tabBarActiveTintColor: "#feac03",
-          tabBarInactiveTintColor: "#f3d25b",
-          tabBarStyle: { backgroundColor: "#080808", borderColor: "#080808" },
-          tabBarIcon: ({ color, size }) => <Feather name="more-horizontal" color={color} size={25} />,
-          headerShown: true,
-          headerTintColor: "black",
-          headerStyle: {
-            backgroundColor: "#f3d25b",
-          },
-          tabBarLabelStyle: {
-            fontSize: 11,
-            fontFamily: "Poppins-ExtraBoldItalic",
-          },
+          tabBarIcon: ({ color, focused }) => (
+            <View style={[styles.tabIconContainer, focused && styles.activeTabIconContainer]}>
+              <Feather name="more-horizontal" color={color} size={24} />
+            </View>
+          ),
+          headerShown: false,
         }}
       />
     </Tab.Navigator>
@@ -699,16 +872,27 @@ const styles = StyleSheet.create({
     color: "#874701",
     fontWeight: "600",
   },
+  // Clean Tab Bar Styles
+  tabIconContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginTop: 2,
+  },
+  activeTabIconContainer: {
+    backgroundColor: "rgba(243, 210, 91, 0.1)",
+    borderWidth: 1,
+    borderColor: "rgba(243, 210, 91, 0.3)",
+  },
 })
 
 const securityStyles = StyleSheet.create({
-  container: {
+  // FULL SCREEN PIN STYLES WITH FIXED BUTTON LAYOUT
+  fullScreenContainer: {
     flex: 1,
     backgroundColor: "#f3d25b",
-  },
-  scrollContent: {
-    flexGrow: 1,
-    minHeight: screenHeight,
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -717,85 +901,84 @@ const securityStyles = StyleSheet.create({
     alignItems: "center",
     zIndex: 10,
   },
-  logoContainer: {
-    alignItems: "center",
-    marginTop: 60,
-    marginBottom: 30,
-  },
-  logo: {
-    width: 120,
-    height: 120,
-  },
-  contentContainer: {
+  fullScreenContent: {
     flex: 1,
     backgroundColor: "white",
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    paddingHorizontal: 30,
-    paddingTop: 30,
-    paddingBottom: 40,
-    minHeight: screenHeight * 0.75,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    justifyContent: "space-between",
+  },
+  headerSection: {
+    alignItems: "center",
+    paddingTop: 40,
+    flex: 0.25,
+    justifyContent: "center",
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#333",
     textAlign: "center",
-    marginBottom: 10,
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
     color: "#666",
     textAlign: "center",
-    marginBottom: 25,
   },
   wrongPinContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FFE6E6",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    marginBottom: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    marginBottom: 15,
     borderWidth: 1,
     borderColor: "#FF4444",
+    alignSelf: "center",
   },
   wrongPinText: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#FF4444",
     fontWeight: "600",
-    marginLeft: 8,
+    marginLeft: 6,
   },
   attemptWarningContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FFF3E0",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    marginBottom: 20,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 15,
+    marginBottom: 15,
     borderWidth: 1,
     borderColor: "#FF8C00",
+    alignSelf: "center",
   },
   attemptWarning: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#FF8C00",
     fontWeight: "600",
-    marginLeft: 6,
+    marginLeft: 4,
+  },
+  pinSection: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 0.2,
   },
   pinDotsContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 40,
   },
   pinDot: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    marginHorizontal: 15,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    marginHorizontal: 12,
     borderWidth: 2,
   },
   pinDotEmpty: {
@@ -810,63 +993,67 @@ const securityStyles = StyleSheet.create({
     backgroundColor: "#FF4444",
     borderColor: "#FF4444",
   },
+  keypadSection: {
+    flex: 0.45,
+    justifyContent: "center",
+  },
   numberPadContainer: {
     alignItems: "center",
-    marginBottom: 30,
     paddingVertical: 10,
   },
   numberRow: {
     flexDirection: "row",
-    marginBottom: 15,
+    marginBottom: 16,
     justifyContent: "center",
     alignItems: "center",
   },
   numberButton: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    width: screenWidth * 0.2, // 20% of screen width
+    height: screenWidth * 0.2, // Square buttons
+    borderRadius: screenWidth * 0.1, // Perfect circle
     backgroundColor: "#ffffff",
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 15,
-    borderWidth: 2,
+    marginHorizontal: screenWidth * 0.05, // 5% margin between buttons
+    borderWidth: 1,
     borderColor: "#e9ecef",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   emptyButton: {
-    width: 70,
-    height: 70,
-    marginHorizontal: 15,
+    width: screenWidth * 0.2,
+    height: screenWidth * 0.2,
+    marginHorizontal: screenWidth * 0.05,
   },
   backspaceButton: {
     backgroundColor: "#fff5f5",
     borderColor: "#fed7d7",
   },
   numberText: {
-    fontSize: 26,
-    fontWeight: "700",
-    color: "#000",
+    fontSize: screenWidth * 0.06, // 6% of screen width
+    fontWeight: "600",
+    color: "#333",
     textAlign: "center",
+    includeFontPadding: false,
+    textAlignVertical: "center",
   },
-  backspaceText: {
-    fontSize: 20,
-    color: "#874701",
-    textAlign: "center",
+  footerSection: {
+    alignItems: "center",
+    flex: 0.1,
+    justifyContent: "center",
   },
   securityNote: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
-    marginTop: 20,
   },
   securityText: {
-    marginLeft: 8,
-    fontSize: 14,
+    marginLeft: 6,
+    fontSize: 12,
     color: "#666",
     textAlign: "center",
   },

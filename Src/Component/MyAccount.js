@@ -719,7 +719,7 @@
 //   },
 // });
 
-import {
+/* import {
   StatusBar,
   StyleSheet,
   Text,
@@ -1210,7 +1210,7 @@ const MyAccount = () => {
             </View>
           </Modal>
 
-          {/* Loading Modal */}
+         
           <LoadingModal />
 
           {updateProfile && (
@@ -1556,4 +1556,1104 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyAccount;
+export default MyAccount; */
+
+
+
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+  TextInput,
+  Alert,
+  Modal,
+  Dimensions,
+  PanResponder,
+  ActivityIndicator,
+} from "react-native"
+import Icon from "react-native-vector-icons/FontAwesome"
+import Ionicons from "react-native-vector-icons/Ionicons"
+import FontAwesome6 from "react-native-vector-icons/FontAwesome6"
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
+import React, { useState, useRef } from "react"
+import { launchCamera, launchImageLibrary } from "react-native-image-picker"
+import LinearGradient from "react-native-linear-gradient"
+
+const { width, height } = Dimensions.get("window")
+
+const MyAccount = () => {
+  const navigation = useNavigation()
+  const [modalVisible, setModalVisible] = useState(false)
+  const [cropModalVisible, setCropModalVisible] = useState(false)
+  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [imageSource, setImageSource] = useState(null)
+  const [tempImage, setTempImage] = useState(null)
+  const [user, setUser] = useState(null)
+  const [updateProfile, setUpdateProfile] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
+  const [cropRect, setCropRect] = useState({
+    x: 50,
+    y: 50,
+    width: 200,
+    height: 200,
+  })
+
+  const imageRef = useRef(null)
+
+  const takePhotoFromCamera = async () => {
+    try {
+      const result = await launchCamera({
+        mediaType: "photo",
+        maxWidth: 600,
+        maxHeight: 600,
+        quality: 0.7,
+      })
+      if (result.didCancel) return
+      if (result.errorCode) {
+        Alert.alert("Error", result.errorMessage || "Failed to open camera")
+        return
+      }
+      if (result.assets && result.assets[0].uri) {
+        setTempImage(result.assets[0].uri)
+        setCropModalVisible(true)
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to open camera")
+    }
+  }
+
+  const selectFromGallery = async () => {
+    try {
+      const result = await launchImageLibrary({
+        mediaType: "photo",
+        maxWidth: 600,
+        maxHeight: 600,
+        quality: 0.7,
+      })
+      if (result.didCancel) return
+      if (result.errorCode) {
+        Alert.alert("Error", result.errorMessage || "Failed to open gallery")
+        return
+      }
+      if (result.assets && result.assets[0].uri) {
+        setTempImage(result.assets[0].uri)
+        setCropModalVisible(true)
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to open gallery")
+    }
+  }
+
+  const startPos = useRef({ x: 0, y: 0 })
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        startPos.current = { x: cropRect.x, y: cropRect.y }
+      },
+      onPanResponderMove: (evt, gestureState) => {
+        const dx = gestureState.dx
+        const dy = gestureState.dy
+        const newX = Math.max(0, Math.min(startPos.current.x + dx, width - cropRect.width))
+        const newY = Math.max(0, Math.min(startPos.current.y + dy, height - cropRect.height - 100))
+        setCropRect((prev) => ({ ...prev, x: newX, y: newY }))
+      },
+      onPanResponderRelease: () => {},
+    }),
+  ).current
+
+  const resizePanResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (evt, gestureState) => {
+        setCropRect((prev) => {
+          let newWidth = prev.width + gestureState.dx
+          let newHeight = prev.height + gestureState.dy
+          newWidth = Math.max(50, Math.min(newWidth, width - prev.x))
+          newHeight = Math.max(50, Math.min(newHeight, height - prev.y - 100))
+          return { ...prev, width: newWidth, height: newHeight }
+        })
+      },
+    }),
+  ).current
+
+  const handleCrop = () => {
+    setImageSource(tempImage)
+    setCropModalVisible(false)
+    setModalVisible(false)
+    Alert.alert("Crop", "Image cropped successfully (simulated).")
+  }
+
+  const userData = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem("user")
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser)
+        setUser(parsedUser)
+        setUsername(parsedUser.name || "")
+        setEmail(parsedUser.email || "")
+        setPhone(parsedUser.phoneno || "")
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error)
+    }
+  }
+
+  const updateCustomer = async () => {
+    try {
+      if (!imageSource && !username && !email && !phone) {
+        Alert.alert("No changes to update")
+        return
+      }
+
+      setIsLoading(true)
+
+      const imageSourceUri = imageSource ? (Platform.OS === "android" ? `file://${imageSource}` : imageSource) : null
+
+      const formData = new FormData()
+      formData.append("userId", user?._id)
+      formData.append("name", username || user?.name)
+      formData.append("email", email || user?.email)
+      formData.append("phoneno", phone || user?.phoneno)
+
+      if (imageSourceUri) {
+        formData.append("profileimage", {
+          uri: imageSourceUri,
+          name: "profile.jpg",
+          type: "image/jpeg",
+        })
+      }
+
+      const response = await fetch("http://192.168.1.26:3034/api/v1/user/auth/updateuser", {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+        },
+        body: formData,
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        await AsyncStorage.setItem("user", JSON.stringify(result.success))
+        userData()
+        setImageSource(null)
+        setUpdateProfile(true)
+        Alert.alert("Success", "Profile updated successfully!")
+      } else {
+        Alert.alert("Update failed", result?.message || "Server Error")
+      }
+    } catch (error) {
+      Alert.alert("Update failed", error.message || "Network Error")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      userData()
+    }, []),
+  )
+
+  // Loading Modal Component
+  const LoadingModal = () => (
+    <Modal animationType="fade" transparent={true} visible={isLoading} onRequestClose={() => {}}>
+      <View style={styles.loadingContainer}>
+        <View style={styles.loadingContent}>
+          <ActivityIndicator size="large" color="#f3d25b" />
+          <Text style={styles.loadingText}>Updating Profile...</Text>
+        </View>
+      </View>
+    </Modal>
+  )
+
+  return (
+    <View style={styles.container}>
+      <StatusBar backgroundColor="#f3d25b" barStyle="dark-content" />
+
+      {/* Header Section */}
+      <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.headerGradient}>
+        <View style={styles.headerContent}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <Icon name="arrow-left" size={20} color="#874701" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>My Account</Text>
+          <View style={styles.headerSpacer} />
+        </View>
+      </LinearGradient>
+
+      <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+        {updateProfile ? (
+          <View style={styles.profileContainer}>
+            {/* Profile Header Card */}
+            <View style={styles.profileHeaderCard}>
+              <View style={styles.profileInfo}>
+                {user?.profileimage ? (
+                  <TouchableOpacity onPress={() => navigation.navigate("Imagezoom", { user })}>
+                    <View style={styles.profileImageWrapper}>
+                      <Image
+                        source={{
+                          uri: `http://192.168.1.26:3034/User/${user?.profileimage}`,
+                        }}
+                        style={styles.profileImage}
+                      />
+                      <View style={styles.onlineIndicator} />
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <View style={styles.profileImageWrapper}>
+                    <Image source={require("../../assets/images/Buygold.jpg")} style={styles.profileImage} />
+                    <View style={styles.onlineIndicator} />
+                  </View>
+                )}
+                <View style={styles.profileDetails}>
+                  <Text style={styles.nameText}>{user?.name || "Loading..."}</Text>
+                  <Text style={styles.phoneText}>+91 {user?.phoneno}</Text>
+                  <View style={styles.userIdContainer}>
+                    <Text style={styles.userIdLabel}>ID: </Text>
+                    <Text style={styles.userIdText}>{user?.userId}</Text>
+                  </View>
+                </View>
+              </View>
+              <TouchableOpacity style={styles.editButton} onPress={() => setUpdateProfile(false)}>
+                <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.editButtonGradient}>
+                  <FontAwesome5 name="edit" size={18} color="#874701" />
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+
+            {/* Information Cards */}
+            <View style={styles.infoCardsContainer}>
+              <View style={styles.infoCard}>
+                <View style={styles.infoCardHeader}>
+                  <Icon name="user" style={styles.cardIcon} />
+                  <Text style={styles.cardLabel}>User Name</Text>
+                </View>
+                <Text style={styles.cardValue}>{user?.name}</Text>
+              </View>
+
+              <View style={styles.infoCard}>
+                <View style={styles.infoCardHeader}>
+                  <Ionicons name="mail" style={styles.cardIcon} />
+                  <Text style={styles.cardLabel}>Email Address</Text>
+                </View>
+                <Text style={styles.cardValue}>{user?.email}</Text>
+              </View>
+
+              <View style={styles.infoCard}>
+                <View style={styles.infoCardHeader}>
+                  <FontAwesome6 name="phone" style={styles.cardIcon} />
+                  <Text style={styles.cardLabel}>Phone Number</Text>
+                </View>
+                <Text style={styles.cardValue}>+91-{user?.phoneno}</Text>
+              </View>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.profileContainer}>
+            {/* Edit Profile Header - Fixed Layout */}
+            <View style={styles.editProfileHeader}>
+              <View style={styles.editProfileInfo}>
+                <View style={styles.compactProfileImageWrapper}>
+                  <Image
+                    source={{
+                      uri: imageSource
+                        ? `${imageSource}?${new Date().getTime()}`
+                        : `http://192.168.1.26:3034/User/${user?.profileimage}`,
+                    }}
+                    style={styles.compactProfileImage}
+                  />
+                  <View style={styles.onlineIndicator} />
+                </View>
+                <View style={styles.compactProfileDetails}>
+                  <Text style={styles.compactNameText} numberOfLines={1}>
+                    {user?.name || "Loading..."}
+                  </Text>
+                  <Text style={styles.compactPhoneText} numberOfLines={1}>
+                    +91 {user?.phoneno}
+                  </Text>
+                  <View style={styles.compactUserIdContainer}>
+                    <Text style={styles.userIdLabel}>ID: </Text>
+                    <Text style={styles.userIdText}>{user?.userId}</Text>
+                  </View>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={[styles.saveButton, isLoading && styles.disabledButton]}
+                onPress={() => {
+                  if (!isLoading) {
+                    updateCustomer()
+                  }
+                }}
+                disabled={isLoading}
+              >
+                <LinearGradient
+                  colors={isLoading ? ["#ccc", "#ccc"] : ["#f3d25b", "#f3d25b"]}
+                  style={styles.saveButtonGradient}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator size="small" color="#874701" />
+                  ) : (
+                    <Text style={styles.saveButtonText}>Save</Text>
+                  )}
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+
+            {/* Edit Form */}
+            <View style={styles.editFormContainer}>
+              {/* Profile Image Section - Compact */}
+              <View style={styles.profileImageSection}>
+                <Text style={styles.sectionTitle}>Profile Picture</Text>
+                <View style={styles.profileImageEditContainer}>
+                  <View style={styles.largeProfileImageWrapper}>
+                    <Image
+                      source={{
+                        uri: imageSource
+                          ? `${imageSource}?${new Date().getTime()}`
+                          : `http://192.168.1.26:3034/User/${user?.profileimage}`,
+                      }}
+                      style={styles.largerProfileImage}
+                    />
+                    <TouchableOpacity
+                      style={styles.cameraButton}
+                      onPress={() => setModalVisible(true)}
+                      disabled={isLoading}
+                    >
+                      <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.cameraButtonGradient}>
+                        <FontAwesome6 name="camera" size={16} color="#874701" />
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+
+              {/* Form Fields */}
+              <View style={styles.formFieldsContainer}>
+                <Text style={styles.sectionTitle}>Personal Information</Text>
+
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>User Name</Text>
+                  <View style={styles.modernInputContainer}>
+                    <Icon name="user" style={styles.inputIcon} />
+                    <TextInput
+                      style={styles.modernInput}
+                      value={username}
+                      onChangeText={setUsername}
+                      placeholder={user?.name}
+                      placeholderTextColor="#999"
+                      editable={!isLoading}
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Email Address</Text>
+                  <View style={styles.modernInputContainer}>
+                    <Ionicons name="mail" style={styles.inputIcon} />
+                    <TextInput
+                      style={styles.modernInput}
+                      value={email}
+                      onChangeText={setEmail}
+                      placeholder={user?.email}
+                      keyboardType="email-address"
+                      placeholderTextColor="#999"
+                      editable={!isLoading}
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Phone Number</Text>
+                  <View style={styles.modernInputContainer}>
+                    <FontAwesome6 name="phone" style={styles.inputIcon} />
+                    <TextInput
+                      style={styles.modernInput}
+                      value={phone}
+                      onChangeText={setPhone}
+                      placeholder={user?.phoneno}
+                      keyboardType="phone-pad"
+                      placeholderTextColor="#999"
+                      editable={!isLoading}
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        )}
+
+        {/* Camera/Gallery Selection Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Select Image Source</Text>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={() => {
+                    takePhotoFromCamera()
+                    setModalVisible(false)
+                  }}
+                >
+                  <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.modalButtonGradient}>
+                    <Image source={require("../../assets/images/camera.png")} style={styles.modalIcon} />
+                    <Text style={styles.modalButtonText}>Camera</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={() => {
+                    selectFromGallery()
+                    setModalVisible(false)
+                  }}
+                >
+                  <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.modalButtonGradient}>
+                    <Image source={require("../../assets/images/gallery.png")} style={styles.modalIcon} />
+                    <Text style={styles.modalButtonText}>Gallery</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+                <LinearGradient colors={["#874701", "#874701"]} style={styles.closeButtonGradient}>
+                  <Text style={styles.closeButtonText}>Cancel</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Crop Modal */}
+        <Modal
+          animationType="fade"
+          transparent={false}
+          visible={cropModalVisible}
+          onRequestClose={() => setCropModalVisible(false)}
+        >
+          <View style={styles.cropContainer}>
+            <Image ref={imageRef} source={{ uri: tempImage }} style={styles.cropImage} resizeMode="contain" />
+            <View
+              style={[
+                styles.cropRectangle,
+                {
+                  left: cropRect.x,
+                  top: cropRect.y,
+                  width: cropRect.width,
+                  height: cropRect.height,
+                },
+              ]}
+              {...panResponder.panHandlers}
+            >
+              <View style={styles.resizeHandle} {...resizePanResponder.panHandlers} />
+            </View>
+            <View style={styles.cropButtons}>
+              <TouchableOpacity style={styles.cancelCropButton} onPress={() => setCropModalVisible(false)}>
+                <LinearGradient colors={["#874701", "#874701"]} style={styles.cropButtonGradient}>
+                  <Text style={styles.cropButtonText}>Cancel</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.confirmCropButton} onPress={handleCrop}>
+                <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.cropButtonGradient}>
+                  <Text style={[styles.cropButtonText, { color: "#874701" }]}>Crop</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Loading Modal */}
+        <LoadingModal />
+
+        {/* Promotional Cards - Only show in view mode */}
+        {updateProfile && (
+          <View style={styles.promotionalSection}>
+            <Text style={styles.promotionalTitle}>Investment Tips</Text>
+
+            <View style={styles.promotionCard}>
+              <View style={styles.promotionContent}>
+                <Text style={styles.promotionText}>Start saving today for better tomorrow</Text>
+                <Image
+                  source={require("../../assets/images/g1.png")}
+                  style={styles.promotionImage}
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+
+            <View style={styles.promotionCard}>
+              <View style={styles.promotionContent}>
+                <Image
+                  source={require("../../assets/images/g2.png")}
+                  style={styles.promotionImage}
+                  resizeMode="contain"
+                />
+                <Text style={styles.promotionText}>Daily investing by small amount and get bigger value</Text>
+              </View>
+            </View>
+
+            <View style={styles.promotionCard}>
+              <View style={styles.promotionContent}>
+                <Text style={styles.promotionText}>Refer today for get more surprise</Text>
+                <Image
+                  source={require("../../assets/images/g3.png")}
+                  style={styles.promotionImage}
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+          </View>
+        )}
+      </ScrollView>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#ffffff", // Same as Home screen
+  },
+  scrollContainer: {
+    backgroundColor: "#f8f9fa", // Same light background as Home screen
+  },
+
+  // Header Styles
+  headerGradient: {
+    paddingTop: Platform.OS === "ios" ? 50 : 20,
+    paddingBottom: 15,
+  },
+  headerContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+  },
+  backButton: {
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#874701",
+   /*  fontFamily: "Poppins-SemiBoldItalic", */
+  },
+  headerSpacer: {
+    width: 36,
+  },
+
+  // Profile Container
+  profileContainer: {
+    padding: 15,
+  },
+
+  // Profile Header Card (View Mode)
+  profileHeaderCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  profileInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  profileImageWrapper: {
+    position: "relative",
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 3,
+    borderColor: "#f3d25b",
+  },
+  onlineIndicator: {
+    position: "absolute",
+    bottom: 2,
+    right: 2,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: "#4CAF50",
+    borderWidth: 3,
+    borderColor: "#ffffff",
+  },
+  profileDetails: {
+    marginLeft: 15,
+    flex: 1,
+  },
+  nameText: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#030712",
+    /* fontFamily: "Poppins-SemiBoldItalic", */
+    marginBottom: 4,
+  },
+  phoneText: {
+    fontSize: 16,
+    color: "#666",
+    /* fontFamily: "Poppins-SemiBoldItalic", */
+    marginBottom: 4,
+  },
+  userIdContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  userIdLabel: {
+    fontSize: 14,
+    color: "#999",
+    /* fontFamily: "Poppins-SemiBoldItalic", */
+  },
+  userIdText: {
+    fontSize: 14,
+    color: "#874701",
+    fontWeight: "600",
+    /* fontFamily: "Poppins-SemiBoldItalic", */
+  },
+  editButton: {
+    marginLeft: 10,
+  },
+  editButtonGradient: {
+    width: 45,
+    height: 45,
+    borderRadius: 22.5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  // Information Cards
+  infoCardsContainer: {
+    gap: 15,
+  },
+  infoCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 15,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  infoCardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  cardIcon: {
+    fontSize: 20,
+    color: "#f3d25b",
+    marginRight: 12,
+  },
+  cardLabel: {
+    fontSize: 16,
+    color: "#666",
+   /*  fontFamily: "Poppins-SemiBoldItalic", */
+  },
+  cardValue: {
+    fontSize: 18,
+    color: "#030712",
+    fontWeight: "600",
+   
+    marginLeft: 32,
+  },
+
+  // Edit Profile Header - Fixed Layout
+  editProfileHeader: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 15,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  editProfileInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+    marginRight: 10,
+  },
+  compactProfileImageWrapper: {
+    position: "relative",
+  },
+  compactProfileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: "#f3d25b",
+  },
+  compactProfileDetails: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  compactNameText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#030712",
+   /*  fontFamily: "Poppins-SemiBoldItalic", */
+    marginBottom: 2,
+  },
+  compactPhoneText: {
+    fontSize: 14,
+    color: "#666",
+    /* fontFamily: "Poppins-SemiBoldItalic", */
+    marginBottom: 2,
+  },
+  compactUserIdContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  saveButton: {
+    flexShrink: 0,
+  },
+  saveButtonGradient: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    minWidth: 80,
+    alignItems: "center",
+  },
+  disabledButton: {
+    opacity: 0.6,
+  },
+  saveButtonText: {
+    color: "#874701",
+    fontSize: 14,
+    fontWeight: "700",
+   /*  fontFamily: "Poppins-SemiBoldItalic", */
+  },
+
+  // Edit Form Container
+  editFormContainer: {
+    gap: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    color: "#030712",
+    fontWeight: "700",
+    /* fontFamily: "Poppins-SemiBoldItalic", */
+    marginBottom: 15,
+  },
+
+  // Profile Image Section - More Compact
+  profileImageSection: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  profileImageEditContainer: {
+    alignItems: "center",
+  },
+  largeProfileImageWrapper: {
+    position: "relative",
+  },
+  largerProfileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 3,
+    borderColor: "#f3d25b",
+  },
+  cameraButton: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+  },
+  cameraButtonGradient: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#ffffff",
+  },
+
+  // Form Fields
+  formFieldsContainer: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 16,
+    color: "#030712",
+    fontWeight: "600",
+   /*  fontFamily: "Poppins-SemiBoldItalic", */
+    marginBottom: 8,
+  },
+  modernInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+    paddingHorizontal: 15,
+  },
+  inputIcon: {
+    fontSize: 18,
+    color: "#f3d25b",
+    marginRight: 12,
+  },
+  modernInput: {
+    flex: 1,
+    height: 50,
+    fontSize: 16,
+    color: "#030712",
+   /*  fontFamily: "Poppins-SemiBoldItalic", */
+  },
+
+  // Modal Styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 25,
+    width: width - 40,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#030712",
+    /* fontFamily: "Poppins-SemiBoldItalic", */
+    marginBottom: 25,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    marginBottom: 25,
+    gap: 20,
+  },
+  modalButton: {
+    flex: 1,
+  },
+  modalButtonGradient: {
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 15,
+  },
+  modalIcon: {
+    width: 40,
+    height: 40,
+    marginBottom: 8,
+  },
+  modalButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#874701",
+   /*  fontFamily: "Poppins-SemiBoldItalic", */
+  },
+  closeButton: {
+    width: "100%",
+  },
+  closeButtonGradient: {
+    paddingVertical: 15,
+    borderRadius: 15,
+    alignItems: "center",
+  },
+  closeButtonText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "700",
+  /*   fontFamily: "Poppins-SemiBoldItalic", */
+  },
+
+  // Crop Modal Styles
+  cropContainer: {
+    flex: 1,
+    backgroundColor: "#000",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cropImage: {
+    width: width,
+    height: height - 100,
+  },
+  cropRectangle: {
+    position: "absolute",
+    borderWidth: 2,
+    borderColor: "#f3d25b",
+    backgroundColor: "rgba(243, 210, 91, 0.2)",
+  },
+  resizeHandle: {
+    position: "absolute",
+    bottom: -10,
+    right: -10,
+    width: 20,
+    height: 20,
+    backgroundColor: "#f3d25b",
+    borderRadius: 10,
+  },
+  cropButtons: {
+    flexDirection: "row",
+    position: "absolute",
+    bottom: 30,
+    justifyContent: "space-between",
+    width: width - 40,
+    gap: 20,
+  },
+  cancelCropButton: {
+    flex: 1,
+  },
+  confirmCropButton: {
+    flex: 1,
+  },
+  cropButtonGradient: {
+    padding: 15,
+    borderRadius: 15,
+    alignItems: "center",
+  },
+  cropButtonText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "700",
+   /*  fontFamily: "Poppins-SemiBoldItalic", */
+  },
+
+  // Loading Modal Styles
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+  },
+  loadingContent: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 30,
+    alignItems: "center",
+    minWidth: 150,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  loadingText: {
+    marginTop: 15,
+    fontSize: 16,
+   /*  fontFamily: "Poppins-SemiBoldItalic", */
+    color: "#030712",
+    textAlign: "center",
+  },
+
+  // Promotional Section
+  promotionalSection: {
+    padding: 15,
+    paddingTop: 0,
+  },
+  promotionalTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#030712",
+   /*  fontFamily: "Poppins-SemiBoldItalic", */
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  promotionCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    overflow: "hidden",
+  },
+  promotionContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#f3d25b",
+  },
+  promotionText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "700",
+    /* fontFamily: "Poppins-SemiBoldItalic", */
+    color: "#874701",
+    textTransform: "uppercase",
+    marginRight: 15,
+  },
+  promotionImage: {
+    height: 60,
+    width: 80,
+  },
+})
+
+export default MyAccount
