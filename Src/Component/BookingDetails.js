@@ -733,7 +733,7 @@ const styles = StyleSheet.create({
 
 
 
-"use client"
+
 
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Modal } from "react-native"
 import React, { useEffect, useState } from "react"

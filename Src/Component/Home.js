@@ -3421,7 +3421,7 @@ const styles = StyleSheet.create({
   },
 })
  */
-"use client"
+
 
 import React, { useEffect, useState } from "react"
 import {

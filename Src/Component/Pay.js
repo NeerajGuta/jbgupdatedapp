@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
 
 
 
-"use client"
+
 
 import { Alert, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from "react-native"
 import React, { useEffect, useState } from "react"
