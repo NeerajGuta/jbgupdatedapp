@@ -1,6 +1,16 @@
-import { StyleSheet, Text, View, StatusBar, TouchableOpacity, ScrollView, Image, ActivityIndicator } from "react-native"
+import {
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+  Animated,
+  Dimensions,
+} from "react-native"
 import Entypo from "react-native-vector-icons/Entypo"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6"
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from "react-native-confirmation-code-field"
 import LinearGradient from "react-native-linear-gradient"
@@ -9,8 +19,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import Toast from "./Toast"
 import useToast from "../hooks/useToast"
 
+const { width } = Dimensions.get("window")
 const CELL_COUNT = 6
+
 const Otp = ({ navigation, route }) => {
+  // ==================== STATE VARIABLES ====================
   const { phoneno, resetPin } = route.params || {}
   const [enableMask, setEnableMask] = useState(true)
   const [value, setValue] = useState("")
@@ -21,10 +34,61 @@ const Otp = ({ navigation, route }) => {
     setValue,
   })
 
+  // ==================== ANIMATION REFS ====================
+  const fadeAnim = useRef(new Animated.Value(0)).current
+  const slideAnim = useRef(new Animated.Value(30)).current
+  const scaleAnim = useRef(new Animated.Value(0.9)).current
+  const logoScaleAnim = useRef(new Animated.Value(1)).current
+
+  // ==================== HOOKS ====================
   const { toastConfig, showSuccess, showError, hideToast } = useToast()
 
+  // ==================== ANIMATION EFFECTS ====================
+  useEffect(() => {
+    // Main entrance animation
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start()
+
+    // Logo pulse animation
+    const logoLoop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(logoScaleAnim, {
+          toValue: 1.05,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(logoScaleAnim, {
+          toValue: 1,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ]),
+    )
+    logoLoop.start()
+
+    return () => logoLoop.stop()
+  }, [])
+
+  // ==================== UTILITY FUNCTIONS ====================
   const toggleMask = () => setEnableMask((f) => !f)
 
+  // ==================== OTP CELL RENDERER ====================
   const renderCell = ({ index, symbol, isFocused }) => {
     let textChild = null
 
@@ -35,12 +99,15 @@ const Otp = ({ navigation, route }) => {
     }
 
     return (
-      <Text key={index} style={[styles.cell, isFocused && styles.focusCell]} onLayout={getCellOnLayoutHandler(index)}>
-        {textChild}
-      </Text>
+      <View key={index} style={[styles.cellContainer, isFocused && styles.focusCellContainer]}>
+        <Text style={[styles.cell, isFocused && styles.focusCell]} onLayout={getCellOnLayoutHandler(index)}>
+          {textChild}
+        </Text>
+      </View>
     )
   }
 
+  // ==================== USER ONBOARDING STATUS CHECK ====================
   const checkUserOnboardingStatus = async (userDetails) => {
     try {
       const userId = userDetails.id || userDetails._id || userDetails.phoneno
@@ -94,6 +161,7 @@ const Otp = ({ navigation, route }) => {
     }
   }
 
+  // ==================== OTP VERIFICATION FUNCTION ====================
   const VerfiyOtp = async () => {
     if (!value) return showError("Please enter OTP to continue")
 
@@ -102,7 +170,7 @@ const Otp = ({ navigation, route }) => {
       const config = {
         url: "/otpVarification",
         method: "post",
-        baseURL: "http://192.168.1.26:3034/api/v1/user/auth",
+        baseURL: "https://justbuynewbackend.onrender.com/api/v1/user/auth",
         headers: { "content-type": "application/json" },
         data: {
           phoneno: phoneno,
@@ -140,8 +208,11 @@ const Otp = ({ navigation, route }) => {
 
   return (
     <>
+      {/* ==================== STATUS BAR ==================== */}
       <StatusBar backgroundColor="#f3d25b" barStyle="light-content" />
-      <View style={styles.container1}>
+
+      <View style={styles.container}>
+        {/* ==================== TOAST NOTIFICATIONS ==================== */}
         <Toast
           visible={toastConfig.visible}
           message={toastConfig.message}
@@ -149,79 +220,98 @@ const Otp = ({ navigation, route }) => {
           duration={toastConfig.duration}
           onHide={hideToast}
         />
+
+        {/* ==================== LOADING OVERLAY ==================== */}
         {isLoading && (
           <View style={styles.loadingOverlay}>
-            <ActivityIndicator size="large" color="#874701" />
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#874701" />
+              <Text style={styles.loadingText}>Verifying OTP...</Text>
+            </View>
           </View>
         )}
-        <ScrollView>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              backgroundColor: "#f3d25b",
-            }}
+
+        {/* ==================== BACKGROUND DECORATIVE CIRCLES ==================== */}
+        <View style={styles.backgroundCircle1} />
+        <View style={styles.backgroundCircle2} />
+        <View style={styles.backgroundCircle3} />
+
+        {/* ==================== HEADER SECTION ==================== */}
+        <View style={styles.headerContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <FontAwesome6 name="arrow-left-long" size={20} color="white" />
+          </TouchableOpacity>
+        </View>
+
+        {/* ==================== MAIN CONTENT CONTAINER ==================== */}
+        <Animated.View
+          style={[
+            styles.contentContainer,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }, { scale: scaleAnim }],
+            },
+          ]}
+        >
+          {/* ==================== LOGO SECTION ==================== */}
+          <Animated.View
+            style={[
+              styles.logoContainer,
+              {
+                transform: [{ scale: logoScaleAnim }],
+              },
+            ]}
           >
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <FontAwesome6 name="arrow-left-long" size={20} color="white" style={{ margin: 1 }} />
-            </TouchableOpacity>
+            <View style={styles.logoWrapper}>
+              <Image source={require("../../assets/images/newlogo.png")} style={styles.logoImage} resizeMode="cover" />
+            </View>
+          </Animated.View>
+
+          {/* ==================== TITLE SECTION ==================== */}
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>{resetPin ? "Reset PIN - Verify OTP" : "Enter Verification Code"}</Text>
+            <Text style={styles.subtitle}>OTP sent to +91-{phoneno}</Text>
           </View>
 
-          <View style={styles.inotp}>
-            <View
-              style={{
-                flex: 2,
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 50,
-              }}
-            >
-              <Image
-                source={require("../../assets/images/newlogo.png")}
-                style={{ width: 100, height: 100 }}
-                resizemode="cover"
-              ></Image>
-            </View>
-            <Text style={styles.title}>{resetPin ? "Reset PIN - Verify OTP" : "Enter Your Verification Code"}</Text>
-            <Text style={styles.addtitle}>OTP Sent To +91-{phoneno} </Text>
-            <View style={styles.fieldRow}>
-              <CodeField
-                ref={ref}
-                {...props}
-                value={value}
-                onChangeText={setValue}
-                cellCount={CELL_COUNT}
-                keyboardType="number-pad"
-                textContentType="oneTimeCode"
-                renderCell={renderCell}
-              />
-              <Text style={styles.toggle} onPress={toggleMask}>
-                {enableMask ? (
-                  <Entypo name="eye-with-line" size={20} style={{ marginLeft: 10 }} color="#874701" />
-                ) : (
-                  <Entypo name="eye" size={20} style={{ marginLeft: 10 }} color="blue" />
-                )}
-              </Text>
-            </View>
-            <View
-              style={[
-                styles.regback1,
-                {
-                  marginTop: 20,
-                  marginBottom: 10,
-                  flexDirection: "row",
-                  justifyContent: "center",
-                },
-              ]}
-            >
-              <TouchableOpacity onPress={() => VerfiyOtp()}>
-                <LinearGradient colors={["#874701", "#874701"]} style={styles.linearGradient}>
-                  <Text style={styles.btn}>Verified with OTP</Text>
-                </LinearGradient>
+          {/* ==================== OTP INPUT SECTION ==================== */}
+          <View style={styles.otpSection}>
+            <Text style={styles.otpLabel}>Enter 6-digit OTP</Text>
+
+            <View style={styles.otpContainer}>
+              <View style={styles.fieldRow}>
+                <CodeField
+                  ref={ref}
+                  {...props}
+                  value={value}
+                  onChangeText={setValue}
+                  cellCount={CELL_COUNT}
+                  keyboardType="number-pad"
+                  textContentType="oneTimeCode"
+                  renderCell={renderCell}
+                />
+              </View>
+
+              {/* ==================== TOGGLE VISIBILITY BUTTON ==================== */}
+              <TouchableOpacity onPress={toggleMask} style={styles.toggleButton}>
+                <Entypo name={enableMask ? "eye-with-line" : "eye"} size={18} color="#874701" />
               </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
+
+          {/* ==================== VERIFY BUTTON ==================== */}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={VerfiyOtp} style={styles.verifyButtonWrapper}>
+              <LinearGradient
+                colors={["#874701", "#a55a02"]}
+                style={styles.verifyButton}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Text style={styles.verifyButtonText}>Verify OTP</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
       </View>
     </>
   )
@@ -229,80 +319,242 @@ const Otp = ({ navigation, route }) => {
 
 export default Otp
 
+// ==================== STYLES ====================
 const styles = StyleSheet.create({
-  container1: {
+  // ==================== MAIN CONTAINER STYLES ====================
+  container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "#f3d25b",
   },
+
+  // ==================== LOADING STYLES ====================
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    backgroundColor: "rgba(243, 210, 91, 0.9)",
     justifyContent: "center",
     alignItems: "center",
     zIndex: 10,
   },
-  inotp: {
-    marginTop: "40%",
+  loadingContainer: {
+    backgroundColor: "white",
+    padding: 30,
+    borderRadius: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
   },
-  root: { flex: 1, padding: 20 },
+  loadingText: {
+    marginTop: 15,
+    fontSize: 16,
+    color: "#874701",
+    fontWeight: "600",
+  },
+
+  // ==================== BACKGROUND DECORATION STYLES ====================
+  backgroundCircle1: {
+    position: "absolute",
+    top: 100,
+    right: -50,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: "rgba(135, 71, 1, 0.1)",
+  },
+  backgroundCircle2: {
+    position: "absolute",
+    bottom: 200,
+    left: -40,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: "rgba(135, 71, 1, 0.08)",
+  },
+  backgroundCircle3: {
+    position: "absolute",
+    top: 300,
+    left: 250,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "rgba(135, 71, 1, 0.06)",
+  },
+
+  // ==================== HEADER STYLES ====================
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  // ==================== CONTENT CONTAINER STYLES ====================
+  contentContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  // ==================== LOGO STYLES ====================
+  logoContainer: {
+    alignItems: "center",
+    marginBottom: 30,
+  },
+  logoWrapper: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#874701",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
+    borderWidth: 2,
+    borderColor: "rgba(135, 71, 1, 0.2)",
+  },
+  logoImage: {
+    width: 70,
+    height: 70,
+  },
+
+  // ==================== TITLE STYLES ====================
+  titleContainer: {
+    alignItems: "center",
+    marginBottom: 40,
+  },
   title: {
-    textAlign: "center",
     fontSize: 22,
     color: "white",
-    marginTop: 20,
-    fontWeight: "700",
+    fontWeight: "800",
+    textAlign: "center",
+    marginBottom: 6,
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
-  addtitle: { textAlign: "center", fontSize: 18, color: "black" },
-  codeFiledRoot: { marginTop: 20 },
-  fieldRow: {
-    height: 50,
-    marginTop: 40,
-    flexDirection: "row",
-    marginLeft: 8,
+  subtitle: {
+    fontSize: 15,
+    color: "rgba(255, 255, 255, 0.9)",
+    textAlign: "center",
+    fontWeight: "600",
+  },
+
+  // ==================== OTP SECTION STYLES ====================
+  otpSection: {
     alignItems: "center",
-    alignSelf: "center",
-    justifyContent: "center",
+    marginBottom: 50,
+    width: "100%",
   },
-  cell: {
-    width: 36,
-    height: 36,
-    lineHeight: 32,
-    fontSize: 25,
-    fontWeight: "700",
-    textAlign: "center",
-    marginLeft: 8,
-    borderRadius: 6,
-    borderColor: "blue",
-    backgroundColor: "white",
-    color: "black",
-  },
-  toggle: {
-    width: 45,
-    height: 45,
-    lineHeight: 33,
-    fontSize: 30,
-    textAlign: "center",
-  },
-  focusCell: {
-    borderColor: "#000",
-  },
-  btn: {
-    textAlign: "center",
-    fontSize: 17,
-    backgroundColor: "#874701",
+  otpLabel: {
+    fontSize: 15,
     color: "white",
     fontWeight: "700",
-    padding: 2,
-    marginTop: 12,
-    marginBottom: 10,
-    borderRadius: 100,
-    width: 250,
+    textAlign: "center",
+    marginBottom: 25,
+    textShadowColor: "rgba(0, 0, 0, 0.2)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
-  linearGradient: {
-    flex: 1,
-    borderRadius: 100,
-    width: 250,
+  otpContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  fieldRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  // ==================== OTP CELL STYLES ====================
+  cellContainer: {
+    marginHorizontal: 2,
+    borderRadius: 8,
+    backgroundColor: "white",
+    borderWidth: 1.5,
+    borderColor: "rgba(135, 71, 1, 0.3)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  focusCellContainer: {
+    borderColor: "#874701",
+    backgroundColor: "white",
+    shadowColor: "#874701",
+    shadowOpacity: 0.3,
+    transform: [{ scale: 1.03 }],
+  },
+  cell: {
+    width: 35,
+    height: 42,
+    lineHeight: 38,
+    fontSize: 18,
+    fontWeight: "700",
+    textAlign: "center",
+    color: "#874701",
+  },
+  focusCell: {
+    color: "#874701",
+  },
+
+  // ==================== TOGGLE BUTTON STYLES ====================
+  toggleButton: {
+    marginLeft: 12,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1.5,
+    borderColor: "rgba(135, 71, 1, 0.3)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+
+  // ==================== VERIFY BUTTON STYLES ====================
+  buttonContainer: {
+    alignItems: "center",
+    width: "100%",
+  },
+  verifyButtonWrapper: {
+    shadowColor: "#874701",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 8,
+  },
+  verifyButton: {
+    width: 260,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  verifyButtonText: {
+    fontSize: 16,
+    color: "white",
+    fontWeight: "700",
   },
 })

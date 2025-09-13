@@ -44,7 +44,7 @@
 //     const config = {
 //       url: '/getGst',
 //       method: 'get',
-//       baseURL: 'http://192.168.1.26:3034/api/v1/gst',
+//       baseURL: 'https://justbuynewbackend.onrender.com/api/v1/gst',
 //       headers: {'conttent-type': 'application/json'},
 //     };
 //     try {
@@ -69,7 +69,7 @@
 //     try {
 //       await axios
 //         .get(
-//           'http://192.168.1.26:3034/api/v1/transactions/transactionhistory/' +
+//           'https://justbuynewbackend.onrender.com/api/v1/transactions/transactionhistory/' +
 //             user?._id,
 //         )
 //         .then(res => {
@@ -99,7 +99,7 @@
 
 //       setLoading(false); // Start loading before fetching
 //       const res = await axios.get(
-//         `http://192.168.1.26:3034/api/v1/coins/singalcoins/${parsedUser?._id}`,
+//         `https://justbuynewbackend.onrender.com/api/v1/coins/singalcoins/${parsedUser?._id}`,
 //       );
 
 //       if (res.status === 200) {
@@ -128,7 +128,7 @@
 //   const getRate = async () => {
 //     try {
 //       await axios
-//         .get('http://192.168.1.26:3034/api/v1/rate/allrate')
+//         .get('https://justbuynewbackend.onrender.com/api/v1/rate/allrate')
 //         .then(res => {
 //           if (res.status === 200) {
 //             setRate(res.data.success);
@@ -154,7 +154,7 @@
 //   const getVideo = async () => {
 //     try {
 //       await axios
-//         .get('http://192.168.1.26:3034/api/v1/video/allvideo')
+//         .get('https://justbuynewbackend.onrender.com/api/v1/video/allvideo')
 //         .then(res => {
 //           if (res.status === 200) {
 //             setvideo(res.data.success);
@@ -227,7 +227,7 @@
 //       const config = {
 //         url: '/addCoins',
 //         method: 'post',
-//         baseURL: 'http://192.168.1.26:3034/api/v1/coins',
+//         baseURL: 'https://justbuynewbackend.onrender.com/api/v1/coins',
 //         headers: {'content-type': 'application/json'},
 //         data: {
 //           UserId: user?._id,
@@ -308,7 +308,7 @@
 //       const config = {
 //         url: '/transaction',
 //         method: 'post',
-//         baseURL: 'http://192.168.1.26:3034/api/v1/transactions',
+//         baseURL: 'https://justbuynewbackend.onrender.com/api/v1/transactions',
 //         headers: {'content-type': 'application/json'},
 //         data: {
 //           UserId: user?._id,
@@ -349,7 +349,7 @@
 //   //     const config = {
 //   //       url: '/makepayment',
 //   //       method: 'post',
-//   //       baseURL: 'http://192.168.1.26:3034/api/v1/transactions',
+//   //       baseURL: 'https://justbuynewbackend.onrender.com/api/v1/transactions',
 //   //       data: {
 //   //         merchantTransactionId: newMerchantTransactionId,
 //   //         merchantUserId: '2342343',
@@ -1167,7 +1167,7 @@
 //     const config = {
 //       url: '/getGst',
 //       method: 'get',
-//       baseURL: 'http://192.168.1.26:3034/api/v1/gst',
+//       baseURL: 'https://justbuynewbackend.onrender.com/api/v1/gst',
 //       headers: {'conttent-type': 'application/json'},
 //     };
 //     try {
@@ -1192,7 +1192,7 @@
 //     try {
 //       await axios
 //         .get(
-//           'http://192.168.1.26:3034/api/v1/transactions/transactionhistory/' +
+//           'https://justbuynewbackend.onrender.com/api/v1/transactions/transactionhistory/' +
 //             user?._id,
 //         )
 //         .then(res => {
@@ -1222,7 +1222,7 @@
 
 //       setLoading(false); // Start loading before fetching
 //       const res = await axios.get(
-//         `http://192.168.1.26:3034/api/v1/coins/singalcoins/${parsedUser?._id}`,
+//         `https://justbuynewbackend.onrender.com/api/v1/coins/singalcoins/${parsedUser?._id}`,
 //       );
 
 //       if (res.status === 200) {
@@ -1251,7 +1251,7 @@
 //   const getRate = async () => {
 //     try {
 //       await axios
-//         .get('http://192.168.1.26:3034/api/v1/rate/allrate')
+//         .get('https://justbuynewbackend.onrender.com/api/v1/rate/allrate')
 //         .then(res => {
 //           if (res.status === 200) {
 //             setRate(res.data.success);
@@ -1277,7 +1277,7 @@
 //   const getVideo = async () => {
 //     try {
 //       await axios
-//         .get('http://192.168.1.26:3034/api/v1/video/allvideo')
+//         .get('https://justbuynewbackend.onrender.com/api/v1/video/allvideo')
 //         .then(res => {
 //           if (res.status === 200) {
 //             setvideo(res.data.success);
@@ -1350,7 +1350,7 @@
 //       const config = {
 //         url: '/addCoins',
 //         method: 'post',
-//         baseURL: 'http://192.168.1.26:3034/api/v1/coins',
+//         baseURL: 'https://justbuynewbackend.onrender.com/api/v1/coins',
 //         headers: {'content-type': 'application/json'},
 //         data: {
 //           UserId: user?._id,
@@ -1434,7 +1434,7 @@
 //       const config = {
 //         url: '/transaction',
 //         method: 'post',
-//         baseURL: 'http://192.168.1.26:3034/api/v1/transactions',
+//         baseURL: 'https://justbuynewbackend.onrender.com/api/v1/transactions',
 //         headers: {'content-type': 'application/json'},
 //         data: {
 //           UserId: user?._id,
@@ -1475,7 +1475,7 @@
 //   //     const config = {
 //   //       url: '/makepayment',
 //   //       method: 'post',
-//   //       baseURL: 'http://192.168.1.26:3034/api/v1/transactions',
+//   //       baseURL: 'https://justbuynewbackend.onrender.com/api/v1/transactions',
 //   //       data: {
 //   //         merchantTransactionId: newMerchantTransactionId,
 //   //         merchantUserId: '2342343',
@@ -2256,7 +2256,7 @@
 
 
 
-
+/* 
 import React, { useEffect, useState } from "react"
 import {
   StyleSheet,
@@ -2363,7 +2363,7 @@ function Home() {
     const config = {
       url: "/getGst",
       method: "get",
-      baseURL: "http://192.168.1.26:3034/api/v1/gst",
+      baseURL: "https://justbuynewbackend.onrender.com/api/v1/gst",
       headers: { "conttent-type": "application/json" },
     }
     try {
@@ -2386,7 +2386,7 @@ function Home() {
     let user = await AsyncStorage.getItem("user")
     user = JSON.parse(user)
     try {
-      await axios.get("http://192.168.1.26:3034/api/v1/transactions/transactionhistory/" + user?._id).then((res) => {
+      await axios.get("https://justbuynewbackend.onrender.com/api/v1/transactions/transactionhistory/" + user?._id).then((res) => {
         if (res.status == 200) {
           console.log("idddddddddddddddddddddddddddddddddddddddddd", user?._id)
           setAlltransiction(res.data.success)
@@ -2409,7 +2409,7 @@ function Home() {
       const parsedUser = JSON.parse(storedUser)
 
       setLoading(false) // Start loading before fetching
-      const res = await axios.get(`http://192.168.1.26:3034/api/v1/coins/singalcoins/${parsedUser?._id}`)
+      const res = await axios.get(`https://justbuynewbackend.onrender.com/api/v1/coins/singalcoins/${parsedUser?._id}`)
 
       if (res.status === 200) {
         setallcoin(res.data.success)
@@ -2436,7 +2436,7 @@ function Home() {
   // console.log(objRate, 'objRate>>>>>>>>>>>>>>>>...');
   const getRate = async () => {
     try {
-      await axios.get("http://192.168.1.26:3034/api/v1/rate/allrate").then((res) => {
+      await axios.get("https://justbuynewbackend.onrender.com/api/v1/rate/allrate").then((res) => {
         if (res.status === 200) {
           setRate(res.data.success)
           setObjRate(res.data?.success[0])
@@ -2460,7 +2460,7 @@ function Home() {
   const [video, setvideo] = useState([])
   const getVideo = async () => {
     try {
-      await axios.get("http://192.168.1.26:3034/api/v1/video/allvideo").then((res) => {
+      await axios.get("https://justbuynewbackend.onrender.com/api/v1/video/allvideo").then((res) => {
         if (res.status === 200) {
           setvideo(res.data.success)
           setLoading(true)
@@ -2525,7 +2525,7 @@ function Home() {
       const config = {
         url: "/addCoins",
         method: "post",
-        baseURL: "http://192.168.1.26:3034/api/v1/coins",
+        baseURL: "https://justbuynewbackend.onrender.com/api/v1/coins",
         headers: { "content-type": "application/json" },
         data: {
           UserId: user?._id,
@@ -2634,7 +2634,7 @@ function Home() {
       const config = {
         url: "/transaction",
         method: "post",
-        baseURL: "http://192.168.1.26:3034/api/v1/transactions",
+        baseURL: "https://justbuynewbackend.onrender.com/api/v1/transactions",
         headers: { "content-type": "application/json" },
         data: {
           UserId: user?._id,
@@ -2675,7 +2675,7 @@ function Home() {
   //     const config = {
   //       url: '/makepayment',
   //       method: 'post',
-  //       baseURL: 'http://192.168.1.26:3034/api/v1/transactions',
+  //       baseURL: 'https://justbuynewbackend.onrender.com/api/v1/transactions',
   //       data: {
   //         merchantTransactionId: newMerchantTransactionId,
   //         merchantUserId: '2342343',
@@ -2762,7 +2762,7 @@ function Home() {
             <StatusBar backgroundColor="#f3d25b" barStyle="dark-content" />
 
             <ScrollView style={styles.scrollContainer}>
-              {/* Carousel Images Section - Only at the top */}
+             
               <View style={styles.swiperContainer}>
                 <Swiper
                   style={styles.wrapper}
@@ -2780,25 +2780,24 @@ function Home() {
                 </Swiper>
               </View>
 
-              {/* Gold Rate Section */}
+          
               {rate?.slice(0, 1)?.map((ele, index) => {
-                // console.log('rate', ele.rate);
+
                 return (
                   <View style={styles.loan} key={index}>
-                    {/* with gst {NewGst} % */}
-                    {/* G = (15/100) * 115 = $17.25 */}
+                  
 
                     <View style={styles.content} key={ele?._id}>
                       <Text style={[styles.passage, { fontSize: 20 }]}>Gold Rate</Text>
                       <Text style={styles.passage}>₹{Number(ele.rate)?.toFixed(2)} / gm</Text>
                     </View>
 
-                    {/* Modern Quick Buy Interface */}
+                    
                     <View style={styles.quickBuyContainer}>
-                      {/* Quick Buy Header */}
+                     
                       <Text style={styles.quickBuyHeader}>Quick Buy</Text>
 
-                      {/* Gold Type Selector - Using your actual rate data */}
+                      
                       <View style={styles.goldTypeContainer}>
                         {rate?.map((rateItem, rateIndex) => (
                           <TouchableOpacity
@@ -2827,9 +2826,9 @@ function Home() {
                         ))}
                       </View>
 
-                      {/* Input Section */}
+                   
                       <View style={styles.inputSection}>
-                        {/* Grams Input */}
+                       
                         <View style={styles.inputContainer}>
                           <View style={styles.inputHeader}>
                             <Text style={styles.inputLabel}>Grams</Text>
@@ -2851,12 +2850,12 @@ function Home() {
                           />
                         </View>
 
-                        {/* Exchange Icon */}
+                      
                         <View style={styles.exchangeContainer}>
                           <FontAwesome name="exchange" style={styles.exchangeIcon} />
                         </View>
 
-                        {/* Amount Input */}
+                      
                         <View style={styles.inputContainer}>
                           <View style={styles.inputHeader}>
                             <Text style={styles.inputLabel}>Amount</Text>
@@ -2880,10 +2879,10 @@ function Home() {
                         </View>
                       </View>
 
-                      {/* GST Included Text */}
+                     
                       <Text style={styles.gstText}>GST Included</Text>
 
-                      {/* Buy Now Button */}
+                     
                       <TouchableOpacity
                         onPress={() => {
                           if (!isDisabled) {
@@ -2906,7 +2905,7 @@ function Home() {
                 )
               })}
 
-              {/* Gold coins image and request section - moved below gold rate */}
+           
               <View
                 style={{
                   justifyContent: "center",
@@ -3035,33 +3034,7 @@ function Home() {
                         onChangeText={handleChange}
                       />
                     </View>
-                    {/* <View style={styles.request}>
-                  <TextInput
-                    style={[styles.input1, {fontSize: 16}]}
-                    placeholder={user?.name}
-                    value={name}
-                    keyboardType="default"
-                    onChangeText={name => setName(name)}
-                  />
-                </View> */}
-                    {/* <View style={styles.request}>
-                  <TextInput
-                    style={[styles.input1, {fontSize: 16}]}
-                    placeholder={user?.email}
-                    value={email}
-                    keyboardType="email-address"
-                    onChangeText={email => setEmail(email)}
-                  />
-                </View> */}
-                    {/* <View style={styles.request}>
-                  <TextInput
-                    style={[styles.input1, {fontSize: 16}]}
-                    value={mobile}
-                    placeholder={user?.phoneno}
-                    keyboardType="number-pad"
-                    onChangeText={mobile => setMobile(mobile)}
-                  />
-                </View> */}
+                  
                   </View>
 
                   <View
@@ -3112,18 +3085,16 @@ function Home() {
                 </View>
               </Modal>
             </View>
-            {/* Modal */}
+           
           </View>
         </>
       ) : (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          {/* <Text>
-            <ActivityIndicator size="big" color="#874701" />
-          </Text> */}
+          
         </View>
       )}
 
-      {/* Exit Confirmation Modal */}
+      
       <ExitConfirmationModal
         isVisible={exitModalVisible}
         onClose={() => setExitModalVisible(false)}
@@ -3447,5 +3418,1452 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+})
+ */
+"use client"
+
+import React, { useEffect, useState } from "react"
+import {
+  StyleSheet,
+  View,
+  Text,
+  StatusBar,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  BackHandler,
+  Keyboard,
+} from "react-native"
+import LinearGradient from "react-native-linear-gradient"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import axios from "axios"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import RazorpayCheckout from "react-native-razorpay"
+import { useNavigation, useFocusEffect } from "@react-navigation/native"
+import { Image } from "react-native-animatable"
+import Modal from "react-native-modal"
+import Swiper from "react-native-swiper"
+
+// Exit Confirmation Modal Component
+const ExitConfirmationModal = ({ isVisible, onClose, onConfirm }) => {
+  return (
+    <Modal isVisible={isVisible} backdropOpacity={0.5}>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Exit Application</Text>
+          <Text style={styles.modalText}>Are You Sure Want To Exit?</Text>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={onClose}>
+              <LinearGradient
+                start={{ x: 1, y: 0 }}
+                end={{ x: 0, y: 0 }}
+                colors={["#874701", "#874701", "#874701"]}
+                style={styles.exitButton}
+              >
+                <Text style={styles.exitButtonText}>Cancel</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={onConfirm}>
+              <LinearGradient
+                start={{ x: 1, y: 0 }}
+                end={{ x: 0, y: 0 }}
+                colors={["#f3d25b", "#f3d25b", "#f3d25b"]}
+                style={styles.exitButton}
+              >
+                <Text style={[styles.exitButtonText, { color: "#000" }]}>Yes</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  )
+}
+
+// Sell Modal Component
+const SellModal = ({ isVisible, onClose, onConfirm, balance, mobile, setMobile, handleChange }) => {
+  return (
+    <Modal isVisible={isVisible} backdropOpacity={0.5}>
+      <View style={styles.sellModalContainer}>
+        <View style={styles.sellModalContent}>
+          <Text style={styles.sellModalTitle}>Sell Gold</Text>
+
+          <Text style={styles.sellBalanceDisplay}>{balance.toFixed(4)} Grams Available</Text>
+
+          <Text style={styles.sellModalSubtitle}>Enter Grams to Sell</Text>
+
+          <TextInput
+            style={styles.sellInput}
+            placeholderTextColor={"#666"}
+            placeholder="Enter grams"
+            value={mobile}
+            keyboardType="number-pad"
+            onChangeText={handleChange}
+          />
+
+          <View style={styles.sellButtonContainer}>
+            <TouchableOpacity onPress={onClose}>
+              <LinearGradient
+                start={{ x: 1, y: 0 }}
+                end={{ x: 0, y: 0 }}
+                colors={["#666", "#666", "#666"]}
+                style={styles.sellButton}
+              >
+                <Text style={styles.sellButtonText}>Cancel</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={onConfirm}>
+              <LinearGradient
+                start={{ x: 1, y: 0 }}
+                end={{ x: 0, y: 0 }}
+                colors={["#4CAF50", "#4CAF50", "#4CAF50"]}
+                style={styles.sellButton}
+              >
+                <Text style={styles.sellButtonText}>Sell Now</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  )
+}
+
+function Home() {
+  const navigation = useNavigation("")
+  const [loading, setLoading] = useState(false)
+  const [isInitialLoad, setIsInitialLoad] = useState(true) // Add state to track if this is initial load vs refresh
+  const [sellModalVisible, setSellModalVisible] = useState(false)
+  const [exitModalVisible, setExitModalVisible] = useState(false)
+  const [selectedGoldType, setSelectedGoldType] = useState(0) // Default to first option (backend data)
+  const [gold, setgold] = useState("")
+  const [Amount, setamount] = useState("")
+  const [rate, setRate] = useState([])
+  const [objRate, setObjRate] = useState({})
+  const [goldRate, setGoldRate] = useState(0)
+  const [data, setData] = useState({})
+  const [alltransiction, setAlltransiction] = useState([])
+  const [allcoin, setallcoin] = useState([])
+  const [video, setvideo] = useState([])
+  const [user, setUser] = useState(null) // Updated user state
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false) // Added keyboard visibility state management
+
+  // Handle back button press ONLY when this screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        setExitModalVisible(true)
+        return true // Prevents default back action
+      }
+
+      const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction)
+
+      return () => backHandler.remove()
+    }, []),
+  )
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Set status bar when screen comes into focus
+      const setStatusBar = () => {
+        StatusBar.setBackgroundColor("#4CAF50", true)
+        StatusBar.setBarStyle("light-content", true)
+      }
+
+      // Set immediately
+      setStatusBar()
+
+      // Set again after a small delay to override any conflicting configurations
+      const timeoutId = setTimeout(setStatusBar, 100)
+
+      // Cleanup function when screen loses focus
+      return () => {
+        clearTimeout(timeoutId)
+      }
+    }, []),
+  )
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchUserData() // Refresh user data when navigating back to Home
+      if (!isInitialLoad) {
+        // Only refresh coins and transactions silently after initial load
+        refreshDataSilently()
+      }
+    }, [isInitialLoad]),
+  )
+
+  // Fetch user data from AsyncStorage
+  const fetchUserData = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem("user")
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser)
+        setUser(parsedUser)
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error)
+    }
+  }
+
+  useEffect(() => {
+    getRate()
+    getGst()
+    getVideo()
+    fetchUserData() // Added user data fetching on component mount
+    getCoins()
+    userTransaction()
+  }, [])
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardVisible(true)
+    })
+    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardVisible(false)
+    })
+
+    return () => {
+      keyboardDidHideListener?.remove()
+      keyboardDidShowListener?.remove()
+    }
+  }, [])
+
+  // Get Gst+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  const getGst = async () => {
+    const config = {
+      url: "/getGst",
+      method: "get",
+      baseURL: "https://justbuynewbackend.onrender.com/api/v1/gst",
+      headers: { "conttent-type": "application/json" },
+    }
+    try {
+      const result = await axios(config)
+      if (result.status === 200) {
+        setData(result.data.success)
+        setLoading(true)
+      } else {
+        Alert.alert("Something went wrong")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // get all transiction---
+  const userTransaction = async (_id) => {
+    let user = await AsyncStorage.getItem("user")
+    user = JSON.parse(user)
+    try {
+      await axios
+        .get("https://justbuynewbackend.onrender.com/api/v1/transactions/transactionhistory/" + user?._id)
+        .then((res) => {
+          if (res.status == 200) {
+            console.log("idddddddddddddddddddddddddddddddddddddddddd", user?._id)
+            setAlltransiction(res.data.success)
+            if (isInitialLoad) {
+              setLoading(true)
+            }
+          } else {
+            console.log(res.error)
+          }
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const getCoins = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem("user")
+      const parsedUser = JSON.parse(storedUser)
+
+      if (isInitialLoad) {
+        setLoading(false) // Start loading before fetching
+      }
+
+      const res = await axios.get(`https://justbuynewbackend.onrender.com/api/v1/coins/singalcoins/${parsedUser?._id}`)
+
+      if (res.status === 200) {
+        setallcoin(res.data.success)
+      } else {
+        console.log(res.error)
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      if (isInitialLoad) {
+        setLoading(true) // Stop loading after fetching
+        setIsInitialLoad(false) // Mark initial load as complete
+      }
+    }
+  }
+
+  // Get Gold Rate+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  const getRate = async () => {
+    try {
+      await axios.get("https://justbuynewbackend.onrender.com/api/v1/rate/allrate").then((res) => {
+        if (res.status === 200) {
+          setRate(res.data.success)
+          setObjRate(res.data?.success[0])
+          setGoldRate(res.data?.success[0]?.rate)
+          setLoading(true)
+        } else {
+          console.log(res.error)
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // Total Gst++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  const NewGst = data?.Sgst + data?.Cgst
+
+  // Get Video++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  const getVideo = async () => {
+    try {
+      await axios.get("https://justbuynewbackend.onrender.com/api/v1/video/allvideo").then((res) => {
+        if (res.status === 200) {
+          setvideo(res.data.success)
+          setLoading(true)
+        } else {
+          console.log(res.error)
+        }
+      })
+    } catch (error) {
+      console.log(error.success)
+    }
+  }
+
+  // All transicition
+  const transicitionData = alltransiction?.reduce((a, i) => a + Number(i?.gold), 0)
+  const coinsData = allcoin.reduce((a, i) => a + Number(i?.coins || 0), 0)
+
+  console.log("coinsdata.................................", coinsData)
+  console.log("transicitionData.................................", transicitionData)
+
+  // Total Store gold
+  const totalgoldStore = transicitionData - coinsData
+
+  // Static data for remaining options (2nd and 3rd)
+  const staticMetalData = [
+    {
+      id: 2,
+      name: "Gold",
+      purity: "22k-916",
+      rate: 10222.0,
+      balance: 0.0,
+    },
+    {
+      id: 3,
+      name: "Silver",
+      purity: "24k-995",
+      rate: 132.0,
+      balance: 1.0,
+    },
+  ]
+
+  // Combine backend data (first) with static data (remaining)
+  const getAllMetalData = () => {
+    if (rate.length > 0) {
+      const backendFirst = {
+        id: 1,
+        name: "Gold",
+        purity: `${rate[0]?.name}k-${rate[0]?.purity || "999"}`,
+        rate: rate[0]?.rate || 0,
+        balance: transicitionData - coinsData || 0,
+      }
+      return [backendFirst, ...staticMetalData]
+    }
+    return staticMetalData
+  }
+
+  const metalData = getAllMetalData()
+
+  // Sell functionality
+  const [mobile, setMobile] = useState("")
+
+  const handleChange = (mobile) => {
+    const formattedMobile = mobile.replace(/[^0-9]/g, "")
+    if (formattedMobile !== mobile) {
+      Alert.alert("Only numbers are allowed")
+    }
+    setMobile(formattedMobile)
+  }
+
+  const sellGold = async () => {
+    if (!mobile) return Alert.alert("Enter grams to sell")
+    if (mobile < 1) return Alert.alert("Please enter more than 1 gram")
+    if (mobile > totalgoldStore) return Alert.alert("Don't have sufficient gold in your balance")
+
+    try {
+      const config = {
+        url: "/addCoins",
+        method: "post",
+        baseURL: "https://justbuynewbackend.onrender.com/api/v1/coins",
+        headers: { "content-type": "application/json" },
+        data: {
+          UserId: user?._id,
+          username: user?.name,
+          email: user?.email,
+          usphone: user?.phoneno,
+          phone: user?.phoneno,
+          coins: Number(mobile),
+        },
+      }
+      const res = await axios(config)
+      if (res.status === 200) {
+        setSellModalVisible(false)
+        Alert.alert("Sell Request Sent Successfully")
+        setamount("0")
+        setgold("0")
+        setMobile("0")
+        getCoins()
+      } else {
+        Alert.alert("Something went wrong")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // Total calculation++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  const [gramCompleted, setGramCompleted] = useState(false)
+
+  // Get current gold type multiplier from your rate data
+  const getCurrentMultiplier = () => {
+    if (selectedGoldType === 0 && rate.length > 0) {
+      // Backend data for first option
+      return rate[0].multiplier || 1
+    }
+    // Static data for remaining options
+    return 1
+  }
+
+  const calculate = (price, Amount) => {
+    const multiplier = getCurrentMultiplier()
+    const adjustedPrice = price * multiplier
+    const ab = Number(Amount) / Number(adjustedPrice)
+    const gst = 100 / (100 + NewGst)
+    const amt = ab * gst
+    setgold(amt?.toFixed(4))
+    setGramCompleted(Number.isInteger(ab))
+    setamount(Amount)
+  }
+
+  const calculate2 = (price, gold) => {
+    setgold(gold)
+    const multiplier = getCurrentMultiplier()
+    const adjustedPrice = price * multiplier
+    const ab = Number(gold) * Number(adjustedPrice)
+    setamount(ab?.toFixed(2))
+    setGramCompleted(Number.isInteger(gold))
+  }
+
+  // Calculate amount from grams
+  const calculateAmount = (inputGrams) => {
+    setgold(inputGrams)
+    if (inputGrams && inputGrams !== "0" && selectedGoldType !== null && metalData.length > 0) {
+      const selectedMetal = metalData[selectedGoldType]
+      const priceWithGst = (selectedMetal.rate * (100 + NewGst)) / 100
+      const calculatedAmount = (Number.parseFloat(inputGrams) * priceWithGst).toFixed(2)
+      setamount(calculatedAmount)
+    } else {
+      setamount("0")
+    }
+  }
+
+  // Calculate grams from amount
+  const calculateGrams = (inputAmount) => {
+    setamount(inputAmount)
+    if (inputAmount && inputAmount !== "0" && selectedGoldType !== null && metalData.length > 0) {
+      const selectedMetal = metalData[selectedGoldType]
+      const priceWithGst = (selectedMetal.rate * (100 + NewGst)) / 100
+      const calculatedGrams = (Number.parseFloat(inputAmount) / priceWithGst).toFixed(4)
+      setgold(calculatedGrams)
+    } else {
+      setgold("0")
+    }
+  }
+
+  // Update selected metal when type changes
+  useEffect(() => {
+    if (selectedGoldType !== null && metalData.length > 0) {
+      if (selectedGoldType === 0 && rate.length > 0) {
+        // Backend data
+        setObjRate(rate[0])
+        setGoldRate(rate[0].rate)
+      } else {
+        // Static data
+        const staticIndex = selectedGoldType - 1
+        if (staticIndex >= 0 && staticIndex < staticMetalData.length) {
+          setObjRate(staticMetalData[staticIndex])
+          setGoldRate(staticMetalData[staticIndex].rate)
+        }
+      }
+
+      // Recalculate if there are existing values
+      if (gold) {
+        calculateAmount(gold)
+      } else if (Amount) {
+        calculateGrams(Amount)
+      }
+    }
+  }, [selectedGoldType, rate, transicitionData, coinsData])
+
+  useEffect(() => {
+    if (Object.keys(data).length != 0 && Object.keys(objRate).length != 0) {
+      const NewGst1 = data?.Sgst + data?.Cgst
+    }
+  }, [objRate])
+
+  // Reset calculations when gold type changes
+  useEffect(() => {
+    // Clear inputs when metal type changes
+    setgold("0")
+    setamount("0")
+  }, [selectedGoldType])
+
+  // Transaction++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  const [paymentid, setpaymentId] = useState("")
+  const placeorder = async (paymentid) => {
+    try {
+      const config = {
+        url: "/transaction",
+        method: "post",
+        baseURL: "https://justbuynewbackend.onrender.com/api/v1/transactions",
+        headers: { "content-type": "application/json" },
+        data: {
+          UserId: user?._id,
+          amount: Amount,
+          gold: gold,
+          PaymentId: paymentid,
+          totalCoin: totalgoldStore - Number(gold), // Corrected calculation
+        },
+      }
+      await axios(config).then(async (res) => {
+        if (res.status === 200) {
+          Alert.alert("Successfully")
+          await userTransaction() // Ensure transactions are refreshed
+          await getCoins() // Refresh coins data
+          navigation.navigate("Home1")
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const isDisabled = !Amount || !gold
+
+  // react-native-razorpay+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  const posttransaction = async () => {
+    // Validate amount before proceeding with payment
+    if (!validateAmount(Amount)) {
+      return
+    }
+
+    try {
+      var options = {
+        key: "rzp_test_FAe0X6xLYXaXHe",
+        amount: Amount * 100,
+        currency: "INR",
+        name: "JustBuyGold",
+        description: "Order Amount",
+        image: "./assets/images/newlogo.png",
+        customerId: user?._id,
+        handler: (response) => {
+          setpaymentId(response.razorpay_payment_id)
+        },
+        prefill: {
+          name: user?.name,
+          email: user?.email,
+          contact: user?.phoneno,
+        },
+        theme: { color: "#F37254" },
+      }
+      RazorpayCheckout.open(options)
+        .then((data) => {
+          Alert.alert(`Success: ${data.razorpay_payment_id}`)
+          placeorder(data.razorpay_payment_id)
+          setamount("0")
+          setgold("0")
+        })
+        .catch((error) => {
+          Alert.alert(`Error: ${error.code} | ${error.description}`)
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // Validation function for amount - will be used only when Buy button is clicked
+  const validateAmount = (amount) => {
+    const numAmount = Number(amount)
+    if (numAmount < 100) {
+      Alert.alert("Minimum Amount", "Amount should be at least ₹100")
+      return false
+    } else if (numAmount > 200000) {
+      Alert.alert("Maximum Amount", "Amount should not exceed ₹2,00,000")
+      return false
+    }
+    return true
+  }
+
+  // Action buttons for quick actions
+  const actionButtons = [
+    {
+      name: "Redeem",
+      icon: "card-giftcard",
+      color: "#4CAF50",
+      action: () => Alert.alert("Redeem", "Redeem feature coming soon!"),
+    },
+    {
+      name: "Sell",
+      icon: "shopping-cart",
+      color: "#4CAF50",
+      action: () => {
+        if (totalgoldStore >= 1) {
+          setSellModalVisible(true)
+        } else {
+          Alert.alert("Insufficient Balance", "You need at least 1 gram to sell")
+        }
+      },
+    },
+    {
+      name: "Savings Plan",
+      icon: "account-balance-wallet",
+      color: "#4CAF50",
+      action: () => Alert.alert("Savings Plan", "Savings Plan feature coming soon!"),
+    },
+    {
+      name: "Look Book",
+      icon: "book",
+      color: "#4CAF50",
+      action: () => Alert.alert("Look Book", "Look Book feature coming soon!"),
+    },
+    {
+      name: "Deposit Plan",
+      icon: "timeline",
+      color: "#4CAF50",
+      action: () => Alert.alert("Deposit Plan", "Deposit Plan feature coming soon!"),
+    },
+  ]
+
+  const carouselImages = [require("../../assets/images/g9.png"), require("../../assets/images/g9.png")]
+
+  const refreshDataSilently = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem("user")
+      const parsedUser = JSON.parse(storedUser)
+
+      // Refresh coins data silently
+      const coinsRes = await axios.get(
+        `https://justbuynewbackend.onrender.com/api/v1/coins/singalcoins/${parsedUser?._id}`,
+      )
+      if (coinsRes.status === 200) {
+        setallcoin(coinsRes.data.success)
+      }
+
+      // Refresh transaction history silently
+      const transRes = await axios.get(
+        "https://justbuynewbackend.onrender.com/api/v1/transactions/transactionhistory/" + parsedUser?._id,
+      )
+      if (transRes.status === 200) {
+        setAlltransiction(transRes.data.success)
+      }
+    } catch (error) {
+      console.log("Silent refresh error:", error)
+    }
+  }
+
+  return (
+    <>
+      {loading ? (
+        <>
+          <View style={styles.container}>
+            {/* Greeting Section */}
+            <View style={styles.greetingContainer}>
+              <View style={styles.greetingContent}>
+                <Text style={styles.helloText}>Hello</Text>
+                <Text style={styles.handIcon}>👋 </Text>
+              </View>
+              <Text style={styles.usernameText}>{user?.name || "User"} !</Text>
+            </View>
+
+            <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+              {/* Carousel Images Section */}
+              <View style={styles.swiperContainer}>
+                <Swiper
+                  style={styles.wrapper}
+                  showsButtons={false}
+                  autoplay
+                  autoplayTimeout={3}
+                  dotStyle={styles.dot}
+                  activeDotStyle={styles.activeDot}
+                >
+                  {carouselImages.map((image, index) => (
+                    <View key={index} style={styles.slide}>
+                      <Image source={image} resizeMode="cover" style={styles.swiperImage} />
+                    </View>
+                  ))}
+                </Swiper>
+              </View>
+
+              {/* Balance Section - Scrollable Layout */}
+              <View style={styles.balanceMainContainer}>
+                <View style={styles.balanceContainer}>
+                  <View style={styles.scrollableRow}>
+                    <View style={styles.fixedLabelsColumn}>
+                      <View style={styles.labelSpacing}>{/* Empty space for coins and metal names */}</View>
+                      <View style={styles.labelContainer}>
+                        <Text style={styles.sectionLabel}>Balance{"\n"}in gms</Text>
+                      </View>
+                      <View style={styles.labelContainer}>
+                        <Text style={styles.sectionLabel}>Current{"\n"}rate(₹)/gm</Text>
+                      </View>
+                    </View>
+
+                    <ScrollView
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      style={styles.scrollableContent}
+                      contentContainerStyle={styles.scrollContentContainer}
+                    >
+                      {metalData.map((metal, index) => (
+                        <View key={metal.id} style={styles.scrollableMetalColumn}>
+                          {/* Coin */}
+                          {index < 2 ? (
+                            <View style={styles.goldCoin}>
+                              <Text style={styles.coinText}>GOLD</Text>
+                            </View>
+                          ) : (
+                            <View style={styles.silverCoin}>
+                              <Text style={styles.coinTextSilver}>SILVER</Text>
+                            </View>
+                          )}
+
+                          {/* Metal Name */}
+                          <Text style={styles.metalName}>{metal.name}</Text>
+
+                          {/* Balance Value */}
+                          <View style={styles.valueBox}>
+                            <Text style={styles.balanceValue}>
+                              {index === 0 ? (metal.balance || 0).toFixed(4) : metal.balance.toFixed(4)}
+                            </Text>
+                            <Text style={styles.purityText}>{metal.purity}</Text>
+                          </View>
+
+                          {/* Rate Value */}
+                          <View style={styles.valueBox}>
+                            <Text style={styles.rateValue}>
+                              {index === 0 ? (metal.rate || 0).toLocaleString() : metal.rate.toLocaleString()}
+                            </Text>
+                          </View>
+                        </View>
+                      ))}
+                    </ScrollView>
+                  </View>
+
+                  {/* GST Text */}
+                  <Text style={styles.gstText}>Rates are exclusive of GST</Text>
+                </View>
+              </View>
+
+              {/* Quick Buy Section - First from backend, rest static */}
+              <View style={styles.quickBuyContainer}>
+                <Text style={styles.quickBuyHeader}>Quick Buy</Text>
+
+                {/* Metal Type Selector */}
+                <View style={styles.metalTypeContainer}>
+                  {metalData.map((metal, index) => (
+                    <TouchableOpacity
+                      key={metal.id}
+                      style={[styles.metalTypeTab, selectedGoldType === index && styles.selectedMetalTypeTab]}
+                      onPress={() => setSelectedGoldType(index)}
+                      activeOpacity={0.8}
+                    >
+                      <Text
+                        style={[styles.metalTypeLabel, selectedGoldType === index && styles.selectedMetalTypeLabel]}
+                      >
+                        {metal.name}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.metalTypeSubtitle,
+                          selectedGoldType === index && styles.selectedMetalTypeSubtitle,
+                        ]}
+                      >
+                        {metal.purity}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                {/* Input Section */}
+                <View style={styles.inputSection}>
+                  {/* Grams Input */}
+                  <View style={styles.inputContainer}>
+                    <View style={styles.inputHeader}>
+                      <Text style={styles.inputLabel}>Grams</Text>
+                      <FontAwesome name="balance-scale" style={styles.inputIcon} />
+                    </View>
+                    <TextInput
+                      style={styles.modernInput}
+                      placeholder="0"
+                      placeholderTextColor="#999"
+                      keyboardType="numeric"
+                      value={gold === "0" ? "" : gold}
+                      onChangeText={calculateAmount}
+                      onFocus={() => setKeyboardVisible(true)} // Added onFocus and onBlur to manage keyboard state
+                      onBlur={() => setKeyboardVisible(false)}
+                    />
+                  </View>
+
+                  {/* Exchange Icon */}
+                  <View style={styles.exchangeContainer}>
+                    <FontAwesome name="exchange" style={styles.exchangeIcon} />
+                  </View>
+
+                  {/* Amount Input */}
+                  <View style={styles.inputContainer}>
+                    <View style={styles.inputHeader}>
+                      <Text style={styles.inputLabel}>Amount</Text>
+                      <Text style={styles.rupeeSymbol}>₹</Text>
+                    </View>
+                    <TextInput
+                      style={styles.modernInput}
+                      placeholder="0"
+                      placeholderTextColor="#999"
+                      keyboardType="numeric"
+                      value={Amount === "0" || Amount === "0.00" ? "" : Amount}
+                      onChangeText={calculateGrams}
+                      onFocus={() => setKeyboardVisible(true)} // Added onFocus and onBlur to manage keyboard state
+                      onBlur={() => setKeyboardVisible(false)}
+                    />
+                  </View>
+                </View>
+
+                {/* GST Included Text */}
+                <Text style={styles.gstIncludedText}>GST Included</Text>
+
+                {/* Buy Now Button */}
+                <TouchableOpacity
+                  onPress={() => {
+                    if (selectedGoldType === 0 && !isDisabled) {
+                      if (validateAmount(Amount)) {
+                        navigation.navigate("Pay", {
+                          Amount,
+                          gold,
+                          goldRate: metalData[selectedGoldType]?.rate || 0,
+                        })
+                      }
+                    }
+                  }}
+                  disabled={isDisabled || selectedGoldType !== 0}
+                  style={[styles.buyNowButton, { opacity: isDisabled || selectedGoldType !== 0 ? 0.3 : 1 }]}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.buyNowText}>{selectedGoldType === 0 ? "Buy Now" : "Coming Soon"}</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Quick Actions Section - Individual Cards like third image */}
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.actionsScrollContainer}
+                style={styles.actionsScrollView}
+              >
+                {actionButtons.map((action, index) => (
+                  <TouchableOpacity key={index} style={styles.actionCard} onPress={action.action} activeOpacity={0.7}>
+                    <View style={[styles.actionCardIcon, { backgroundColor: action.color }]}>
+                      <MaterialIcons name={action.icon} size={24} color="white" />
+                    </View>
+                    <Text style={styles.actionCardText}>{action.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+
+              {/* Bottom spacing */}
+              <View style={styles.bottomSpacing} />
+            </ScrollView>
+
+            {/* Sell Modal */}
+            <SellModal
+              isVisible={sellModalVisible}
+              onClose={() => setSellModalVisible(false)}
+              onConfirm={sellGold}
+              balance={totalgoldStore || 0}
+              mobile={mobile}
+              setMobile={setMobile}
+              handleChange={handleChange}
+            />
+          </View>
+        </>
+      ) : (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Text>Loading...</Text>
+        </View>
+      )}
+
+      {/* Exit Confirmation Modal */}
+      <ExitConfirmationModal
+        isVisible={exitModalVisible}
+        onClose={() => setExitModalVisible(false)}
+        onConfirm={() => BackHandler.exitApp()}
+      />
+    </>
+  )
+}
+
+export default Home
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+  },
+  scrollContainer: {
+    flex: 1,
+    backgroundColor: "#f8f9fa",
+  },
+
+  // Carousel Styles
+  swiperContainer: {
+    height: 200,
+    marginTop: 15,
+    marginBottom: 20,
+    marginHorizontal: 15,
+    borderRadius: 20,
+    overflow: "hidden",
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    backgroundColor: "#fff",
+  },
+  wrapper: {},
+  slide: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    overflow: "hidden",
+  },
+  swiperImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+    borderRadius: 20,
+  },
+  dot: {
+    backgroundColor: "rgba(255,255,255,0.5)",
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginLeft: 3,
+    marginRight: 3,
+  },
+  activeDot: {
+    backgroundColor: "#FFD700",
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginLeft: 3,
+    marginRight: 3,
+  },
+
+  // Balance Section - Scrollable Layout
+  balanceMainContainer: {
+    marginHorizontal: 12,
+    marginBottom: 15,
+  },
+  balanceContainer: {
+    backgroundColor: "#ffffff",
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: "#f0f0f0",
+  },
+
+  scrollableRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 20,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+  },
+
+  fixedLabelsColumn: {
+    width: 90,
+    justifyContent: "flex-start",
+    paddingRight: 12,
+  },
+
+  labelSpacing: {
+    height: 85,
+    marginBottom: 8,
+  },
+
+  labelContainer: {
+    height: 60,
+    justifyContent: "center",
+    marginBottom: 8,
+  },
+
+  scrollableMetalColumn: {
+    alignItems: "center",
+    marginHorizontal: 12,
+    minWidth: 100,
+  },
+
+  goldCoin: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#FFD700",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: "#FFA500",
+    marginBottom: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 5,
+    elevation: 8,
+  },
+  silverCoin: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#E5E5E5",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: "#B8B8B8",
+    marginBottom: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 5,
+    elevation: 8,
+  },
+  coinText: {
+    fontSize: 9,
+    fontWeight: "bold",
+    color: "#8B4513",
+    textAlign: "center",
+  },
+  coinTextSilver: {
+    fontSize: 8,
+    fontWeight: "bold",
+    color: "#2F4F4F",
+    textAlign: "center",
+  },
+  metalName: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 8,
+  },
+
+  valueBox: {
+    backgroundColor: "#f8f9fa",
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    minHeight: 60,
+    width: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+    marginBottom: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+
+  sectionLabel: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#333",
+    textAlign: "left",
+    lineHeight: 16,
+  },
+  balanceValue: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#000",
+    textAlign: "center",
+    marginBottom: 2,
+  },
+  purityText: {
+    fontSize: 10,
+    color: "#666",
+    textAlign: "center",
+    fontWeight: "500",
+  },
+  rateValue: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#000",
+    textAlign: "center",
+  },
+
+  // Quick Buy Section Styles
+  quickBuyContainer: {
+    backgroundColor: "#f0f0f0",
+    borderRadius: 20,
+    margin: 15,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  quickBuyHeader: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#000",
+    marginBottom: 20,
+  },
+  metalTypeContainer: {
+    flexDirection: "row",
+    marginBottom: 25,
+    gap: 8,
+  },
+  metalTypeTab: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    alignItems: "center",
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+  },
+  selectedMetalTypeTab: {
+    backgroundColor: "#4CAF50",
+    borderColor: "#4CAF50",
+  },
+  metalTypeLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#666",
+    marginBottom: 2,
+  },
+  selectedMetalTypeLabel: {
+    color: "white",
+  },
+  metalTypeSubtitle: {
+    fontSize: 12,
+    color: "#999",
+  },
+  selectedMetalTypeSubtitle: {
+    color: "white",
+  },
+  inputSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 15,
+    gap: 15,
+  },
+  inputContainer: {
+    flex: 1,
+  },
+  inputHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+    gap: 8,
+  },
+  inputLabel: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+  },
+  inputIcon: {
+    fontSize: 16,
+    color: "#666",
+  },
+  rupeeSymbol: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#666",
+  },
+  modernInput: {
+    backgroundColor: "white",
+    borderRadius: 12,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#000",
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+    textAlign: "center",
+    minHeight: 50,
+  },
+  exchangeContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 25,
+  },
+  exchangeIcon: {
+    fontSize: 20,
+    color: "#666",
+    transform: [{ rotate: "90deg" }],
+  },
+  gstIncludedText: {
+    fontSize: 14,
+    color: "#999",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  buyNowButton: {
+    backgroundColor: "#4CAF50",
+    borderRadius: 15,
+    paddingVertical: 18,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  buyNowText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "700",
+  },
+
+  // Quick Actions Section - Individual Cards like third image
+  actionsScrollView: {
+    marginBottom: 20,
+  },
+  actionsScrollContainer: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+  actionCard: {
+    backgroundColor: "white",
+    borderRadius: 16,
+    padding: 15,
+    alignItems: "center",
+    marginHorizontal: 6,
+    minWidth: 100,
+    minHeight: 110,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 4,
+  },
+  actionCardIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  actionCardText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#333",
+    textAlign: "center",
+  },
+
+  // Bottom spacing
+  bottomSpacing: {
+    height: 30,
+  },
+
+  // Sell Modal Styles
+  sellModalContainer: {
+    backgroundColor: "white",
+    borderRadius: 15,
+    margin: 20,
+    padding: 25,
+  },
+  sellModalContent: {
+    alignItems: "center",
+  },
+  sellModalTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#333",
+    marginBottom: 20,
+  },
+  sellBalanceDisplay: {
+    fontSize: 18,
+    fontWeight: "600",
+    backgroundColor: "#f0f8ff",
+    borderColor: "#4CAF50",
+    borderWidth: 2,
+    borderRadius: 10,
+    padding: 15,
+    textAlign: "center",
+    marginBottom: 20,
+    minWidth: 250,
+    color: "#333",
+  },
+  sellModalSubtitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 15,
+  },
+  sellInput: {
+    height: 50,
+    borderWidth: 2,
+    borderRadius: 10,
+    color: "#333",
+    padding: 15,
+    borderColor: "#4CAF50",
+    backgroundColor: "#f9f9f9",
+    textAlign: "center",
+    fontSize: 16,
+    minWidth: 250,
+    marginBottom: 25,
+  },
+  sellButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    paddingHorizontal: 10,
+  },
+  sellButton: {
+    height: 45,
+    paddingHorizontal: 25,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    minWidth: 110,
+  },
+  sellButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  // Exit Modal Styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    width: "80%",
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "black",
+    marginBottom: 15,
+  },
+  modalText: {
+    fontSize: 16,
+    color: "black",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    paddingHorizontal: 20,
+  },
+  exitButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 100,
+    minWidth: 100,
+    alignItems: "center",
+  },
+  exitButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  // Greeting Styles
+  greetingContainer: {
+    backgroundColor: "#4CAF50",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    paddingTop: 50, // Account for status bar
+  },
+  greetingContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
+  },
+  helloText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    marginRight: 8,
+  },
+  handIcon: {
+    fontSize: 26,
+    color: "#FFD700", // Golden yellow color for better contrast
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  usernameText: {
+    fontSize: 18,
+    color: "#FFFFFF",
+    fontWeight: "500",
   },
 })

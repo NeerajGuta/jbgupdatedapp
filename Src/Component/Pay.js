@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from "react-native"
+/* import { Alert, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from "react-native"
 import React, { useEffect, useState } from "react"
 
 import LinearGradient from "react-native-linear-gradient"
@@ -23,7 +23,7 @@ const Pay = ({ navigation, route }) => {
 
   const userID = async (userId) => {
     try {
-      const response = await axios.get(`http://192.168.1.26:3034/api/v1/user/auth/user/${userId}`)
+      const response = await axios.get(`https://justbuynewbackend.onrender.com/api/v1/user/auth/user/${userId}`)
 
       if (response.status === 200) {
         setGetuser(response.data.user)
@@ -48,7 +48,7 @@ const Pay = ({ navigation, route }) => {
       //   throw new Error('User ID is not available');
       // }
 
-      const res = await axios.get(`http://192.168.1.26:3034/api/v1/refCode/${user._id}`)
+      const res = await axios.get(`https://justbuynewbackend.onrender.com/api/v1/refCode/${user._id}`)
 
       // console.log('referalcode', res);
 
@@ -97,7 +97,7 @@ const Pay = ({ navigation, route }) => {
 
   const handleReferralSubmit = async () => {
     try {
-      const response = await axios.put("http://192.168.1.26:3034/api/v1/changestatus", {
+      const response = await axios.put("https://justbuynewbackend.onrender.com/api/v1/changestatus", {
         receiverId: user?._id,
       })
       console.log("Success", response.data.message)
@@ -118,7 +118,7 @@ const Pay = ({ navigation, route }) => {
   // console.log(datas, 'dstsss');
   const fetchUserReferralStats = async (userId) => {
     try {
-      const response = await axios.get(`http://192.168.1.26:3034/api/v1/user/${userId}`)
+      const response = await axios.get(`https://justbuynewbackend.onrender.com/api/v1/user/${userId}`)
       if (response.status === 200) {
         setData(response.data.totalRupeesEarned)
       } else {
@@ -139,7 +139,7 @@ const Pay = ({ navigation, route }) => {
       const config = {
         url: "/transaction",
         method: "post",
-        baseURL: "http://192.168.1.26:3034/api/v1/transactions",
+        baseURL: "https://justbuynewbackend.onrender.com/api/v1/transactions",
         headers: { "content-type": "application/json" },
         data: {
           UserId: user?._id,
@@ -217,7 +217,7 @@ const Pay = ({ navigation, route }) => {
     const config = {
       url: "/getGst",
       method: "get",
-      baseURL: "http://192.168.1.26:3034/api/v1/gst",
+      baseURL: "https://justbuynewbackend.onrender.com/api/v1/gst",
       headers: { "conttent-type": "application/json" },
     }
     try {
@@ -237,7 +237,7 @@ const Pay = ({ navigation, route }) => {
   // console.log(objRate, 'objRate>>>>>>>>>>>>>>>>...');
   const getRate = async () => {
     try {
-      await axios.get("http://192.168.1.26:3034/api/v1/rate/allrate").then((res) => {
+      await axios.get("https://justbuynewbackend.onrender.com/api/v1/rate/allrate").then((res) => {
         if (res.status === 200) {
           setRate(res.data.success)
           setObjRate(res.data.success[0])
@@ -292,18 +292,7 @@ const Pay = ({ navigation, route }) => {
           <Text style={styles.label}>GST ({NewGst}%):</Text>
           <Text style={styles.value}>₹{(TotalPayableAmount - baseGoldValue?.toFixed(2)).toFixed(2)}</Text>
         </View>
-        {/* <View style={styles.detailItem}>
-          <Text style={styles.label}>GST ({NewGst}%):</Text>
-          <Text style={styles.value}>₹{goldWeight*goldRate}</Text>
-        </View> */}
-        {/* {RedCodeID && RedCodeID.status == 'Active' ? (
-          <>
-            <View style={styles.detailItem}>
-              <Text style={styles.label}>Referral Discount Amount:</Text>
-              <Text style={styles.value}>- ₹{referralprice?.toFixed(3)}</Text>
-            </View>
-          </>
-        ) : null} */}
+       
         {getUser && getUser?.totalEarnedMoney == 0 ? (
           <>
             <View style={styles.detailItem}>
@@ -417,6 +406,448 @@ const styles = StyleSheet.create({
     marginTop: 15,
     fontSize: 16,
     color: "#874701",
+    fontWeight: "600",
+  },
+})
+ */
+
+
+
+"use client"
+
+import { Alert, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from "react-native"
+import React, { useEffect, useState } from "react"
+
+import LinearGradient from "react-native-linear-gradient"
+import axios from "axios"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useFocusEffect } from "@react-navigation/native"
+import RazorpayCheckout from "react-native-razorpay"
+
+const Pay = ({ navigation, route }) => {
+  const { Amount, gold, goldRate } = route.params
+
+  const [user, setUser] = useState("")
+  const [data, setData] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [getUser, setGetuser] = useState(null)
+
+  const userID = async (userId) => {
+    try {
+      const response = await axios.get(`https://justbuynewbackend.onrender.com/api/v1/user/auth/user/${userId}`)
+
+      if (response.status === 200) {
+        setGetuser(response.data.user)
+      } else {
+        console.error("Unexpected response status:", response.status)
+      }
+    } catch (error) {
+      console.log("Error fetching user:", error)
+    }
+  }
+
+  const [RedCodeID, setRedCodeID] = useState({})
+  const [ActiveStatus, setActiveStatus] = useState({})
+  const [referralCode, setReferralCode] = useState("")
+  const [error, setError] = useState("")
+
+  const getrefCode = async () => {
+    try {
+      const res = await axios.get(`https://justbuynewbackend.onrender.com/api/v1/refCode/${user._id}`)
+
+      if (res.status === 200) {
+        setRedCodeID(res.data)
+        setActiveStatus(res.data.status === "Inactive")
+      } else {
+        console.error(`Unexpected response status: ${res.status}`)
+      }
+    } catch (error) {
+      console.error("Error fetching referral code:", error?.message)
+    }
+  }
+
+  const userData = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem("user")
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser)
+        setUser(parsedUser)
+        userID(parsedUser._id)
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error)
+    }
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      userData()
+    }, []),
+  )
+
+  const handleReferralSubmit = async () => {
+    try {
+      const response = await axios.put("https://justbuynewbackend.onrender.com/api/v1/changestatus", {
+        receiverId: user?._id,
+      })
+      console.log("Success", response.data.message)
+      setReferralCode(" ")
+    } catch (error) {
+      // Handle error
+    }
+  }
+
+  const fetchUserReferralStats = async (userId) => {
+    try {
+      const response = await axios.get(`https://justbuynewbackend.onrender.com/api/v1/user/${userId}`)
+      if (response.status === 200) {
+        setData(response.data.totalRupeesEarned)
+      } else {
+        console.error("Unexpected response status:", response.status)
+        setError("Unexpected response status.")
+      }
+    } catch (error) {
+      console.error("Error fetching referral stats:", error?.response ? error?.response?.data?.message : error?.message)
+    }
+  }
+
+  const [paymentid, setpaymentId] = useState("")
+  const placeorder = async (paymentid) => {
+    try {
+      const config = {
+        url: "/transaction",
+        method: "post",
+        baseURL: "https://justbuynewbackend.onrender.com/api/v1/transactions",
+        headers: { "content-type": "application/json" },
+        data: {
+          UserId: user?._id,
+          amount: TotalPayableAmount,
+          gold: gold,
+          PaymentId: paymentid,
+          totalCoin: Number(gold),
+          goldRate: goldRate,
+          goldValue: goldValue * gold,
+          gst: gstAmount,
+        },
+      }
+      console.log("user", user._id, Amount, gold)
+      await axios(config).then((res) => {
+        if (res.status == 200) {
+          handleReferralSubmit()
+          setTimeout(() => {
+            setIsLoading(false)
+            Alert.alert("Payment Successful!", "Your gold purchase has been completed successfully.", [
+              {
+                text: "OK",
+                onPress: () => navigation.navigate("Home1"),
+              },
+            ])
+          }, 100)
+        }
+      })
+    } catch (error) {
+      console.log(error)
+      setIsLoading(false)
+    }
+  }
+
+  const posttransaction = async () => {
+    setIsLoading(true)
+    try {
+      var options = {
+        key: "rzp_test_FAe0X6xLYXaXHe",
+        amount: TotalPayableAmount * 100,
+        currency: "INR",
+        name: "JustBuyGold",
+        description: "Order Amount",
+        image: "./assets/images/app-logo.jpg",
+        customerId: user?._id,
+        handler: (response) => {
+          setpaymentId(response.razorpay_payment_id)
+        },
+        prefill: {
+          name: user?.name,
+          email: user?.email,
+          contact: user?.phoneno,
+        },
+        theme: { color: "#22C55E" },
+      }
+      RazorpayCheckout.open(options)
+        .then((data) => {
+          Alert.alert(`Success: ${data.razorpay_payment_id}`)
+          placeorder(data.razorpay_payment_id)
+        })
+        .catch((error) => {
+          Alert.alert(`Error: ${error.code} | ${error.description}`)
+          setIsLoading(false)
+        })
+    } catch (error) {
+      console.log(error)
+      setIsLoading(false)
+    }
+  }
+
+  const [datagst, setDatagst] = useState({})
+  const getGst = async () => {
+    const config = {
+      url: "/getGst",
+      method: "get",
+      baseURL: "https://justbuynewbackend.onrender.com/api/v1/gst",
+      headers: { "conttent-type": "application/json" },
+    }
+    try {
+      const result = await axios(config)
+      if (result.status === 200) {
+        setDatagst(result.data.success)
+      } else {
+        Alert.alert("Something went wrong")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const [rate, setRate] = useState([])
+  const [objRate, setObjRate] = useState({})
+
+  const getRate = async () => {
+    try {
+      await axios.get("https://justbuynewbackend.onrender.com/api/v1/rate/allrate").then((res) => {
+        if (res.status === 200) {
+          setRate(res.data.success)
+          setObjRate(res.data.success[0])
+        } else {
+          console.log(res.error)
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getRate()
+    getGst()
+  }, [])
+
+  const NewGst = Number(datagst?.Sgst || 0) + Number(datagst?.Cgst || 0)
+  const goldValue = Number(rate[0]?.rate || 0)
+  const goldWeight = Number(gold || 0)
+  const baseGoldValue = Number(goldValue * goldWeight || 0)
+  const gstAmount = (baseGoldValue * NewGst) / 100
+
+  console.log(NewGst, goldValue, goldWeight, baseGoldValue, gstAmount)
+
+  const userTotalEarnedMoney = Number(getUser?.totalEarnedMoney || 0)
+  const TotalPayableAmount = Math.round(baseGoldValue + gstAmount - userTotalEarnedMoney)
+
+  console.log(TotalPayableAmount)
+
+  return (
+    <View style={styles.mainContainer}>
+      <View style={styles.paymentCard}>
+        <Text style={styles.title}>Buy Gold 999</Text>
+
+        <View style={styles.detailRow}>
+          <Text style={styles.label}>Metal Type :</Text>
+          <View style={styles.metalTypeContainer}>
+            <View style={styles.goldCoin}>
+              <Text style={styles.coinText}>GOLD</Text>
+            </View>
+            <Text style={styles.metalText}>Gold</Text>
+          </View>
+        </View>
+
+        <View style={styles.detailRow}>
+          <Text style={styles.label}>Quantity :</Text>
+          <Text style={styles.value}>{gold} gm</Text>
+        </View>
+
+        <View style={styles.detailRow}>
+          <Text style={styles.label}>Amount :</Text>
+          <Text style={styles.value}>{baseGoldValue?.toFixed(2)}</Text>
+        </View>
+
+        <View style={styles.detailRow}>
+          <Text style={styles.label}>GST @ {NewGst}% :</Text>
+          <Text style={styles.value}>{gstAmount?.toFixed(2)}</Text>
+        </View>
+
+        <View style={styles.detailRow}>
+          <Text style={styles.label}>Total Amount :</Text>
+          <Text style={styles.value}>{(baseGoldValue + gstAmount)?.toFixed(2)}</Text>
+        </View>
+
+        {getUser && getUser?.totalEarnedMoney > 0 && (
+          <View style={styles.detailRow}>
+            <Text style={styles.label}>Balance :</Text>
+            <Text style={styles.value}>- ₹{getUser?.totalEarnedMoney}</Text>
+          </View>
+        )}
+
+        <View style={[styles.detailRow, styles.totalRow]}>
+          <Text style={styles.totalLabel}>Net Amount Payable :</Text>
+          <Text style={styles.totalValue}>{TotalPayableAmount}</Text>
+        </View>
+
+        <TouchableOpacity style={styles.payButton} onPress={posttransaction} disabled={isLoading}>
+          <LinearGradient
+            colors={["#22C55E", "#16A34A"]}
+            style={[styles.linearGradientmodel, isLoading && { opacity: 0.7 }]}
+          >
+            <Text style={styles.btn}>{isLoading ? "Processing..." : "Pay Now"}</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+
+      {isLoading && (
+        <View style={styles.loadingOverlay}>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#22C55E" />
+            <Text style={styles.loadingText}>Processing Payment...</Text>
+          </View>
+        </View>
+      )}
+    </View>
+  )
+}
+
+export default Pay
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  paymentCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 30,
+    width: "100%",
+    maxWidth: 400,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 30,
+  },
+  detailRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    color: "#333",
+    fontWeight: "500",
+  },
+  value: {
+    fontSize: 16,
+    color: "#333",
+    fontWeight: "600",
+  },
+  metalTypeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  goldCoin: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#FFD700",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  coinText: {
+    fontSize: 8,
+    fontWeight: "bold",
+    color: "#B8860B",
+  },
+  metalText: {
+    fontSize: 16,
+    color: "#333",
+    fontWeight: "600",
+  },
+  totalRow: {
+    marginTop: 10,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+  },
+  totalLabel: {
+    fontSize: 16,
+    color: "#333",
+    fontWeight: "bold",
+  },
+  totalValue: {
+    fontSize: 20,
+    color: "#22C55E",
+    fontWeight: "bold",
+  },
+  payButton: {
+    marginTop: 30,
+  },
+  linearGradientmodel: {
+    borderRadius: 25,
+    paddingVertical: 15,
+  },
+  btn: {
+    textAlign: "center",
+    fontSize: 18,
+    color: "white",
+    fontWeight: "bold",
+  },
+  loadingOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingContainer: {
+    backgroundColor: "white",
+    padding: 30,
+    borderRadius: 10,
+    alignItems: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  loadingText: {
+    marginTop: 15,
+    fontSize: 16,
+    color: "#22C55E",
     fontWeight: "600",
   },
 })

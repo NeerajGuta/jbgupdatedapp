@@ -10,6 +10,7 @@ import {
   Animated,
   Platform,
   Dimensions,
+  Keyboard, // Added Keyboard import
 } from "react-native"
 import Home from "./Src/Component/Home"
 import SlapScreen from "./Src/Component/SlapScreen"
@@ -313,10 +314,8 @@ const AppSecurityScreen = ({ onSuccess }) => {
   const [attemptCount, setAttemptCount] = useState(0)
   const [showWrongPin, setShowWrongPin] = useState(false)
   const [wrongPinAnimation] = useState(new Animated.Value(0))
-
   const MAX_ATTEMPTS = 5
 
-  // Safe vibration function
   const safeVibrate = (pattern = [0, 100]) => {
     try {
       if (Platform.OS === "android") {
@@ -790,10 +789,27 @@ const MyStack = ({ setSplashCompleted, initialRoute }) => {
 }
 
 const BottomTab = () => {
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false)
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardVisible(true)
+    })
+    const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardVisible(false)
+    })
+
+    return () => {
+      keyboardDidHideListener?.remove()
+      keyboardDidShowListener?.remove()
+    }
+  }, [])
+
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: {
+          display: isKeyboardVisible ? "none" : "flex",
           backgroundColor: "#ffffff",
           borderTopWidth: 1,
           borderTopColor: "#f0f0f0",

@@ -43,7 +43,7 @@
 //   const handleReferralShare = async referralCode => {
 //     try {
 //       const response = await axios.post(
-//         'http://192.168.1.26:3034/api/v1/referral',
+//         'https://justbuynewbackend.onrender.com/api/v1/referral',
 //         {
 //           userId: user?._id,
 //           referral: referralCode,
@@ -542,7 +542,7 @@
 //   const handleReferralShare = async referralCode => {
 //     try {
 //       const response = await axios.post(
-//         'http://192.168.1.26:3034/api/v1/referral',
+//         'https://justbuynewbackend.onrender.com/api/v1/referral',
 //         {
 //           userId: user?._id,
 //           referral: referralCode,
@@ -920,7 +920,7 @@
 //   const handleReferralShare = async referralCode => {
 //     try {
 //       const response = await axios.post(
-//         'http://192.168.1.26:3034/api/v1/referral',
+//         'https://justbuynewbackend.onrender.com/api/v1/referral',
 //         {
 //           userId: user?._id,
 //           referral: referralCode,
@@ -1419,7 +1419,7 @@
 //   const handleReferralShare = async referralCode => {
 //     try {
 //       const response = await axios.post(
-//         'http://192.168.1.26:3034/api/v1/referral',
+//         'https://justbuynewbackend.onrender.com/api/v1/referral',
 //         {
 //           userId: user?._id,
 //           referral: referralCode,
@@ -1808,7 +1808,7 @@ const More = () => {
 
   const handleReferralShare = async (referralCode) => {
     try {
-      const response = await axios.post("http://192.168.1.26:3034/api/v1/referral", {
+      const response = await axios.post("https://justbuynewbackend.onrender.com/api/v1/referral", {
         userId: user?._id,
         referral: referralCode,
       })

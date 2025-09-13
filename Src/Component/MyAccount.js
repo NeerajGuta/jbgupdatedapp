@@ -114,7 +114,7 @@
 //       });
 
 //       const response = await fetch(
-//         'http://192.168.1.26:3034/api/v1/user/auth/updateuser',
+//         'https://justbuynewbackend.onrender.com/api/v1/user/auth/updateuser',
 //         {
 //           method: 'PUT',
 //           headers: {
@@ -173,7 +173,7 @@
 //                     onPress={() => navigation.navigate('Imagezoom', {user})}>
 //                     <Image
 //                       source={{
-//                         uri: `http://192.168.1.26:3034/User/${user?.profileimage}`,
+//                         uri: `https://justbuynewbackend.onrender.com/User/${user?.profileimage}`,
 //                       }}
 //                       resizeMode="cover"
 //                       style={[
@@ -315,7 +315,7 @@
 //               <View style={styles.profiles}>
 //                 <Image
 //                   source={{
-//                     uri: `http://192.168.1.26:3034/User/${user?.profileimage}`,
+//                     uri: `https://justbuynewbackend.onrender.com/User/${user?.profileimage}`,
 //                   }}
 //                   resizeMode="cover"
 //                   style={[
@@ -356,7 +356,7 @@
 //                         imageSource
 //                           ? {uri: `${imageSource}?${new Date().getTime()}`}
 //                           : {
-//                               uri: `http://192.168.1.26:3034/User/${user?.profileimage}`,
+//                               uri: `https://justbuynewbackend.onrender.com/User/${user?.profileimage}`,
 //                             }
 //                       }
 //                       resizeMode="cover"
@@ -909,7 +909,7 @@ const MyAccount = () => {
       }
 
       const response = await fetch(
-        'http://192.168.1.26:3034/api/v1/user/auth/updateuser',
+        'https://justbuynewbackend.onrender.com/api/v1/user/auth/updateuser',
         {
           method: 'PUT',
           headers: {
@@ -976,7 +976,7 @@ const MyAccount = () => {
                       onPress={() => navigation.navigate('Imagezoom', {user})}>
                       <Image
                         source={{
-                          uri: `http://192.168.1.26:3034/User/${user?.profileimage}`,
+                          uri: `https://justbuynewbackend.onrender.com/User/${user?.profileimage}`,
                         }}
                         style={styles.profileImage}
                       />
@@ -1032,7 +1032,7 @@ const MyAccount = () => {
                     source={{
                       uri: imageSource
                         ? `${imageSource}?${new Date().getTime()}`
-                        : `http://192.168.1.26:3034/User/${user?.profileimage}`,
+                        : `https://justbuynewbackend.onrender.com/User/${user?.profileimage}`,
                     }}
                     style={styles.profileImage}
                   />
@@ -1067,7 +1067,7 @@ const MyAccount = () => {
                       source={{
                         uri: imageSource
                           ? `${imageSource}?${new Date().getTime()}`
-                          : `http://192.168.1.26:3034/User/${user?.profileimage}`,
+                          : `https://justbuynewbackend.onrender.com/User/${user?.profileimage}`,
                       }}
                       style={styles.largerProfileImage}
                     />
@@ -1559,7 +1559,6 @@ const styles = StyleSheet.create({
 export default MyAccount; */
 
 
-
 import {
   StatusBar,
   StyleSheet,
@@ -1575,39 +1574,41 @@ import {
   Dimensions,
   PanResponder,
   ActivityIndicator,
-} from "react-native"
-import Icon from "react-native-vector-icons/FontAwesome"
-import Ionicons from "react-native-vector-icons/Ionicons"
-import FontAwesome6 from "react-native-vector-icons/FontAwesome6"
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useFocusEffect, useNavigation } from "@react-navigation/native"
-import React, { useState, useRef } from "react"
-import { launchCamera, launchImageLibrary } from "react-native-image-picker"
-import LinearGradient from "react-native-linear-gradient"
+} from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import React, { useState, useRef } from "react";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
+import LinearGradient from "react-native-linear-gradient";
+import ImagePicker from "react-native-image-crop-picker";
 
-const { width, height } = Dimensions.get("window")
+const { width, height } = Dimensions.get("window");
 
 const MyAccount = () => {
-  const navigation = useNavigation()
-  const [modalVisible, setModalVisible] = useState(false)
-  const [cropModalVisible, setCropModalVisible] = useState(false)
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
-  const [imageSource, setImageSource] = useState(null)
-  const [tempImage, setTempImage] = useState(null)
-  const [user, setUser] = useState(null)
-  const [updateProfile, setUpdateProfile] = useState(true)
-  const [isLoading, setIsLoading] = useState(false)
+  const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [cropModalVisible, setCropModalVisible] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [imageSource, setImageSource] = useState(null);
+  const [tempImage, setTempImage] = useState(null);
+  const [user, setUser] = useState(null);
+  const [updateProfile, setUpdateProfile] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [cropRect, setCropRect] = useState({
     x: 50,
     y: 50,
     width: 200,
     height: 200,
-  })
+  });
+  const [lockAspectRatio, setLockAspectRatio] = useState(true); // Lock to 1:1 for profile pictures
 
-  const imageRef = useRef(null)
+  const imageRef = useRef(null);
 
   const takePhotoFromCamera = async () => {
     try {
@@ -1616,20 +1617,20 @@ const MyAccount = () => {
         maxWidth: 600,
         maxHeight: 600,
         quality: 0.7,
-      })
-      if (result.didCancel) return
+      });
+      if (result.didCancel) return;
       if (result.errorCode) {
-        Alert.alert("Error", result.errorMessage || "Failed to open camera")
-        return
+        Alert.alert("Error", result.errorMessage || "Failed to open camera");
+        return;
       }
       if (result.assets && result.assets[0].uri) {
-        setTempImage(result.assets[0].uri)
-        setCropModalVisible(true)
+        setTempImage(result.assets[0].uri);
+        setCropModalVisible(true);
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to open camera")
+      Alert.alert("Error", "Failed to open camera");
     }
-  }
+  };
 
   const selectFromGallery = async () => {
     try {
@@ -1638,133 +1639,214 @@ const MyAccount = () => {
         maxWidth: 600,
         maxHeight: 600,
         quality: 0.7,
-      })
-      if (result.didCancel) return
+      });
+      if (result.didCancel) return;
       if (result.errorCode) {
-        Alert.alert("Error", result.errorMessage || "Failed to open gallery")
-        return
+        Alert.alert("Error", result.errorMessage || "Failed to open gallery");
+        return;
       }
       if (result.assets && result.assets[0].uri) {
-        setTempImage(result.assets[0].uri)
-        setCropModalVisible(true)
+        setTempImage(result.assets[0].uri);
+        setCropModalVisible(true);
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to open gallery")
+      Alert.alert("Error", "Failed to open gallery");
     }
-  }
+  };
 
-  const startPos = useRef({ x: 0, y: 0 })
-
+  // Enhanced PanResponder for dragging the crop rectangle
+  const startPos = useRef({ x: 0, y: 0 });
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderGrant: () => {
-        startPos.current = { x: cropRect.x, y: cropRect.y }
+        startPos.current = { x: cropRect.x, y: cropRect.y };
       },
       onPanResponderMove: (evt, gestureState) => {
-        const dx = gestureState.dx
-        const dy = gestureState.dy
-        const newX = Math.max(0, Math.min(startPos.current.x + dx, width - cropRect.width))
-        const newY = Math.max(0, Math.min(startPos.current.y + dy, height - cropRect.height - 100))
-        setCropRect((prev) => ({ ...prev, x: newX, y: newY }))
+        const dx = gestureState.dx;
+        const dy = gestureState.dy;
+        const newX = Math.max(0, Math.min(startPos.current.x + dx, width - cropRect.width));
+        const newY = Math.max(0, Math.min(startPos.current.y + dy, height - cropRect.height - 100));
+        setCropRect((prev) => ({ ...prev, x: newX, y: newY }));
       },
       onPanResponderRelease: () => {},
-    }),
-  ).current
+    })
+  ).current;
 
-  const resizePanResponder = useRef(
+  // PanResponders for each corner handle
+  const handleTopLeft = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (evt, gestureState) => {
         setCropRect((prev) => {
-          let newWidth = prev.width + gestureState.dx
-          let newHeight = prev.height + gestureState.dy
-          newWidth = Math.max(50, Math.min(newWidth, width - prev.x))
-          newHeight = Math.max(50, Math.min(newHeight, height - prev.y - 100))
-          return { ...prev, width: newWidth, height: newHeight }
-        })
-      },
-    }),
-  ).current
+          let newWidth = prev.width - gestureState.dx;
+          let newHeight = lockAspectRatio ? newWidth : prev.height - gestureState.dy;
+          let newX = prev.x + gestureState.dx;
+          let newY = lockAspectRatio ? prev.y + gestureState.dx : prev.y + gestureState.dy;
 
-  const handleCrop = () => {
-    setImageSource(tempImage)
-    setCropModalVisible(false)
-    setModalVisible(false)
-    Alert.alert("Crop", "Image cropped successfully (simulated).")
-  }
+          newWidth = Math.max(50, Math.min(newWidth, width - prev.x));
+          newHeight = Math.max(50, Math.min(newHeight, height - prev.y - 100));
+          newX = Math.max(0, Math.min(newX, prev.x + prev.width - 50));
+          newY = Math.max(0, Math.min(newY, prev.y + prev.height - 50));
+
+          return { ...prev, x: newX, y: newY, width: newWidth, height: newHeight };
+        });
+      },
+    })
+  ).current;
+
+  const handleTopRight = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (evt, gestureState) => {
+        setCropRect((prev) => {
+          let newWidth = prev.width + gestureState.dx;
+          let newHeight = lockAspectRatio ? newWidth : prev.height - gestureState.dy;
+          let newY = lockAspectRatio ? prev.y - gestureState.dx : prev.y + gestureState.dy;
+
+          newWidth = Math.max(50, Math.min(newWidth, width - prev.x));
+          newHeight = Math.max(50, Math.min(newHeight, height - prev.y - 100));
+          newY = Math.max(0, Math.min(newY, prev.y + prev.height - 50));
+
+          return { ...prev, y: newY, width: newWidth, height: newHeight };
+        });
+      },
+    })
+  ).current;
+
+  const handleBottomLeft = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (evt, gestureState) => {
+        setCropRect((prev) => {
+          let newWidth = prev.width - gestureState.dx;
+          let newHeight = lockAspectRatio ? newWidth : prev.height + gestureState.dy;
+          let newX = prev.x + gestureState.dx;
+
+          newWidth = Math.max(50, Math.min(newWidth, width - prev.x));
+          newHeight = Math.max(50, Math.min(newHeight, height - prev.y - 100));
+          newX = Math.max(0, Math.min(newX, prev.x + prev.width - 50));
+
+          return { ...prev, x: newX, width: newWidth, height: newHeight };
+        });
+      },
+    })
+  ).current;
+
+  const handleBottomRight = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (evt, gestureState) => {
+        setCropRect((prev) => {
+          let newWidth = prev.width + gestureState.dx;
+          let newHeight = lockAspectRatio ? newWidth : prev.height + gestureState.dy;
+
+          newWidth = Math.max(50, Math.min(newWidth, width - prev.x));
+          newHeight = Math.max(50, Math.min(newHeight, height - prev.y - 100));
+
+          return { ...prev, width: newWidth, height: newHeight };
+        });
+      },
+    })
+  ).current;
+
+  const handleCrop = async () => {
+    try {
+      const croppedImage = await ImagePicker.openCropper({
+        path: tempImage,
+        width: cropRect.width,
+        height: cropRect.height,
+        cropperRectangle: {
+          x: cropRect.x,
+          y: cropRect.y,
+          width: cropRect.width,
+          height: cropRect.height,
+        },
+      });
+      setImageSource(croppedImage.path);
+      setCropModalVisible(false);
+      setModalVisible(false);
+      Alert.alert("Success", "Image cropped successfully!");
+    } catch (error) {
+      Alert.alert("Crop Error", "Failed to crop image");
+    }
+  };
 
   const userData = async () => {
     try {
-      const storedUser = await AsyncStorage.getItem("user")
+      const storedUser = await AsyncStorage.getItem("user");
       if (storedUser) {
-        const parsedUser = JSON.parse(storedUser)
-        setUser(parsedUser)
-        setUsername(parsedUser.name || "")
-        setEmail(parsedUser.email || "")
-        setPhone(parsedUser.phoneno || "")
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        setUsername(parsedUser.name || "");
+        setEmail(parsedUser.email || "");
+        setPhone(parsedUser.phoneno || "");
       }
     } catch (error) {
-      console.error("Error fetching user data:", error)
+      console.error("Error fetching user data:", error);
     }
-  }
+  };
 
   const updateCustomer = async () => {
     try {
       if (!imageSource && !username && !email && !phone) {
-        Alert.alert("No changes to update")
-        return
+        Alert.alert("No changes to update");
+        return;
       }
 
-      setIsLoading(true)
+      setIsLoading(true);
 
-      const imageSourceUri = imageSource ? (Platform.OS === "android" ? `file://${imageSource}` : imageSource) : null
+      const imageSourceUri = imageSource
+        ? Platform.OS === "android"
+          ? `file://${imageSource}`
+          : imageSource
+        : null;
 
-      const formData = new FormData()
-      formData.append("userId", user?._id)
-      formData.append("name", username || user?.name)
-      formData.append("email", email || user?.email)
-      formData.append("phoneno", phone || user?.phoneno)
+      const formData = new FormData();
+      formData.append("userId", user?._id);
+      formData.append("name", username || user?.name);
+      formData.append("email", email || user?.email);
+      formData.append("phoneno", phone || user?.phoneno);
 
       if (imageSourceUri) {
         formData.append("profileimage", {
           uri: imageSourceUri,
           name: "profile.jpg",
           type: "image/jpeg",
-        })
+        });
       }
 
-      const response = await fetch("http://192.168.1.26:3034/api/v1/user/auth/updateuser", {
+      const response = await fetch("https://justbuynewbackend.onrender.com/api/v1/user/auth/updateuser", {
         method: "PUT",
         headers: {
           Accept: "application/json",
         },
         body: formData,
-      })
+      });
 
-      const result = await response.json()
+      const result = await response.json();
 
       if (response.ok) {
-        await AsyncStorage.setItem("user", JSON.stringify(result.success))
-        userData()
-        setImageSource(null)
-        setUpdateProfile(true)
-        Alert.alert("Success", "Profile updated successfully!")
+        await AsyncStorage.setItem("user", JSON.stringify(result.success));
+        userData();
+        setImageSource(null);
+        setUpdateProfile(true);
+        Alert.alert("Success", "Profile updated successfully!");
       } else {
-        Alert.alert("Update failed", result?.message || "Server Error")
+        Alert.alert("Update failed", result?.message || "Server Error");
       }
     } catch (error) {
-      Alert.alert("Update failed", error.message || "Network Error")
+      Alert.alert("Update failed", error.message || "Network Error");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   useFocusEffect(
     React.useCallback(() => {
-      userData()
-    }, []),
-  )
+      userData();
+    }, [])
+  );
 
   // Loading Modal Component
   const LoadingModal = () => (
@@ -1776,7 +1858,7 @@ const MyAccount = () => {
         </View>
       </View>
     </Modal>
-  )
+  );
 
   return (
     <View style={styles.container}>
@@ -1804,7 +1886,7 @@ const MyAccount = () => {
                     <View style={styles.profileImageWrapper}>
                       <Image
                         source={{
-                          uri: `http://192.168.1.26:3034/User/${user?.profileimage}`,
+                          uri: `https://justbuynewbackend.onrender.com/User/${user?.profileimage}`,
                         }}
                         style={styles.profileImage}
                       />
@@ -1870,7 +1952,7 @@ const MyAccount = () => {
                     source={{
                       uri: imageSource
                         ? `${imageSource}?${new Date().getTime()}`
-                        : `http://192.168.1.26:3034/User/${user?.profileimage}`,
+                        : `https://justbuynewbackend.onrender.com/User/${user?.profileimage}`,
                     }}
                     style={styles.compactProfileImage}
                   />
@@ -1893,7 +1975,7 @@ const MyAccount = () => {
                 style={[styles.saveButton, isLoading && styles.disabledButton]}
                 onPress={() => {
                   if (!isLoading) {
-                    updateCustomer()
+                    updateCustomer();
                   }
                 }}
                 disabled={isLoading}
@@ -1922,7 +2004,7 @@ const MyAccount = () => {
                       source={{
                         uri: imageSource
                           ? `${imageSource}?${new Date().getTime()}`
-                          : `http://192.168.1.26:3034/User/${user?.profileimage}`,
+                          : `https://justbuynewbackend.onrender.com/User/${user?.profileimage}`,
                       }}
                       style={styles.largerProfileImage}
                     />
@@ -2008,8 +2090,8 @@ const MyAccount = () => {
                 <TouchableOpacity
                   style={styles.modalButton}
                   onPress={() => {
-                    takePhotoFromCamera()
-                    setModalVisible(false)
+                    takePhotoFromCamera();
+                    setModalVisible(false);
                   }}
                 >
                   <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.modalButtonGradient}>
@@ -2020,8 +2102,8 @@ const MyAccount = () => {
                 <TouchableOpacity
                   style={styles.modalButton}
                   onPress={() => {
-                    selectFromGallery()
-                    setModalVisible(false)
+                    selectFromGallery();
+                    setModalVisible(false);
                   }}
                 >
                   <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.modalButtonGradient}>
@@ -2039,7 +2121,7 @@ const MyAccount = () => {
           </View>
         </Modal>
 
-        {/* Crop Modal */}
+        {/* Enhanced Crop Modal */}
         <Modal
           animationType="fade"
           transparent={false}
@@ -2060,19 +2142,62 @@ const MyAccount = () => {
               ]}
               {...panResponder.panHandlers}
             >
-              <View style={styles.resizeHandle} {...resizePanResponder.panHandlers} />
+              {/* Grid Overlay */}
+              <View style={styles.gridContainer}>
+                <View style={styles.gridRow}>
+                  <View style={styles.gridCell} />
+                  <View style={[styles.gridCell, styles.gridVertical]} />
+                  <View style={styles.gridCell} />
+                </View>
+                <View style={[styles.gridRow, styles.gridHorizontal]}>
+                  <View style={styles.gridCell} />
+                  <View style={[styles.gridCell, styles.gridVertical]} />
+                  <View style={styles.gridCell} />
+                </View>
+                <View style={styles.gridRow}>
+                  <View style={styles.gridCell} />
+                  <View style={[styles.gridCell, styles.gridVertical]} />
+                  <View style={styles.gridCell} />
+                </View>
+              </View>
+
+              {/* Corner Handles */}
+              <View style={[styles.resizeHandle, styles.topLeft]} {...handleTopLeft.panHandlers} />
+              <View style={[styles.resizeHandle, styles.topRight]} {...handleTopRight.panHandlers} />
+              <View style={[styles.resizeHandle, styles.bottomLeft]} {...handleBottomLeft.panHandlers} />
+              <View style={[styles.resizeHandle, styles.bottomRight]} {...handleBottomRight.panHandlers} />
             </View>
-            <View style={styles.cropButtons}>
-              <TouchableOpacity style={styles.cancelCropButton} onPress={() => setCropModalVisible(false)}>
-                <LinearGradient colors={["#874701", "#874701"]} style={styles.cropButtonGradient}>
-                  <Text style={styles.cropButtonText}>Cancel</Text>
+
+            {/* Crop Controls */}
+            <View style={styles.cropControls}>
+              <TouchableOpacity
+                style={styles.aspectButton}
+                onPress={() => setLockAspectRatio(!lockAspectRatio)}
+              >
+                <LinearGradient
+                  colors={lockAspectRatio ? ["#f3d25b", "#f3d25b"] : ["#ccc", "#ccc"]}
+                  style={styles.aspectButtonGradient}
+                >
+                  <Text style={styles.aspectButtonText}>
+                    {lockAspectRatio ? "Locked (1:1)" : "Free"}
+                  </Text>
                 </LinearGradient>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.confirmCropButton} onPress={handleCrop}>
-                <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.cropButtonGradient}>
-                  <Text style={[styles.cropButtonText, { color: "#874701" }]}>Crop</Text>
-                </LinearGradient>
-              </TouchableOpacity>
+              <View style={styles.cropButtons}>
+                <TouchableOpacity
+                  style={styles.cancelCropButton}
+                  onPress={() => setCropModalVisible(false)}
+                >
+                  <LinearGradient colors={["#874701", "#874701"]} style={styles.cropButtonGradient}>
+                    <Text style={styles.cropButtonText}>Cancel</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.confirmCropButton} onPress={handleCrop}>
+                  <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.cropButtonGradient}>
+                    <Text style={[styles.cropButtonText, { color: "#874701" }]}>Crop</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>
@@ -2121,22 +2246,32 @@ const MyAccount = () => {
         )}
       </ScrollView>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff", // Same as Home screen
+    backgroundColor: "#f8f9fa",
   },
   scrollContainer: {
-    backgroundColor: "#f8f9fa", // Same light background as Home screen
+    flex: 1,
   },
 
   // Header Styles
   headerGradient: {
     paddingTop: Platform.OS === "ios" ? 50 : 20,
     paddingBottom: 15,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 8,
   },
   headerContent: {
     flexDirection: "row",
@@ -2146,12 +2281,16 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 8,
+    /* backgroundColor: "rgba(255, 255, 255, 0.3)", */
+    borderRadius: 10,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: "700",
     color: "#874701",
-   /*  fontFamily: "Poppins-SemiBoldItalic", */
+    textShadowColor: "rgba(0, 0, 0, 0.1)",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   headerSpacer: {
     width: 36,
@@ -2171,11 +2310,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
     shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowRadius: 6,
+    elevation: 6,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -2214,29 +2353,30 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
     color: "#030712",
-    /* fontFamily: "Poppins-SemiBoldItalic", */
     marginBottom: 4,
   },
   phoneText: {
     fontSize: 16,
     color: "#666",
-    /* fontFamily: "Poppins-SemiBoldItalic", */
     marginBottom: 4,
   },
   userIdContainer: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#f8f9fa",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    alignSelf: "flex-start",
   },
   userIdLabel: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#999",
-    /* fontFamily: "Poppins-SemiBoldItalic", */
   },
   userIdText: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#874701",
     fontWeight: "600",
-    /* fontFamily: "Poppins-SemiBoldItalic", */
   },
   editButton: {
     marginLeft: 10,
@@ -2247,6 +2387,14 @@ const styles = StyleSheet.create({
     borderRadius: 22.5,
     justifyContent: "center",
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
 
   // Information Cards
@@ -2263,8 +2411,10 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowRadius: 4,
+    elevation: 4,
+    borderLeftWidth: 4,
+    borderLeftColor: "#f3d25b",
   },
   infoCardHeader: {
     flexDirection: "row",
@@ -2279,14 +2429,16 @@ const styles = StyleSheet.create({
   cardLabel: {
     fontSize: 16,
     color: "#666",
-   /*  fontFamily: "Poppins-SemiBoldItalic", */
+    fontWeight: "600",
   },
   cardValue: {
     fontSize: 18,
     color: "#030712",
     fontWeight: "600",
-   
     marginLeft: 32,
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
   },
 
   // Edit Profile Header - Fixed Layout
@@ -2298,11 +2450,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
     shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowRadius: 6,
+    elevation: 6,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -2331,18 +2483,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     color: "#030712",
-   /*  fontFamily: "Poppins-SemiBoldItalic", */
     marginBottom: 2,
   },
   compactPhoneText: {
     fontSize: 14,
     color: "#666",
-    /* fontFamily: "Poppins-SemiBoldItalic", */
     marginBottom: 2,
   },
   compactUserIdContainer: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#f8f9fa",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    alignSelf: "flex-start",
   },
   saveButton: {
     flexShrink: 0,
@@ -2353,6 +2508,14 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     minWidth: 80,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   disabledButton: {
     opacity: 0.6,
@@ -2361,7 +2524,6 @@ const styles = StyleSheet.create({
     color: "#874701",
     fontSize: 14,
     fontWeight: "700",
-   /*  fontFamily: "Poppins-SemiBoldItalic", */
   },
 
   // Edit Form Container
@@ -2372,11 +2534,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#030712",
     fontWeight: "700",
-    /* fontFamily: "Poppins-SemiBoldItalic", */
     marginBottom: 15,
+    paddingBottom: 5,
+    borderBottomWidth: 2,
+    borderBottomColor: "#f3d25b",
   },
 
-  // Profile Image Section - More Compact
+  // Profile Image Section - Compact
   profileImageSection: {
     backgroundColor: "#ffffff",
     borderRadius: 20,
@@ -2387,8 +2551,8 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowRadius: 4,
+    elevation: 4,
   },
   profileImageEditContainer: {
     alignItems: "center",
@@ -2416,6 +2580,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 2,
     borderColor: "#ffffff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
 
   // Form Fields
@@ -2429,8 +2601,8 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowRadius: 4,
+    elevation: 4,
   },
   inputGroup: {
     marginBottom: 20,
@@ -2439,8 +2611,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#030712",
     fontWeight: "600",
-   /*  fontFamily: "Poppins-SemiBoldItalic", */
     marginBottom: 8,
+    marginLeft: 5,
   },
   modernInputContainer: {
     flexDirection: "row",
@@ -2450,6 +2622,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#e0e0e0",
     paddingHorizontal: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
   },
   inputIcon: {
     fontSize: 18,
@@ -2461,7 +2641,6 @@ const styles = StyleSheet.create({
     height: 50,
     fontSize: 16,
     color: "#030712",
-   /*  fontFamily: "Poppins-SemiBoldItalic", */
   },
 
   // Modal Styles
@@ -2477,12 +2656,19 @@ const styles = StyleSheet.create({
     padding: 25,
     width: width - 40,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 10,
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: "700",
     color: "#030712",
-    /* fontFamily: "Poppins-SemiBoldItalic", */
     marginBottom: 25,
   },
   modalButtons: {
@@ -2499,6 +2685,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   modalIcon: {
     width: 40,
@@ -2509,7 +2703,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#874701",
-   /*  fontFamily: "Poppins-SemiBoldItalic", */
   },
   closeButton: {
     width: "100%",
@@ -2518,15 +2711,22 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 15,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   closeButtonText: {
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "700",
-  /*   fontFamily: "Poppins-SemiBoldItalic", */
   },
 
-  // Crop Modal Styles
+  // Enhanced Crop Modal Styles
   cropContainer: {
     flex: 1,
     backgroundColor: "#000",
@@ -2543,21 +2743,81 @@ const styles = StyleSheet.create({
     borderColor: "#f3d25b",
     backgroundColor: "rgba(243, 210, 91, 0.2)",
   },
+  gridContainer: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  gridRow: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  gridCell: {
+    flex: 1,
+    borderColor: "rgba(255, 255, 255, 0.5)",
+    borderWidth: 0.5,
+  },
+  gridVertical: {
+    borderLeftWidth: 0.5,
+    borderRightWidth: 0.5,
+  },
+  gridHorizontal: {
+    borderTopWidth: 0.5,
+    borderBottomWidth: 0.5,
+  },
   resizeHandle: {
-    position: "absolute",
-    bottom: -10,
-    right: -10,
     width: 20,
     height: 20,
     backgroundColor: "#f3d25b",
     borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#ffffff",
+    position: "absolute",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  topLeft: {
+    top: -10,
+    left: -10,
+  },
+  topRight: {
+    top: -10,
+    right: -10,
+  },
+  bottomLeft: {
+    bottom: -10,
+    left: -10,
+  },
+  bottomRight: {
+    bottom: -10,
+    right: -10,
+  },
+  cropControls: {
+    position: "absolute",
+    bottom: 20,
+    width: width - 40,
+    alignItems: "center",
+  },
+  aspectButton: {
+    marginBottom: 10,
+  },
+  aspectButtonGradient: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  aspectButtonText: {
+    color: "#874701",
+    fontSize: 14,
+    fontWeight: "600",
   },
   cropButtons: {
     flexDirection: "row",
-    position: "absolute",
-    bottom: 30,
     justifyContent: "space-between",
-    width: width - 40,
+    width: "100%",
     gap: 20,
   },
   cancelCropButton: {
@@ -2570,12 +2830,19 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 15,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   cropButtonText: {
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "700",
-   /*  fontFamily: "Poppins-SemiBoldItalic", */
   },
 
   // Loading Modal Styles
@@ -2594,16 +2861,15 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 4,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 10,
   },
   loadingText: {
     marginTop: 15,
     fontSize: 16,
-   /*  fontFamily: "Poppins-SemiBoldItalic", */
     color: "#030712",
     textAlign: "center",
   },
@@ -2617,9 +2883,11 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "700",
     color: "#030712",
-   /*  fontFamily: "Poppins-SemiBoldItalic", */
     marginBottom: 20,
     textAlign: "center",
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#e0e0e0",
   },
   promotionCard: {
     backgroundColor: "#ffffff",
@@ -2628,11 +2896,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
     shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowRadius: 6,
+    elevation: 6,
     overflow: "hidden",
   },
   promotionContent: {
@@ -2645,15 +2913,14 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: "700",
-    /* fontFamily: "Poppins-SemiBoldItalic", */
     color: "#874701",
     textTransform: "uppercase",
     marginRight: 15,
   },
   promotionImage: {
+    width: 60,
     height: 60,
-    width: 80,
   },
-})
+});
 
-export default MyAccount
+export default MyAccount;

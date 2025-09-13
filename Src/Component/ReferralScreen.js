@@ -26,7 +26,7 @@ const ReferralScreen = ({navigation}) => {
   const handleReferralSubmit = async () => {
     try {
       const response = await axios.put(
-        'http://192.168.1.26:3034/api/v1/useReferralCode',
+        'https://justbuynewbackend.onrender.com/api/v1/useReferralCode',
         {
           referral: referralCode,
           receiverId: user?._id,

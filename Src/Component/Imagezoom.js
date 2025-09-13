@@ -4,7 +4,7 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 
 const Imagezoom = ({route}) => {
   const {user} = route.params;
-  const imageUrl = `http://192.168.1.26:3034/User/${user?.profileimage}`;
+  const imageUrl = `https://justbuynewbackend.onrender.com/User/${user?.profileimage}`;
   console.log(imageUrl, 'Image URL');
 
   // Get screen width and height

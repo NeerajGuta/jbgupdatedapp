@@ -56,7 +56,7 @@ const NewPassword = () => {
       const config = {
         url: '/forgotPassword',
         method: 'post',
-        baseURL: 'http://192.168.1.26:3034/api/v1/user/auth',
+        baseURL: 'https://justbuynewbackend.onrender.com/api/v1/user/auth',
         headers: {'content-type': 'application/json'},
         data: {
           id: user?._id,

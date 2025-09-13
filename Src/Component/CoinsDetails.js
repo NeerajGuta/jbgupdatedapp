@@ -28,7 +28,7 @@
 //     setLoader(true);
 //     try {
 //       await axios
-//         .get('http://192.168.1.26:3034/api/v1/coins/singalcoins/' + user?._id)
+//         .get('https://justbuynewbackend.onrender.com/api/v1/coins/singalcoins/' + user?._id)
 //         .then(res => {
 //           if (res.status == 200) {
 //             setData(res.data.success);
@@ -252,7 +252,7 @@ const CoinsDetails = () => {
     try {
       await axios
         .get(
-          'http://192.168.1.26:3034/api/v1/transactions/transactionhistory/' +
+          'https://justbuynewbackend.onrender.com/api/v1/transactions/transactionhistory/' +
             user?._id,
         )
         .then(res => {
@@ -285,7 +285,7 @@ const CoinsDetails = () => {
     setLoader(true);
     try {
       await axios
-        .get('http://192.168.1.26:3034/api/v1/coins/singalcoins/' + user?._id)
+        .get('https://justbuynewbackend.onrender.com/api/v1/coins/singalcoins/' + user?._id)
         .then(res => {
           if (res.status == 200) {
             setData(res.data.success);
@@ -475,7 +475,7 @@ const CoinsDetails = () => {
     let user = await AsyncStorage.getItem("user")
     user = JSON.parse(user)
     try {
-      await axios.get("http://192.168.1.26:3034/api/v1/transactions/transactionhistory/" + user?._id).then((res) => {
+      await axios.get("https://justbuynewbackend.onrender.com/api/v1/transactions/transactionhistory/" + user?._id).then((res) => {
         if (res.status == 200) {
           console.log("idddddddddddddddddddddddddddddddddddddddddd", user?._id)
           setAlltransiction(res.data.success)
@@ -497,7 +497,7 @@ const CoinsDetails = () => {
     user = JSON.parse(user)
     setLoader(true)
     try {
-      await axios.get("http://192.168.1.26:3034/api/v1/coins/singalcoins/" + user?._id).then((res) => {
+      await axios.get("https://justbuynewbackend.onrender.com/api/v1/coins/singalcoins/" + user?._id).then((res) => {
         if (res.status == 200) {
           setData(res.data.success)
           setAllcoin(res.data.success) // Initialize allcoin here

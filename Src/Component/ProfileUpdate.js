@@ -64,7 +64,7 @@ const ProfileUpdate = ({navigation}) => {
       const config = {
         url: '/updateuser',
         method: 'put',
-        baseURL: 'http://192.168.1.26:3034/api/v1/user/auth',
+        baseURL: 'https://justbuynewbackend.onrender.com/api/v1/user/auth',
         headers: {
           'Content-Type': 'multipart/form-data',
         },

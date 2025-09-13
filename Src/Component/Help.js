@@ -140,7 +140,7 @@ const Help = () => {
     <View style={styles.container}>
       <StatusBar backgroundColor="#f3d25b" barStyle="dark-content" />
 
-     {/*  <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.headerGradient}>
+      {/* <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.headerGradient}>
         <View style={styles.headerContent}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
             <MaterialIcons name="arrow-back" size={20} color="#874701" />
@@ -185,9 +185,13 @@ const Help = () => {
               </View>
             </View>
 
-           {/*  <View style={styles.imageCard}>
+            <View style={styles.imageCard}>
+              <View style={styles.helpTextContainer}>
+                <Text style={styles.helpTitle}>Can I Help You?</Text>
+                <Text style={styles.helpSubtitle}>Our customer service team is here to assist you 24/7</Text>
+              </View>
               <Image source={require("../../assets/images/g11.png")} resizeMode="contain" style={styles.image} />
-            </View> */}
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -295,7 +299,7 @@ const styles = StyleSheet.create({
   },
 
   imageCard: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#f8f9fa",
     borderRadius: 24,
     marginTop: 24,
     marginBottom: 20,
@@ -308,11 +312,41 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 10,
     overflow: "hidden",
-    borderWidth: 2,
-    borderColor: "#f3d25b20",
+    borderWidth: 3,
+    borderColor: "#f3d25b",
+    padding: 20,
+  },
+  helpTextContainer: {
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  helpTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#874701",
+    fontFamily: "Poppins-SemiBoldItalic",
+    textAlign: "center",
+    marginBottom: 8,
+  },
+  helpSubtitle: {
+    fontSize: 16,
+    color: "#4a5568",
+    fontFamily: "Poppins-Regular",
+    textAlign: "center",
+    lineHeight: 22,
   },
   image: {
     width: "100%",
-    height: 320,
+    height: 280,
+    backgroundColor: "#ffffff",
+    borderRadius: 16,
+    shadowColor: "#f3d25b",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
 })
