@@ -151,7 +151,6 @@ const styles = StyleSheet.create({
 });
  */
 
-
 import { StyleSheet, Text, View, ScrollView } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 
@@ -308,10 +307,12 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: "#D6DBE6",
     borderRadius: 12,
     padding: 20,
     marginBottom: 16,
+    borderLeftWidth: 4,
+    borderLeftColor: "#f3d25b",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -340,8 +341,6 @@ const styles = StyleSheet.create({
     color: "#2c3e50",
   },
   contactCard: {
-    borderLeftWidth: 4,
-    borderLeftColor: "#f3d25b",
     backgroundColor: "#fffbf0",
   },
   contactInfo: {

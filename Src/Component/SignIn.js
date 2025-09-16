@@ -235,7 +235,7 @@ function SignIn() {
               <View style={styles.logoContainer}>
                 <View style={styles.logoBackground}>
                   <Image
-                    source={require("../../assets/images/newlogo.png")}
+                    source={require("../../assets/images/Buygold.jpg")}
                     style={styles.logoImage}
                     resizeMode="contain"
                   />

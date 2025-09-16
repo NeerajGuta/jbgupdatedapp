@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react"
 import {
   StyleSheet,
@@ -81,12 +82,12 @@ function SignUp() {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 1000,
+        duration: 800,
         useNativeDriver: true,
       }),
       Animated.timing(slideAnim, {
         toValue: 0,
-        duration: 800,
+        duration: 600,
         useNativeDriver: true,
       }),
       Animated.spring(scaleAnim, {
@@ -97,8 +98,8 @@ function SignUp() {
       }),
     ]).start()
 
-    // Logo pulsing animation
-    const logoAnimation = Animated.loop(
+    // Logo pulse animation - continuous loop (same as SignIn)
+    const pulseAnimation = Animated.loop(
       Animated.sequence([
         Animated.timing(logoScale, {
           toValue: 1.05,
@@ -112,9 +113,9 @@ function SignUp() {
         }),
       ]),
     )
-    logoAnimation.start()
+    pulseAnimation.start()
 
-    return () => logoAnimation.stop()
+    return () => pulseAnimation.stop()
   }, [])
 
   // ============ SIGN UP API CALL ============
@@ -201,33 +202,33 @@ function SignUp() {
         <View style={styles.backgroundCircle4} />
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.reg}>
-            {/* ============ LOGO SECTION ============ */}
+          <Animated.View
+            style={[
+              styles.reg,
+              {
+                opacity: fadeAnim,
+                transform: [{ translateY: slideAnim }],
+              },
+            ]}
+          >
+            {/* ============ LOGO SECTION - EXACT COPY FROM SIGNIN ============ */}
             <Animated.View
               style={[
                 styles.logoSection,
                 {
-                  opacity: fadeAnim,
-                  transform: [{ translateY: slideAnim }, { scale: scaleAnim }],
+                  transform: [{ scale: logoScale }],
                 },
               ]}
             >
-              <Animated.View
-                style={[
-                  styles.logoContainer,
-                  {
-                    transform: [{ scale: logoScale }],
-                  },
-                ]}
-              >
+              <View style={styles.logoContainer}>
                 <View style={styles.logoBackground}>
                   <Image
-                    source={require("../../assets/images/newlogo.png")}
+                    source={require("../../assets/images/Buygold.jpg")}
                     style={styles.logoImage}
-                    resizeMode="cover"
+                    resizeMode="contain"
                   />
                 </View>
-              </Animated.View>
+              </View>
             </Animated.View>
 
             {/* ============ WELCOME SECTION ============ */}
@@ -236,7 +237,7 @@ function SignUp() {
                 styles.welcomeSection,
                 {
                   opacity: fadeAnim,
-                  transform: [{ translateY: slideAnim }],
+                  transform: [{ scale: scaleAnim }],
                 },
               ]}
             >
@@ -250,7 +251,7 @@ function SignUp() {
                 styles.formContainer,
                 {
                   opacity: fadeAnim,
-                  transform: [{ translateY: slideAnim }, { scale: scaleAnim }],
+                  transform: [{ translateY: slideAnim }],
                 },
               ]}
             >
@@ -336,7 +337,7 @@ function SignUp() {
                 <Text style={styles.signInButtonText}>Already have an account? Sign In</Text>
               </TouchableOpacity>
             </Animated.View>
-          </View>
+          </Animated.View>
         </ScrollView>
       </View>
     </>
@@ -353,7 +354,7 @@ const styles = StyleSheet.create({
   },
   reg: {
     width: "100%",
-    minHeight: height,
+    paddingHorizontal: 20,
   },
 
   // ============ LOADING STYLES ============
@@ -366,18 +367,21 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     backgroundColor: "white",
-    padding: 30,
-    borderRadius: 20,
+    padding: 25,
+    borderRadius: 15,
     alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
     shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 10,
+    shadowRadius: 8,
+    elevation: 8,
   },
   loadingText: {
-    marginTop: 15,
-    fontSize: 16,
+    marginTop: 12,
+    fontSize: 15,
     color: "#874701",
     fontWeight: "600",
   },
@@ -386,29 +390,29 @@ const styles = StyleSheet.create({
   backgroundCircle1: {
     position: "absolute",
     top: height * 0.1,
-    right: -60,
-    width: 150,
-    height: 150,
-    borderRadius: 75,
+    right: -80,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
     backgroundColor: "rgba(135, 71, 1, 0.1)",
   },
   backgroundCircle2: {
     position: "absolute",
-    top: height * 0.3,
-    left: -80,
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    bottom: height * 0.3,
+    left: -60,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
     backgroundColor: "rgba(135, 71, 1, 0.08)",
   },
   backgroundCircle3: {
     position: "absolute",
-    top: height * 0.6,
-    right: -40,
+    top: height * 0.4,
+    left: width * 0.8,
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: "rgba(135, 71, 1, 0.12)",
+    backgroundColor: "rgba(135, 71, 1, 0.06)",
   },
   backgroundCircle4: {
     position: "absolute",
@@ -420,18 +424,14 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(135, 71, 1, 0.06)",
   },
 
-  // ============ LOGO SECTION ============
+  // ============ LOGO SECTION - EXACT COPY FROM SIGNIN ============
   logoSection: {
     alignItems: "center",
-    marginTop: 60,
-    marginBottom: 20,
+    marginTop: 50,
+    marginBottom: 25,
   },
   logoContainer: {
-    shadowColor: "#874701",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 15,
-    elevation: 10,
+    alignItems: "center",
   },
   logoBackground: {
     width: 100,
@@ -440,30 +440,36 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 3,
-    borderColor: "#874701",
+    shadowColor: "#874701",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 10,
+    borderWidth: 2,
+    borderColor: "rgba(135, 71, 1, 0.2)",
   },
   logoImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 75,
+    height: 75,
   },
 
   // ============ WELCOME SECTION ============
   welcomeSection: {
     alignItems: "center",
-    marginBottom: 40,
-    paddingHorizontal: 20,
+    marginBottom: 30,
   },
   welcomeTitle: {
     fontSize: 26,
-    fontWeight: "800",
+    fontWeight: "900",
     color: "white",
     textAlign: "center",
-    marginBottom: 8,
-    textShadowColor: "rgba(0, 0, 0, 0.3)",
+    marginBottom: 6,
+    textShadowColor: "rgba(135, 71, 1, 0.3)",
     textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
+    textShadowRadius: 4,
   },
   welcomeSubtitle: {
     fontSize: 15,
@@ -475,15 +481,17 @@ const styles = StyleSheet.create({
   // ============ FORM CONTAINER ============
   formContainer: {
     backgroundColor: "white",
-    marginHorizontal: 20,
     borderRadius: 25,
     padding: 25,
     marginBottom: 30,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 15 },
-    shadowOpacity: 0.2,
-    shadowRadius: 25,
-    elevation: 15,
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 15,
+    elevation: 12,
   },
 
   // ============ INPUT STYLES ============
@@ -492,8 +500,8 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 15,
-    fontWeight: "700",
     color: "#874701",
+    fontWeight: "700",
     marginBottom: 8,
   },
   inputContainer: {
@@ -504,41 +512,45 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: "#e9ecef",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowRadius: 3,
+    elevation: 2,
+    minHeight: 50,
   },
   iconContainer: {
-    width: 50,
-    height: 55,
+    width: 45,
+    height: 50,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#874701",
+    backgroundColor: "rgba(135, 71, 1, 0.1)",
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
   },
   inputIcon: {
     fontSize: 18,
-    color: "white",
+    color: "#874701",
   },
   countryCode: {
-    paddingHorizontal: 12,
-    paddingVertical: 18,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
     borderRightWidth: 1,
     borderRightColor: "#e9ecef",
   },
   countryCodeText: {
     fontSize: 15,
-    fontWeight: "700",
     color: "#874701",
+    fontWeight: "600",
   },
   textInput: {
     flex: 1,
-    height: 55,
-    paddingHorizontal: 15,
+    height: 50,
     fontSize: 15,
     color: "#333",
+    paddingHorizontal: 12,
     fontWeight: "500",
   },
   phoneInput: {
@@ -547,25 +559,26 @@ const styles = StyleSheet.create({
 
   // ============ BUTTON STYLES ============
   signUpButtonContainer: {
-    marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   signUpButton: {
-    height: 55,
-    borderRadius: 15,
+    height: 50,
+    borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#874701",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 8,
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 6,
   },
   signUpButtonText: {
+    color: "white",
     fontSize: 16,
     fontWeight: "700",
-    color: "white",
-    letterSpacing: 0.5,
   },
 
   // ============ DIVIDER STYLES ============
@@ -582,8 +595,8 @@ const styles = StyleSheet.create({
   dividerText: {
     marginHorizontal: 15,
     fontSize: 13,
-    fontWeight: "600",
     color: "#6c757d",
+    fontWeight: "600",
   },
 
   // ============ SIGN IN BUTTON ============
@@ -592,9 +605,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   signInButtonText: {
-    fontSize: 15,
-    fontWeight: "600",
     color: "#874701",
-    textDecorationLine: "underline",
+    fontSize: 15,
+    fontWeight: "700",
   },
 })

@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState, useRef } from "react"
 import {
   Text,
@@ -10,7 +12,7 @@ import {
   Animated,
   Platform,
   Dimensions,
-  Keyboard, // Added Keyboard import
+  Keyboard,
 } from "react-native"
 import Home from "./Src/Component/Home"
 import SlapScreen from "./Src/Component/SlapScreen"
@@ -48,6 +50,7 @@ import TermsConditions from "./Src/Component/TermsConditions"
 import PinVerification from "./Src/Component/PinVerification"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import { SafeAreaView, useSafeAreaInsets, SafeAreaProvider } from "react-native-safe-area-context"
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -527,7 +530,7 @@ const AppSecurityScreen = ({ onSuccess }) => {
   }
 
   return (
-    <>
+    <SafeAreaView style={securityStyles.safeAreaContainer}>
       <StatusBar backgroundColor="#f3d25b" barStyle="light-content" />
       <View style={securityStyles.fullScreenContainer}>
         {isLoading && (
@@ -576,17 +579,19 @@ const AppSecurityScreen = ({ onSuccess }) => {
           </View>
         </View>
       </View>
-    </>
+    </SafeAreaView>
   )
 }
 
 export default function App() {
   return (
-    <PaperProvider>
-      <NavigationContainer independent={true}>
-        <AppWrapper />
-      </NavigationContainer>
-    </PaperProvider>
+    <SafeAreaProvider>
+      <PaperProvider>
+        <NavigationContainer independent={true}>
+          <AppWrapper />
+        </NavigationContainer>
+      </PaperProvider>
+    </SafeAreaProvider>
   )
 }
 
@@ -618,10 +623,12 @@ const AppWrapper = () => {
   // Show loading while checking authentication status (only after splash)
   if (isCheckingAuth) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#874701" />
-        <Text style={styles.loadingText}>Checking security...</Text>
-      </View>
+      <SafeAreaView style={styles.safeAreaContainer}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#874701" />
+          <Text style={styles.loadingText}>Checking security...</Text>
+        </View>
+      </SafeAreaView>
     )
   }
 
@@ -665,7 +672,7 @@ const MyStack = ({ setSplashCompleted, initialRoute }) => {
       <Stack.Screen name="SignIn" options={{ headerShown: false }} component={SignIn} />
       <Stack.Screen name="ReferralScreen" options={{ headerShown: false }} component={ReferralScreen} />
       <Stack.Screen name="EarnedBonusPoint" options={{ headerShown: true }} component={EarnedBonusPoint} />
-      <Stack.Screen name="Pay" options={{ headerShown: true }} component={Pay} />
+      <Stack.Screen name="Pay" options={{ headerShown: false }} component={Pay} />
       <Stack.Screen name="ProfileUpdate" options={{ headerShown: false }} component={ProfileUpdate} />
       <Stack.Screen name="ChangePassword" options={{ headerShown: false }} component={ChangePassword} />
       <Stack.Screen name="Otp" options={{ headerShown: false }} component={Otp} />
@@ -790,6 +797,7 @@ const MyStack = ({ setSplashCompleted, initialRoute }) => {
 
 const BottomTab = () => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false)
+  const insets = useSafeAreaInsets()
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
@@ -805,77 +813,113 @@ const BottomTab = () => {
     }
   }, [])
 
+  // Calculate proper tab bar height based on device and safe area
+  const getTabBarHeight = () => {
+    const baseHeight = 60
+    const safeAreaBottom = Math.max(insets.bottom, 0)
+
+    if (Platform.OS === "ios") {
+      // iOS devices with home indicator need more space
+      return baseHeight + safeAreaBottom + 5
+    } else {
+      // Android devices
+      return baseHeight + Math.max(safeAreaBottom, 10)
+    }
+  }
+
+  const tabBarHeight = getTabBarHeight()
+
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: {
-          display: isKeyboardVisible ? "none" : "flex",
-          backgroundColor: "#ffffff",
-          borderTopWidth: 1,
-          borderTopColor: "#f0f0f0",
-          paddingBottom: Platform.OS === "ios" ? 20 : 5,
-          paddingTop: 5,
-          height: Platform.OS === "ios" ? 85 : 65,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: -2,
+    <View style={styles.tabContainer}>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle: {
+            display: isKeyboardVisible ? "none" : "flex",
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: "#ffffff",
+            borderTopWidth: 1,
+            borderTopColor: "#f0f0f0",
+            paddingBottom: Math.max(insets.bottom, 5),
+            paddingTop: 8,
+            height: tabBarHeight,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: -3,
+            },
+            shadowOpacity: 0.15,
+            shadowRadius: 4,
+            elevation: 10,
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
           },
-          shadowOpacity: 0.1,
-          shadowRadius: 3,
-          elevation: 8,
-        },
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: "600",
-          fontFamily: "Poppins-SemiBold",
-          marginTop: 2,
-        },
-        tabBarActiveTintColor: "#f3d25b",
-        tabBarInactiveTintColor: "#999999",
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.tabIconContainer, focused && styles.activeTabIconContainer]}>
-              <Ionicons name="home" color={color} size={24} />
-            </View>
-          ),
-          headerShown: false,
+          tabBarLabelStyle: {
+            fontSize: 11,
+            fontWeight: "600",
+            marginTop: 2,
+            marginBottom: Platform.OS === "ios" ? 0 : 2,
+          },
+          tabBarActiveTintColor: "#005801",
+          tabBarInactiveTintColor: "#999999",
+          tabBarItemStyle: {
+            paddingVertical: 4,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          tabBarIconStyle: {
+            marginTop: 2,
+          },
         }}
-      />
-      <Tab.Screen
-        name="MyAccount"
-        component={MyAccount}
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.tabIconContainer, focused && styles.activeTabIconContainer]}>
-              <AntDesign name="user" color={color} size={24} />
-            </View>
-          ),
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="More"
-        component={More}
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <View style={[styles.tabIconContainer, focused && styles.activeTabIconContainer]}>
-              <Feather name="more-horizontal" color={color} size={24} />
-            </View>
-          ),
-          headerShown: false,
-        }}
-      />
-    </Tab.Navigator>
+      >
+        <Tab.Screen
+          name="Home"
+          component={Home}
+          options={{
+            tabBarIcon: ({ color, focused }) => (
+              <View style={[styles.tabIconContainer, focused && styles.activeTabIconContainer]}>
+                <Ionicons name="home" color={color} size={22} />
+              </View>
+            ),
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="MyAccount"
+          component={MyAccount}
+          options={{
+            tabBarIcon: ({ color, focused }) => (
+              <View style={[styles.tabIconContainer, focused && styles.activeTabIconContainer]}>
+                <AntDesign name="user" color={color} size={22} />
+              </View>
+            ),
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="More"
+          component={More}
+          options={{
+            tabBarIcon: ({ color, focused }) => (
+              <View style={[styles.tabIconContainer, focused && styles.activeTabIconContainer]}>
+                <Feather name="more-horizontal" color={color} size={22} />
+              </View>
+            ),
+            headerShown: false,
+          }}
+        />
+      </Tab.Navigator>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+    backgroundColor: "#f3d25b",
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -888,23 +932,32 @@ const styles = StyleSheet.create({
     color: "#874701",
     fontWeight: "600",
   },
-  // Clean Tab Bar Styles
+  // FIXED Tab Container and Icon Styles
+  tabContainer: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+  },
   tabIconContainer: {
     alignItems: "center",
     justifyContent: "center",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginTop: 2,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    marginBottom: 2,
   },
   activeTabIconContainer: {
-    backgroundColor: "rgba(243, 210, 91, 0.1)",
+    backgroundColor: "rgba(0, 88, 1, 0.1)",
     borderWidth: 1,
-    borderColor: "rgba(243, 210, 91, 0.3)",
+    borderColor: "rgba(0, 88, 1, 0.2)",
   },
 })
 
 const securityStyles = StyleSheet.create({
+  // SafeAreaView container
+  safeAreaContainer: {
+    flex: 1,
+    backgroundColor: "#f3d25b",
+  },
   // FULL SCREEN PIN STYLES WITH FIXED BUTTON LAYOUT
   fullScreenContainer: {
     flex: 1,

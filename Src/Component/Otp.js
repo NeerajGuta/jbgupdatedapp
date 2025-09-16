@@ -1,3 +1,5 @@
+
+
 import {
   StyleSheet,
   Text,
@@ -262,8 +264,12 @@ const Otp = ({ navigation, route }) => {
               },
             ]}
           >
-            <View style={styles.logoWrapper}>
-              <Image source={require("../../assets/images/newlogo.png")} style={styles.logoImage} resizeMode="cover" />
+            <View style={styles.logoBackground}>
+              <Image
+                source={require("../../assets/images/Buygold.jpg")}
+                style={styles.logoImage}
+                resizeMode="contain"
+              />
             </View>
           </Animated.View>
 
@@ -412,24 +418,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 30,
   },
-  logoWrapper: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+  logoBackground: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#874701",
-    shadowOffset: { width: 0, height: 6 },
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
     shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowRadius: 10,
+    elevation: 10,
     borderWidth: 2,
     borderColor: "rgba(135, 71, 1, 0.2)",
   },
   logoImage: {
-    width: 70,
-    height: 70,
+    width: 75,
+    height: 75,
   },
 
   // ==================== TITLE STYLES ====================

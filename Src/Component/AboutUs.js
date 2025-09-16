@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: "#D6DBE6",
     borderRadius: 12,
     padding: 20,
     marginBottom: 16,
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     marginBottom: 12,
     padding: 12,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#D6DBE6",
     borderRadius: 8,
   },
   benefitIcon: {

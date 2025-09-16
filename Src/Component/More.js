@@ -1754,18 +1754,7 @@
 
 
 
-import {
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Alert,
-  ScrollView,
-  Platform,
-} from "react-native"
+import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Alert, ScrollView } from "react-native"
 import React, { useEffect, useState } from "react"
 import { useFocusEffect, useNavigation } from "@react-navigation/native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -1777,11 +1766,13 @@ import axios from "axios"
 import LoaderKit from "react-native-loader-kit"
 import Icon from "react-native-vector-icons/FontAwesome"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 const { width, height } = Dimensions.get("window")
 
 const More = () => {
   const navigation = useNavigation("")
+  const insets = useSafeAreaInsets()
 
   // Get User++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   const [user, setUser] = useState({})
@@ -2001,11 +1992,14 @@ const More = () => {
   ]
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeAreaContainer}>
       <StatusBar backgroundColor="#f3d25b" barStyle="dark-content" />
 
       {/* Header Section */}
-      <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.headerGradient}>
+      <LinearGradient
+        colors={["#f3d25b", "#f3d25b"]}
+        style={[styles.headerGradient, { paddingTop: Math.max(insets.top, 10) }]}
+      >
         <View style={styles.headerContent}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
             <Icon name="arrow-left" size={20} color="#874701" />
@@ -2020,7 +2014,14 @@ const More = () => {
           <LoaderKit style={{ width: 50, height: 50 }} name={"LineSpinFadeLoader"} color={"#f3d25b"} />
         </View>
       ) : (
-        <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[
+            styles.scrollContentContainer,
+            { paddingBottom: Math.max(insets.bottom, 15) + 30 }, // Extra space for tab bar
+          ]}
+        >
           <View style={styles.contentContainer}>
             <View style={styles.menuContainer}>
               {menuItems.map((item, index) => (
@@ -2090,25 +2091,44 @@ const More = () => {
           )}
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   )
 }
 
 export default More
 
 const styles = StyleSheet.create({
-  container: {
+  // SafeAreaView container - CRITICAL for proper display
+  safeAreaContainer: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#f3d25b", // Match the header color
   },
   scrollContainer: {
+    flex: 1,
     backgroundColor: "#f8f9fa",
   },
-
-  // Header Styles
+  // NEW: Content container for proper spacing
+  scrollContentContainer: {
+    flexGrow: 1,
+  },
+  // Loading container with proper centering
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+  },
+  // Header Styles - Updated for SafeAreaView
   headerGradient: {
-    paddingTop: Platform.OS === "ios" ? 50 : 20,
     paddingBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   headerContent: {
     flexDirection: "row",
@@ -2118,6 +2138,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 8,
+    borderRadius: 8,
   },
   headerTitle: {
     fontSize: 20,
@@ -2128,16 +2149,9 @@ const styles = StyleSheet.create({
   headerSpacer: {
     width: 36,
   },
-
-  // Content Styles
   contentContainer: {
     padding: 15,
-  },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f8f9fa",
+    
   },
   menuContainer: {
     gap: 12,
@@ -2146,7 +2160,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   menuCard: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#D6DBE6",
     borderRadius: 15,
     shadowColor: "#000",
     shadowOffset: {
@@ -2156,6 +2170,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
+    // Added border styling to match MyAccount
+    borderLeftWidth: 4,
+    borderLeftColor: "#005801",
   },
   menuItemContent: {
     flexDirection: "row",
@@ -2185,8 +2202,6 @@ const styles = StyleSheet.create({
   chevronIcon: {
     marginLeft: 10,
   },
-
-  // Footer Card
   footerCard: {
     backgroundColor: "#ffffff",
     borderRadius: 20,
@@ -2201,13 +2216,14 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     overflow: "hidden",
+    // Added border styling to match MyAccount
+    borderLeftWidth: 4,
+    borderLeftColor: "#005801",
   },
   footerImage: {
     width: "100%",
     height: 120,
   },
-
-  // Modal Styles
   modalContainer: {
     backgroundColor: "white",
     borderRadius: 20,

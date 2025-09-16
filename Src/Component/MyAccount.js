@@ -1559,7 +1559,7 @@ const styles = StyleSheet.create({
 export default MyAccount; */
 
 
-import {
+/* import {
   StatusBar,
   StyleSheet,
   Text,
@@ -1864,7 +1864,7 @@ const MyAccount = () => {
     <View style={styles.container}>
       <StatusBar backgroundColor="#f3d25b" barStyle="dark-content" />
 
-      {/* Header Section */}
+     
       <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.headerGradient}>
         <View style={styles.headerContent}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -1878,7 +1878,7 @@ const MyAccount = () => {
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         {updateProfile ? (
           <View style={styles.profileContainer}>
-            {/* Profile Header Card */}
+           
             <View style={styles.profileHeaderCard}>
               <View style={styles.profileInfo}>
                 {user?.profileimage ? (
@@ -1915,7 +1915,7 @@ const MyAccount = () => {
               </TouchableOpacity>
             </View>
 
-            {/* Information Cards */}
+           
             <View style={styles.infoCardsContainer}>
               <View style={styles.infoCard}>
                 <View style={styles.infoCardHeader}>
@@ -1944,7 +1944,7 @@ const MyAccount = () => {
           </View>
         ) : (
           <View style={styles.profileContainer}>
-            {/* Edit Profile Header - Fixed Layout */}
+          
             <View style={styles.editProfileHeader}>
               <View style={styles.editProfileInfo}>
                 <View style={styles.compactProfileImageWrapper}>
@@ -1993,9 +1993,9 @@ const MyAccount = () => {
               </TouchableOpacity>
             </View>
 
-            {/* Edit Form */}
+            
             <View style={styles.editFormContainer}>
-              {/* Profile Image Section - Compact */}
+            
               <View style={styles.profileImageSection}>
                 <Text style={styles.sectionTitle}>Profile Picture</Text>
                 <View style={styles.profileImageEditContainer}>
@@ -2021,7 +2021,7 @@ const MyAccount = () => {
                 </View>
               </View>
 
-              {/* Form Fields */}
+             
               <View style={styles.formFieldsContainer}>
                 <Text style={styles.sectionTitle}>Personal Information</Text>
 
@@ -2076,7 +2076,7 @@ const MyAccount = () => {
           </View>
         )}
 
-        {/* Camera/Gallery Selection Modal */}
+   
         <Modal
           animationType="slide"
           transparent={true}
@@ -2121,7 +2121,7 @@ const MyAccount = () => {
           </View>
         </Modal>
 
-        {/* Enhanced Crop Modal */}
+      
         <Modal
           animationType="fade"
           transparent={false}
@@ -2142,7 +2142,7 @@ const MyAccount = () => {
               ]}
               {...panResponder.panHandlers}
             >
-              {/* Grid Overlay */}
+            
               <View style={styles.gridContainer}>
                 <View style={styles.gridRow}>
                   <View style={styles.gridCell} />
@@ -2161,14 +2161,14 @@ const MyAccount = () => {
                 </View>
               </View>
 
-              {/* Corner Handles */}
+             
               <View style={[styles.resizeHandle, styles.topLeft]} {...handleTopLeft.panHandlers} />
               <View style={[styles.resizeHandle, styles.topRight]} {...handleTopRight.panHandlers} />
               <View style={[styles.resizeHandle, styles.bottomLeft]} {...handleBottomLeft.panHandlers} />
               <View style={[styles.resizeHandle, styles.bottomRight]} {...handleBottomRight.panHandlers} />
             </View>
 
-            {/* Crop Controls */}
+         
             <View style={styles.cropControls}>
               <TouchableOpacity
                 style={styles.aspectButton}
@@ -2202,10 +2202,10 @@ const MyAccount = () => {
           </View>
         </Modal>
 
-        {/* Loading Modal */}
+    
         <LoadingModal />
 
-        {/* Promotional Cards - Only show in view mode */}
+        
         {updateProfile && (
           <View style={styles.promotionalSection}>
             <Text style={styles.promotionalTitle}>Investment Tips</Text>
@@ -2281,7 +2281,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 8,
-    /* backgroundColor: "rgba(255, 255, 255, 0.3)", */
+  
     borderRadius: 10,
   },
   headerTitle: {
@@ -2303,22 +2303,24 @@ const styles = StyleSheet.create({
 
   // Profile Header Card (View Mode)
   profileHeaderCard: {
-    backgroundColor: "#ffffff",
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 6,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  backgroundColor: "#D6DBE6",
+  borderRadius: 20,
+  padding: 20,
+  marginBottom: 20,
+  shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 3,
   },
+  shadowOpacity: 0.1,
+  shadowRadius: 6,
+  elevation: 6,
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  borderLeftWidth: 4, // Add this
+  borderLeftColor: "#005801", // Add this - green color
+},
   profileInfo: {
     flexDirection: "row",
     alignItems: "center",
@@ -2363,7 +2365,7 @@ const styles = StyleSheet.create({
   userIdContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#D6DBE6",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
@@ -2402,20 +2404,20 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   infoCard: {
-    backgroundColor: "#ffffff",
-    borderRadius: 15,
-    padding: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
-    borderLeftWidth: 4,
-    borderLeftColor: "#f3d25b",
+  backgroundColor: "#D6DBE6",
+  borderRadius: 15,
+  padding: 20,
+  shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 2,
   },
+  shadowOpacity: 0.1,
+  shadowRadius: 4,
+  elevation: 4,
+  borderLeftWidth: 4,
+  borderLeftColor: "#005801", // Changed to green
+},
   infoCardHeader: {
     flexDirection: "row",
     alignItems: "center",
@@ -2423,7 +2425,7 @@ const styles = StyleSheet.create({
   },
   cardIcon: {
     fontSize: 20,
-    color: "#f3d25b",
+    color: "#005801",
     marginRight: 12,
   },
   cardLabel: {
@@ -2923,4 +2925,1331 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyAccount;
+export default MyAccount; */
+
+
+
+"use client"
+
+import { useState, useCallback } from "react"
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+  TextInput,
+  Alert,
+  Modal,
+  Dimensions,
+  ActivityIndicator,
+  PermissionsAndroid,
+} from "react-native"
+import Icon from "react-native-vector-icons/FontAwesome"
+import Ionicons from "react-native-vector-icons/Ionicons"
+import FontAwesome6 from "react-native-vector-icons/FontAwesome6"
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useFocusEffect, useNavigation } from "@react-navigation/native"
+import LinearGradient from "react-native-linear-gradient"
+import ImagePicker from "react-native-image-crop-picker"
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
+
+const { width, height } = Dimensions.get("window")
+
+const MyAccount = () => {
+  const navigation = useNavigation()
+  const [modalVisible, setModalVisible] = useState(false)
+  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [imageSource, setImageSource] = useState(null)
+  const [user, setUser] = useState(null)
+  const [updateProfile, setUpdateProfile] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
+  const [imageProcessing, setImageProcessing] = useState(false)
+
+  // Get safe area insets for proper spacing
+  const insets = useSafeAreaInsets()
+
+  // Request camera permission for Android
+  const requestCameraPermission = async () => {
+    if (Platform.OS === "android") {
+      try {
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
+          title: "Camera Permission",
+          message: "This app needs access to camera to take profile pictures.",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK",
+        })
+        return granted === PermissionsAndroid.RESULTS.GRANTED
+      } catch (err) {
+        console.warn(err)
+        return false
+      }
+    }
+    return true
+  }
+
+  // FIXED: Perfect camera function with device-compatible settings
+  const takePhotoFromCamera = async () => {
+    try {
+      setModalVisible(false)
+      setImageProcessing(true)
+
+      // Request permission first
+      const hasPermission = await requestCameraPermission()
+      if (!hasPermission) {
+        Alert.alert("Permission Required", "Camera permission is required to take photos.")
+        setImageProcessing(false)
+        return
+      }
+
+      // FIXED: Enhanced camera settings for all devices
+      const image = await ImagePicker.openCamera({
+        width: 800,
+        height: 800,
+        cropping: true,
+        cropperCircleOverlay: true,
+        compressImageMaxWidth: 800,
+        compressImageMaxHeight: 800,
+        compressImageQuality: 0.95,
+        mediaType: "photo",
+        includeBase64: false,
+        includeExif: false,
+
+        // FIXED: Universal UI customization that works on all devices
+        cropperActiveWidgetColor: "#f3d25b",
+        cropperStatusBarColor: "#000000", // Black for better visibility
+        cropperToolbarColor: "#f3d25b",
+        cropperToolbarWidgetColor: "#874701",
+        cropperTitleText: "Move and Scale Your Photo",
+        cropperChooseText: "✓ Use Photo",
+        cropperCancelText: "✗ Retake",
+
+        // FIXED: Enhanced controls for better device compatibility
+        enableRotationGesture: true,
+        showCropGuidelines: true,
+        showCropFrame: true,
+        hideBottomControls: false,
+        freeStyleCropEnabled: false,
+        avoidEmptySpaceAroundImage: false, // FIXED: Allow space for better visibility
+        cropperToolbarTitle: "Edit Your Profile Photo",
+        loadingLabelText: "Processing your photo...",
+        writeTempFile: true,
+
+        // FIXED: Better visibility settings
+        cropperCircleOverlayColor: "rgba(0,0,0,0.5)", // Lighter overlay
+        disableCropperColorSetters: false,
+        cropperRotationEnabled: true,
+        cropperScaleEnabled: true,
+
+        // FIXED: Device compatibility settings
+        useFrontCamera: true,
+        forceJpg: true,
+
+        // FIXED: Additional settings for device compatibility
+        cropperChooseColor: "#f3d25b",
+        cropperCancelColor: "#ff4444",
+        cropperRotateButtonsHidden: false,
+        showsHorizontalScrollIndicator: false,
+        showsVerticalScrollIndicator: false,
+
+        // FIXED: Safe area and status bar handling
+        cropperStatusBarHidden: false, // Keep status bar visible
+        cropperToolbarHidden: false, // Keep toolbar visible
+      })
+
+      if (image && image.path) {
+        setImageSource(image.path)
+        Alert.alert("Success! 📸", "Your profile picture has been updated successfully!", [
+          { text: "Great!", style: "default" },
+        ])
+      }
+    } catch (error) {
+      console.log("Camera error:", error)
+      if (error.code === "E_PICKER_CANCELLED") {
+        // User cancelled - no error message needed
+      } else if (error.code === "E_NO_CAMERA_PERMISSION") {
+        Alert.alert("Permission Required", "Please enable camera permission in your device settings.")
+      } else {
+        Alert.alert("Camera Error", "Unable to take photo. Please try again.")
+      }
+    } finally {
+      setImageProcessing(false)
+    }
+  }
+
+  // FIXED: Perfect gallery function with device-compatible settings
+  const selectFromGallery = async () => {
+    try {
+      setModalVisible(false)
+      setImageProcessing(true)
+
+      // FIXED: Enhanced gallery settings for all devices
+      const image = await ImagePicker.openPicker({
+        width: 800,
+        height: 800,
+        cropping: true,
+        cropperCircleOverlay: true,
+        compressImageMaxWidth: 800,
+        compressImageMaxHeight: 800,
+        compressImageQuality: 0.95,
+        mediaType: "photo",
+        includeBase64: false,
+        includeExif: false,
+
+        // FIXED: Universal UI customization that works on all devices
+        cropperActiveWidgetColor: "#f3d25b",
+        cropperStatusBarColor: "#000000", // Black for better visibility
+        cropperToolbarColor: "#f3d25b",
+        cropperToolbarWidgetColor: "#874701",
+        cropperTitleText: "Move and Scale Your Photo",
+        cropperChooseText: "✓ Use Photo",
+        cropperCancelText: "✗ Choose Different",
+
+        // FIXED: Enhanced controls for better device compatibility
+        enableRotationGesture: true,
+        showCropGuidelines: true,
+        showCropFrame: true,
+        hideBottomControls: false,
+        freeStyleCropEnabled: false,
+        avoidEmptySpaceAroundImage: false, // FIXED: Allow space for better visibility
+        cropperToolbarTitle: "Edit Your Profile Photo",
+        loadingLabelText: "Processing your photo...",
+        writeTempFile: true,
+
+        // FIXED: Better visibility settings
+        cropperCircleOverlayColor: "rgba(0,0,0,0.5)", // Lighter overlay
+        disableCropperColorSetters: false,
+        cropperRotationEnabled: true,
+        cropperScaleEnabled: true,
+
+        // FIXED: Gallery specific settings for device compatibility
+        smartAlbums: ["UserLibrary", "PhotoStream", "Panoramas", "Videos", "Bursts"],
+        multiple: false,
+        forceJpg: true,
+        sortOrder: "desc",
+
+        // FIXED: Additional settings for device compatibility
+        cropperChooseColor: "#f3d25b",
+        cropperCancelColor: "#ff4444",
+        cropperRotateButtonsHidden: false,
+        showsHorizontalScrollIndicator: false,
+        showsVerticalScrollIndicator: false,
+
+        // FIXED: Safe area and status bar handling
+        cropperStatusBarHidden: false, // Keep status bar visible
+        cropperToolbarHidden: false, // Keep toolbar visible
+      })
+
+      if (image && image.path) {
+        setImageSource(image.path)
+        Alert.alert("Success! 🖼️", "Your profile picture has been updated successfully!", [
+          { text: "Awesome!", style: "default" },
+        ])
+      }
+    } catch (error) {
+      console.log("Gallery error:", error)
+      if (error.code === "E_PICKER_CANCELLED") {
+        // User cancelled - no error message needed
+      } else {
+        Alert.alert("Gallery Error", "Unable to select photo. Please try again.")
+      }
+    } finally {
+      setImageProcessing(false)
+    }
+  }
+
+  const userData = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem("user")
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser)
+        setUser(parsedUser)
+        setUsername(parsedUser.name || "")
+        setEmail(parsedUser.email || "")
+        setPhone(parsedUser.phoneno || "")
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error)
+    }
+  }
+
+  const updateCustomer = async () => {
+    try {
+      if (!imageSource && !username && !email && !phone) {
+        Alert.alert("No Changes", "Please make some changes before saving.")
+        return
+      }
+
+      setIsLoading(true)
+
+      const imageSourceUri = imageSource ? (Platform.OS === "android" ? `file://${imageSource}` : imageSource) : null
+
+      const formData = new FormData()
+      formData.append("userId", user?._id)
+      formData.append("name", username || user?.name)
+      formData.append("email", email || user?.email)
+      formData.append("phoneno", phone || user?.phoneno)
+
+      if (imageSourceUri) {
+        formData.append("profileimage", {
+          uri: imageSourceUri,
+          name: "profile.jpg",
+          type: "image/jpeg",
+        })
+      }
+
+      const response = await fetch("https://justbuynewbackend.onrender.com/api/v1/user/auth/updateuser", {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+        },
+        body: formData,
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        await AsyncStorage.setItem("user", JSON.stringify(result.success))
+        userData()
+        setImageSource(null)
+        setUpdateProfile(true)
+        Alert.alert("Profile Updated! ✅", "Your profile has been successfully updated.", [
+          { text: "Perfect!", style: "default" },
+        ])
+      } else {
+        Alert.alert("Update Failed", result?.message || "Server error occurred. Please try again.")
+      }
+    } catch (error) {
+      Alert.alert("Network Error", "Please check your internet connection and try again.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      userData()
+    }, []),
+  )
+
+  // Get profile image URL with cache busting
+  const getProfileImageUrl = () => {
+    if (imageSource) {
+      return `${imageSource}?${new Date().getTime()}`
+    }
+    if (user?.profileimage) {
+      return `https://justbuynewbackend.onrender.com/User/${user.profileimage}?${new Date().getTime()}`
+    }
+    return null
+  }
+
+  // Enhanced Loading Modal
+  const LoadingModal = () => (
+    <Modal animationType="fade" transparent={true} visible={isLoading} onRequestClose={() => {}}>
+      <View style={styles.loadingContainer}>
+        <View style={styles.loadingContent}>
+          <ActivityIndicator size="large" color="#f3d25b" />
+          <Text style={styles.loadingText}>Updating Your Profile...</Text>
+          <Text style={styles.loadingSubtext}>Please wait a moment</Text>
+        </View>
+      </View>
+    </Modal>
+  )
+
+  // FIXED: Enhanced Image Processing Modal with better messaging
+  const ImageProcessingModal = () => (
+    <Modal animationType="fade" transparent={true} visible={imageProcessing} onRequestClose={() => {}}>
+      <View style={styles.loadingContainer}>
+        <View style={styles.loadingContent}>
+          <ActivityIndicator size="large" color="#f3d25b" />
+          <Text style={styles.loadingText}>Opening Photo Editor...</Text>
+          <Text style={styles.loadingSubtext}>Preparing your perfect shot! 📸</Text>
+        </View>
+      </View>
+    </Modal>
+  )
+
+  return (
+    <SafeAreaView style={styles.safeAreaContainer}>
+      <StatusBar backgroundColor="#f3d25b" barStyle="dark-content" />
+
+      {/* Header Section */}
+      <LinearGradient
+        colors={["#f3d25b", "#f3d25b"]}
+        style={[styles.headerGradient, { paddingTop: Math.max(insets.top + 10, 40) }]}
+      >
+        <View style={styles.headerContent}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <Icon name="arrow-left" size={20} color="#874701" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>My Account</Text>
+          <View style={styles.headerSpacer} />
+        </View>
+      </LinearGradient>
+
+      <ScrollView
+        style={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          styles.scrollContentContainer,
+          { paddingBottom: Math.max(insets.bottom, 15) + 35 }, // Extra space for tab bar
+        ]}
+      >
+        {updateProfile ? (
+          <View style={styles.profileContainer}>
+            {/* Profile Header Card */}
+            <View style={styles.profileHeaderCard}>
+              <View style={styles.profileInfo}>
+                <TouchableOpacity onPress={() => navigation.navigate("ImageZoom", { user })}>
+                  <View style={styles.profileImageWrapper}>
+                    {getProfileImageUrl() ? (
+                      <Image source={{ uri: getProfileImageUrl() }} style={styles.profileImage} />
+                    ) : (
+                      <View style={styles.avatarPlaceholder}>
+                        <Text style={styles.avatarText}>{user?.name ? user.name.charAt(0).toUpperCase() : "U"}</Text>
+                      </View>
+                    )}
+                    <View style={styles.onlineIndicator} />
+                  </View>
+                </TouchableOpacity>
+                <View style={styles.profileDetails}>
+                  <Text style={styles.nameText}>{user?.name || "Loading..."}</Text>
+                  <Text style={styles.phoneText}>+91 {user?.phoneno}</Text>
+                  <View style={styles.userIdContainer}>
+                    <Text style={styles.userIdLabel}>ID: </Text>
+                    <Text style={styles.userIdText}>{user?.userId}</Text>
+                  </View>
+                </View>
+              </View>
+              <TouchableOpacity style={styles.editButton} onPress={() => setUpdateProfile(false)}>
+                <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.editButtonGradient}>
+                  <FontAwesome5 name="edit" size={18} color="#874701" />
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+
+            {/* Information Cards */}
+            <View style={styles.infoCardsContainer}>
+              <View style={styles.infoCard}>
+                <View style={styles.infoCardHeader}>
+                  <Icon name="user" style={styles.cardIcon} />
+                  <Text style={styles.cardLabel}>User Name</Text>
+                </View>
+                <Text style={styles.cardValue}>{user?.name}</Text>
+              </View>
+
+              <View style={styles.infoCard}>
+                <View style={styles.infoCardHeader}>
+                  <Ionicons name="mail" style={styles.cardIcon} />
+                  <Text style={styles.cardLabel}>Email Address</Text>
+                </View>
+                <Text style={styles.cardValue}>{user?.email}</Text>
+              </View>
+
+              <View style={styles.infoCard}>
+                <View style={styles.infoCardHeader}>
+                  <FontAwesome6 name="phone" style={styles.cardIcon} />
+                  <Text style={styles.cardLabel}>Phone Number</Text>
+                </View>
+                <Text style={styles.cardValue}>+91-{user?.phoneno}</Text>
+              </View>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.profileContainer}>
+            {/* Edit Profile Header */}
+            <View style={styles.editProfileHeader}>
+              <View style={styles.editProfileInfo}>
+                <View style={styles.compactProfileImageWrapper}>
+                  {getProfileImageUrl() ? (
+                    <Image source={{ uri: getProfileImageUrl() }} style={styles.compactProfileImage} />
+                  ) : (
+                    <View style={styles.compactAvatarPlaceholder}>
+                      <Text style={styles.compactAvatarText}>
+                        {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+                      </Text>
+                    </View>
+                  )}
+                  <View style={styles.onlineIndicator} />
+                </View>
+                <View style={styles.compactProfileDetails}>
+                  <Text style={styles.compactNameText} numberOfLines={1}>
+                    {user?.name || "Loading..."}
+                  </Text>
+                  <Text style={styles.compactPhoneText} numberOfLines={1}>
+                    +91 {user?.phoneno}
+                  </Text>
+                  <View style={styles.compactUserIdContainer}>
+                    <Text style={styles.userIdLabel}>ID: </Text>
+                    <Text style={styles.userIdText}>{user?.userId}</Text>
+                  </View>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={[styles.saveButton, isLoading && styles.disabledButton]}
+                onPress={() => {
+                  if (!isLoading) {
+                    updateCustomer()
+                  }
+                }}
+                disabled={isLoading}
+              >
+                <LinearGradient
+                  colors={isLoading ? ["#ccc", "#ccc"] : ["#f3d25b", "#f3d25b"]}
+                  style={styles.saveButtonGradient}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator size="small" color="#874701" />
+                  ) : (
+                    <Text style={styles.saveButtonText}>Save</Text>
+                  )}
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+
+            {/* Edit Form */}
+            <View style={styles.editFormContainer}>
+              {/* Profile Image Section */}
+              <View style={styles.profileImageSection}>
+                <Text style={styles.sectionTitle}>Profile Picture</Text>
+                <View style={styles.profileImageEditContainer}>
+                  <View style={styles.largeProfileImageWrapper}>
+                    {getProfileImageUrl() ? (
+                      <Image source={{ uri: getProfileImageUrl() }} style={styles.largerProfileImage} />
+                    ) : (
+                      <View style={styles.largeAvatarPlaceholder}>
+                        <Text style={styles.largeAvatarText}>
+                          {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+                        </Text>
+                      </View>
+                    )}
+                    <TouchableOpacity
+                      style={styles.cameraButton}
+                      onPress={() => setModalVisible(true)}
+                      disabled={isLoading || imageProcessing}
+                    >
+                      <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.cameraButtonGradient}>
+                        <FontAwesome6 name="camera" size={16} color="#874701" />
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  </View>
+                  <Text style={styles.imageHint}>Tap the camera icon to update your photo</Text>
+                </View>
+              </View>
+
+              {/* Form Fields */}
+              <View style={styles.formFieldsContainer}>
+                <Text style={styles.sectionTitle}>Personal Information</Text>
+
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>User Name</Text>
+                  <View style={styles.modernInputContainer}>
+                    <Icon name="user" style={styles.inputIcon} />
+                    <TextInput
+                      style={styles.modernInput}
+                      value={username}
+                      onChangeText={setUsername}
+                      placeholder={user?.name}
+                      placeholderTextColor="#999"
+                      editable={!isLoading}
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Email Address</Text>
+                  <View style={styles.modernInputContainer}>
+                    <Ionicons name="mail" style={styles.inputIcon} />
+                    <TextInput
+                      style={styles.modernInput}
+                      value={email}
+                      onChangeText={setEmail}
+                      placeholder={user?.email}
+                      keyboardType="email-address"
+                      placeholderTextColor="#999"
+                      editable={!isLoading}
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>Phone Number</Text>
+                  <View style={styles.modernInputContainer}>
+                    <FontAwesome6 name="phone" style={styles.inputIcon} />
+                    <TextInput
+                      style={styles.modernInput}
+                      value={phone}
+                      onChangeText={setPhone}
+                      placeholder={user?.phoneno}
+                      keyboardType="phone-pad"
+                      placeholderTextColor="#999"
+                      editable={!isLoading}
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        )}
+
+        {/* FIXED: Enhanced Photo Selection Modal with better instructions */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Update Profile Picture</Text>
+                <Text style={styles.modalSubtitle}>Choose how you'd like to add your photo</Text>
+              </View>
+
+              {/* FIXED: Added helpful hint for cropping */}
+              <View style={styles.modalHintContainer}>
+                <Text style={styles.modalHint}>
+                  📸 After selecting, you'll be able to crop and adjust your photo perfectly!
+                </Text>
+              </View>
+
+              <View style={styles.modalButtons}>
+                <TouchableOpacity style={styles.modalButton} onPress={takePhotoFromCamera} disabled={imageProcessing}>
+                  <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.modalButtonGradient}>
+                    <View style={styles.modalButtonIcon}>
+                      <Icon name="camera" size={32} color="#874701" />
+                    </View>
+                    <Text style={styles.modalButtonText}>Take Photo</Text>
+                    <Text style={styles.modalButtonSubtext}>Use your camera</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.modalButton} onPress={selectFromGallery} disabled={imageProcessing}>
+                  <LinearGradient colors={["#f3d25b", "#f3d25b"]} style={styles.modalButtonGradient}>
+                    <View style={styles.modalButtonIcon}>
+                      <Icon name="image" size={32} color="#874701" />
+                    </View>
+                    <Text style={styles.modalButtonText}>Choose Photo</Text>
+                    <Text style={styles.modalButtonSubtext}>From your gallery</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.modalFooter}>
+                <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+                  <LinearGradient colors={["#874701", "#874701"]} style={styles.closeButtonGradient}>
+                    <Text style={styles.closeButtonText}>Cancel</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Loading Modals */}
+        <LoadingModal />
+        <ImageProcessingModal />
+
+        {/* Promotional Cards - Only show in view mode */}
+        {updateProfile && (
+          <View style={styles.promotionalSection}>
+            <Text style={styles.promotionalTitle}>Investment Tips</Text>
+
+            <View style={styles.promotionCard}>
+              <View style={styles.promotionContent}>
+                <Text style={styles.promotionText}>Start saving today for better tomorrow</Text>
+                <Image
+                  source={require("../../assets/images/g1.png")}
+                  style={styles.promotionImage}
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+
+            <View style={styles.promotionCard}>
+              <View style={styles.promotionContent}>
+                <Image
+                  source={require("../../assets/images/g2.png")}
+                  style={styles.promotionImage}
+                  resizeMode="contain"
+                />
+                <Text style={styles.promotionText}>Daily investing by small amount and get bigger value</Text>
+              </View>
+            </View>
+
+            <View style={styles.promotionCard}>
+              <View style={styles.promotionContent}>
+                <Text style={styles.promotionText}>Refer today for get more surprise</Text>
+                <Image
+                  source={require("../../assets/images/g3.png")}
+                  style={styles.promotionImage}
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+          </View>
+        )}
+      </ScrollView>
+    </SafeAreaView>
+  )
+}
+
+const styles = StyleSheet.create({
+  // SafeAreaView container - CRITICAL for proper display (Same as Home)
+  safeAreaContainer: {
+    flex: 1,
+    backgroundColor: "#ffffff", // Match the header color
+  },
+  scrollContainer: {
+    flex: 1,
+    backgroundColor: "#f8f9fa",
+  },
+  // NEW: Content container for proper spacing (Same as Home)
+  scrollContentContainer: {
+    flexGrow: 1,
+  },
+
+  // Header Styles - Updated for SafeAreaView
+  headerGradient: {
+    paddingBottom: 15,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+  headerContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+  },
+  backButton: {
+    padding: 8,
+    borderRadius: 10,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#874701",
+    textShadowColor: "rgba(0, 0, 0, 0.1)",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  headerSpacer: {
+    width: 36,
+  },
+
+  // Profile Container
+  profileContainer: {
+    padding: 15,
+  },
+
+  // Profile Header Card (View Mode)
+  profileHeaderCard: {
+    backgroundColor: "#D6DBE6",
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 6,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderLeftWidth: 4,
+    borderLeftColor: "#005801",
+  },
+  profileInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  profileImageWrapper: {
+    position: "relative",
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 3,
+    borderColor: "#f3d25b",
+  },
+  avatarPlaceholder: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "#f3d25b",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: "#874701",
+  },
+  avatarText: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#874701",
+  },
+  onlineIndicator: {
+    position: "absolute",
+    bottom: 2,
+    right: 2,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: "#4CAF50",
+    borderWidth: 3,
+    borderColor: "#ffffff",
+  },
+  profileDetails: {
+    marginLeft: 15,
+    flex: 1,
+  },
+  nameText: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#030712",
+    marginBottom: 4,
+  },
+  phoneText: {
+    fontSize: 16,
+    color: "#666",
+    marginBottom: 4,
+  },
+  userIdContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#D6DBE6",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    alignSelf: "flex-start",
+  },
+  userIdLabel: {
+    fontSize: 12,
+    color: "#999",
+  },
+  userIdText: {
+    fontSize: 12,
+    color: "#874701",
+    fontWeight: "600",
+  },
+  editButton: {
+    marginLeft: 10,
+  },
+  editButtonGradient: {
+    width: 45,
+    height: 45,
+    borderRadius: 22.5,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+
+  // Information Cards
+  infoCardsContainer: {
+    gap: 15,
+  },
+  infoCard: {
+    backgroundColor: "#D6DBE6",
+    borderRadius: 15,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+    borderLeftWidth: 4,
+    borderLeftColor: "#005801",
+  },
+  infoCardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  cardIcon: {
+    fontSize: 20,
+    color: "#005801",
+    marginRight: 12,
+  },
+  cardLabel: {
+    fontSize: 16,
+    color: "#666",
+    fontWeight: "600",
+  },
+  cardValue: {
+    fontSize: 18,
+    color: "#030712",
+    fontWeight: "600",
+    marginLeft: 32,
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+  },
+
+  // Edit Profile Header
+  editProfileHeader: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 15,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 6,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  editProfileInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+    marginRight: 10,
+  },
+  compactProfileImageWrapper: {
+    position: "relative",
+  },
+  compactProfileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: "#f3d25b",
+  },
+  compactAvatarPlaceholder: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#f3d25b",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#874701",
+  },
+  compactAvatarText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#874701",
+  },
+  compactProfileDetails: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  compactNameText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#030712",
+    marginBottom: 2,
+  },
+  compactPhoneText: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 2,
+  },
+  compactUserIdContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    alignSelf: "flex-start",
+  },
+  saveButton: {
+    flexShrink: 0,
+  },
+  saveButtonGradient: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    minWidth: 80,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  disabledButton: {
+    opacity: 0.6,
+  },
+  saveButtonText: {
+    color: "#874701",
+    fontSize: 14,
+    fontWeight: "700",
+  },
+
+  // Edit Form Container
+  editFormContainer: {
+    gap: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    color: "#030712",
+    fontWeight: "700",
+    marginBottom: 15,
+    paddingBottom: 5,
+    borderBottomWidth: 2,
+    borderBottomColor: "#f3d25b",
+  },
+
+  // Profile Image Section
+  profileImageSection: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  profileImageEditContainer: {
+    alignItems: "center",
+  },
+  largeProfileImageWrapper: {
+    position: "relative",
+    marginBottom: 10,
+  },
+  largerProfileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: "#f3d25b",
+  },
+  largeAvatarPlaceholder: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: "#f3d25b",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: "#874701",
+  },
+  largeAvatarText: {
+    fontSize: 40,
+    fontWeight: "bold",
+    color: "#874701",
+  },
+  cameraButton: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+  },
+  cameraButtonGradient: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: "#ffffff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 6,
+  },
+  imageHint: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    fontStyle: "italic",
+  },
+
+  // Form Fields
+  formFieldsContainer: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 16,
+    color: "#030712",
+    fontWeight: "600",
+    marginBottom: 8,
+    marginLeft: 5,
+  },
+  modernInputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+    paddingHorizontal: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  inputIcon: {
+    fontSize: 18,
+    color: "#f3d25b",
+    marginRight: 12,
+  },
+  modernInput: {
+    flex: 1,
+    height: 50,
+    fontSize: 16,
+    color: "#030712",
+  },
+
+  // Enhanced Modal Styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.7)",
+  },
+  modalContent: {
+    backgroundColor: "#ffffff",
+    borderRadius: 25,
+    padding: 0,
+    width: width - 30,
+    maxWidth: 400,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 15,
+    elevation: 20,
+    overflow: "hidden",
+  },
+  modalHeader: {
+    backgroundColor: "#f3d25b",
+    padding: 25,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#874701",
+    marginBottom: 5,
+    textAlign: "center",
+  },
+  modalSubtitle: {
+    fontSize: 15,
+    color: "#874701",
+    textAlign: "center",
+    opacity: 0.8,
+  },
+  // FIXED: Added hint container for better user guidance
+  modalHintContainer: {
+    padding: 15,
+    backgroundColor: "#f8f9fa",
+  },
+  modalHint: {
+    fontSize: 13,
+    color: "#666",
+    textAlign: "center",
+    fontStyle: "italic",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    padding: 20,
+    gap: 15,
+  },
+  modalButton: {
+    flex: 1,
+  },
+  modalButtonGradient: {
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 18,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 6,
+  },
+  modalButtonIcon: {
+    marginBottom: 10,
+  },
+  modalButtonText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#874701",
+    marginBottom: 4,
+    textAlign: "center",
+  },
+  modalButtonSubtext: {
+    fontSize: 12,
+    color: "#666",
+    textAlign: "center",
+  },
+  modalFooter: {
+    padding: 20,
+    paddingTop: 0,
+  },
+  closeButton: {
+    width: "100%",
+  },
+  closeButtonGradient: {
+    paddingVertical: 16,
+    borderRadius: 18,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 6,
+  },
+  closeButtonText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+
+  // Enhanced Loading Modal Styles
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+  },
+  loadingContent: {
+    backgroundColor: "#ffffff",
+    borderRadius: 25,
+    padding: 35,
+    alignItems: "center",
+    minWidth: 200,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 15,
+  },
+  loadingText: {
+    marginTop: 20,
+    fontSize: 18,
+    color: "#030712",
+    textAlign: "center",
+    fontWeight: "600",
+  },
+  loadingSubtext: {
+    marginTop: 8,
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+  },
+
+  // Promotional Section
+  promotionalSection: {
+    padding: 15,
+    paddingTop: 0,
+  },
+  promotionalTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#030712",
+    marginBottom: 20,
+    textAlign: "center",
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#e0e0e0",
+  },
+  promotionCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 6,
+    overflow: "hidden",
+  },
+  promotionContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#f3d25b",
+  },
+  promotionText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#874701",
+    textTransform: "uppercase",
+    marginRight: 15,
+  },
+  promotionImage: {
+    width: 60,
+    height: 60,
+  },
+})
+
+export default MyAccount

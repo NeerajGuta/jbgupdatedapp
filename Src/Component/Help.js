@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     paddingVertical: 22,
     paddingHorizontal: 24,
     marginBottom: 16,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#D6DBE6",
     borderRadius: 18,
     shadowColor: "#000",
     shadowOffset: {
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
     borderWidth: 1,
-    borderColor: "#f0f0f0",
+    borderColor: "#D6DBE6",
   },
 
   iconContainer: {
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
   },
 
   imageCard: {
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#D6DBE6",
     borderRadius: 24,
     marginTop: 24,
     marginBottom: 20,
@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 280,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#D6DBE6",
     borderRadius: 16,
     shadowColor: "#f3d25b",
     shadowOffset: {

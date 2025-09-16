@@ -3446,6 +3446,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native"
 import { Image } from "react-native-animatable"
 import Modal from "react-native-modal"
 import Swiper from "react-native-swiper"
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 // Exit Confirmation Modal Component
 const ExitConfirmationModal = ({ isVisible, onClose, onConfirm }) => {
@@ -3491,11 +3492,11 @@ const SellModal = ({ isVisible, onClose, onConfirm, balance, mobile, setMobile, 
     <Modal isVisible={isVisible} backdropOpacity={0.5}>
       <View style={styles.sellModalContainer}>
         <View style={styles.sellModalContent}>
-          <Text style={styles.sellModalTitle}>Sell Gold</Text>
+          <Text style={styles.sellModalTitle}>Request</Text>
 
           <Text style={styles.sellBalanceDisplay}>{balance.toFixed(4)} Grams Available</Text>
 
-          <Text style={styles.sellModalSubtitle}>Enter Grams to Sell</Text>
+          <Text style={styles.sellModalSubtitle}>Enter Grams to Request</Text>
 
           <TextInput
             style={styles.sellInput}
@@ -3522,10 +3523,10 @@ const SellModal = ({ isVisible, onClose, onConfirm, balance, mobile, setMobile, 
               <LinearGradient
                 start={{ x: 1, y: 0 }}
                 end={{ x: 0, y: 0 }}
-                colors={["#4CAF50", "#4CAF50", "#4CAF50"]}
+                colors={["#005801", "#005801", "#005801"]}
                 style={styles.sellButton}
               >
-                <Text style={styles.sellButtonText}>Sell Now</Text>
+                <Text style={styles.sellButtonText}>Request</Text>
               </LinearGradient>
             </TouchableOpacity>
           </View>
@@ -3538,10 +3539,10 @@ const SellModal = ({ isVisible, onClose, onConfirm, balance, mobile, setMobile, 
 function Home() {
   const navigation = useNavigation("")
   const [loading, setLoading] = useState(false)
-  const [isInitialLoad, setIsInitialLoad] = useState(true) // Add state to track if this is initial load vs refresh
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [sellModalVisible, setSellModalVisible] = useState(false)
   const [exitModalVisible, setExitModalVisible] = useState(false)
-  const [selectedGoldType, setSelectedGoldType] = useState(0) // Default to first option (backend data)
+  const [selectedGoldType, setSelectedGoldType] = useState(0)
   const [gold, setgold] = useState("")
   const [Amount, setamount] = useState("")
   const [rate, setRate] = useState([])
@@ -3551,15 +3552,18 @@ function Home() {
   const [alltransiction, setAlltransiction] = useState([])
   const [allcoin, setallcoin] = useState([])
   const [video, setvideo] = useState([])
-  const [user, setUser] = useState(null) // Updated user state
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false) // Added keyboard visibility state management
+  const [user, setUser] = useState(null)
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false)
+
+  // Get safe area insets for proper spacing
+  const insets = useSafeAreaInsets()
 
   // Handle back button press ONLY when this screen is focused
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
         setExitModalVisible(true)
-        return true // Prevents default back action
+        return true
       }
 
       const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction)
@@ -3570,19 +3574,14 @@ function Home() {
 
   useFocusEffect(
     React.useCallback(() => {
-      // Set status bar when screen comes into focus
       const setStatusBar = () => {
-        StatusBar.setBackgroundColor("#4CAF50", true)
+        StatusBar.setBackgroundColor("#005801", true)
         StatusBar.setBarStyle("light-content", true)
       }
 
-      // Set immediately
       setStatusBar()
-
-      // Set again after a small delay to override any conflicting configurations
       const timeoutId = setTimeout(setStatusBar, 100)
 
-      // Cleanup function when screen loses focus
       return () => {
         clearTimeout(timeoutId)
       }
@@ -3591,9 +3590,8 @@ function Home() {
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchUserData() // Refresh user data when navigating back to Home
+      fetchUserData()
       if (!isInitialLoad) {
-        // Only refresh coins and transactions silently after initial load
         refreshDataSilently()
       }
     }, [isInitialLoad]),
@@ -3616,7 +3614,7 @@ function Home() {
     getRate()
     getGst()
     getVideo()
-    fetchUserData() // Added user data fetching on component mount
+    fetchUserData()
     getCoins()
     userTransaction()
   }, [])
@@ -3635,7 +3633,7 @@ function Home() {
     }
   }, [])
 
-  // Get Gst+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  // Get Gst
   const getGst = async () => {
     const config = {
       url: "/getGst",
@@ -3656,7 +3654,7 @@ function Home() {
     }
   }
 
-  // get all transiction---
+  // get all transiction
   const userTransaction = async (_id) => {
     let user = await AsyncStorage.getItem("user")
     user = JSON.parse(user)
@@ -3685,7 +3683,7 @@ function Home() {
       const parsedUser = JSON.parse(storedUser)
 
       if (isInitialLoad) {
-        setLoading(false) // Start loading before fetching
+        setLoading(false)
       }
 
       const res = await axios.get(`https://justbuynewbackend.onrender.com/api/v1/coins/singalcoins/${parsedUser?._id}`)
@@ -3699,13 +3697,13 @@ function Home() {
       console.log(error)
     } finally {
       if (isInitialLoad) {
-        setLoading(true) // Stop loading after fetching
-        setIsInitialLoad(false) // Mark initial load as complete
+        setLoading(true)
+        setIsInitialLoad(false)
       }
     }
   }
 
-  // Get Gold Rate+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  // Get Gold Rate
   const getRate = async () => {
     try {
       await axios.get("https://justbuynewbackend.onrender.com/api/v1/rate/allrate").then((res) => {
@@ -3723,10 +3721,10 @@ function Home() {
     }
   }
 
-  // Total Gst++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  // Total Gst
   const NewGst = data?.Sgst + data?.Cgst
 
-  // Get Video++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  // Get Video
   const getVideo = async () => {
     try {
       await axios.get("https://justbuynewbackend.onrender.com/api/v1/video/allvideo").then((res) => {
@@ -3758,15 +3756,15 @@ function Home() {
       id: 2,
       name: "Gold",
       purity: "22k-916",
-      rate: 10222.0,
+      rate: 0.0,
       balance: 0.0,
     },
     {
       id: 3,
       name: "Silver",
       purity: "24k-995",
-      rate: 132.0,
-      balance: 1.0,
+      rate: 0.0,
+      balance: 0.0,
     },
   ]
 
@@ -3821,7 +3819,7 @@ function Home() {
       const res = await axios(config)
       if (res.status === 200) {
         setSellModalVisible(false)
-        Alert.alert("Sell Request Sent Successfully")
+        Alert.alert("Request Sent Successfully")
         setamount("0")
         setgold("0")
         setMobile("0")
@@ -3834,62 +3832,53 @@ function Home() {
     }
   }
 
-  // Total calculation++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  // Total calculation
   const [gramCompleted, setGramCompleted] = useState(false)
 
   // Get current gold type multiplier from your rate data
   const getCurrentMultiplier = () => {
     if (selectedGoldType === 0 && rate.length > 0) {
-      // Backend data for first option
       return rate[0].multiplier || 1
     }
-    // Static data for remaining options
     return 1
   }
 
-  const calculate = (price, Amount) => {
-    const multiplier = getCurrentMultiplier()
-    const adjustedPrice = price * multiplier
-    const ab = Number(Amount) / Number(adjustedPrice)
-    const gst = 100 / (100 + NewGst)
-    const amt = ab * gst
-    setgold(amt?.toFixed(4))
-    setGramCompleted(Number.isInteger(ab))
-    setamount(Amount)
-  }
-
-  const calculate2 = (price, gold) => {
-    setgold(gold)
-    const multiplier = getCurrentMultiplier()
-    const adjustedPrice = price * multiplier
-    const ab = Number(gold) * Number(adjustedPrice)
-    setamount(ab?.toFixed(2))
-    setGramCompleted(Number.isInteger(gold))
-  }
-
-  // Calculate amount from grams
-  const calculateAmount = (inputGrams) => {
-    setgold(inputGrams)
-    if (inputGrams && inputGrams !== "0" && selectedGoldType !== null && metalData.length > 0) {
-      const selectedMetal = metalData[selectedGoldType]
-      const priceWithGst = (selectedMetal.rate * (100 + NewGst)) / 100
-      const calculatedAmount = (Number.parseFloat(inputGrams) * priceWithGst).toFixed(2)
-      setamount(calculatedAmount)
-    } else {
-      setamount("0")
-    }
-  }
-
-  // Calculate grams from amount
+  // FIXED: Calculate grams from amount (GST inclusive)
   const calculateGrams = (inputAmount) => {
     setamount(inputAmount)
     if (inputAmount && inputAmount !== "0" && selectedGoldType !== null && metalData.length > 0) {
       const selectedMetal = metalData[selectedGoldType]
-      const priceWithGst = (selectedMetal.rate * (100 + NewGst)) / 100
-      const calculatedGrams = (Number.parseFloat(inputAmount) / priceWithGst).toFixed(4)
+      const multiplier = getCurrentMultiplier()
+      const adjustedPrice = selectedMetal.rate * multiplier
+
+      // Calculate base amount (amount without GST)
+      const baseAmount = (Number.parseFloat(inputAmount) * 100) / (100 + NewGst)
+
+      // Calculate grams from base amount
+      const calculatedGrams = (baseAmount / adjustedPrice).toFixed(4)
       setgold(calculatedGrams)
     } else {
       setgold("0")
+    }
+  }
+
+  // FIXED: Calculate amount from grams (GST inclusive)
+  const calculateAmount = (inputGrams) => {
+    setgold(inputGrams)
+    if (inputGrams && inputGrams !== "0" && selectedGoldType !== null && metalData.length > 0) {
+      const selectedMetal = metalData[selectedGoldType]
+      const multiplier = getCurrentMultiplier()
+      const adjustedPrice = selectedMetal.rate * multiplier
+
+      // Calculate base amount (without GST)
+      const baseAmount = Number.parseFloat(inputGrams) * adjustedPrice
+
+      // Add GST to get final amount
+      const finalAmount = (baseAmount * (100 + NewGst)) / 100
+
+      setamount(finalAmount.toFixed(2))
+    } else {
+      setamount("0")
     }
   }
 
@@ -3897,11 +3886,9 @@ function Home() {
   useEffect(() => {
     if (selectedGoldType !== null && metalData.length > 0) {
       if (selectedGoldType === 0 && rate.length > 0) {
-        // Backend data
         setObjRate(rate[0])
         setGoldRate(rate[0].rate)
       } else {
-        // Static data
         const staticIndex = selectedGoldType - 1
         if (staticIndex >= 0 && staticIndex < staticMetalData.length) {
           setObjRate(staticMetalData[staticIndex])
@@ -3909,7 +3896,6 @@ function Home() {
         }
       }
 
-      // Recalculate if there are existing values
       if (gold) {
         calculateAmount(gold)
       } else if (Amount) {
@@ -3926,12 +3912,11 @@ function Home() {
 
   // Reset calculations when gold type changes
   useEffect(() => {
-    // Clear inputs when metal type changes
     setgold("0")
     setamount("0")
   }, [selectedGoldType])
 
-  // Transaction++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  // Transaction
   const [paymentid, setpaymentId] = useState("")
   const placeorder = async (paymentid) => {
     try {
@@ -3945,14 +3930,14 @@ function Home() {
           amount: Amount,
           gold: gold,
           PaymentId: paymentid,
-          totalCoin: totalgoldStore - Number(gold), // Corrected calculation
+          totalCoin: totalgoldStore - Number(gold),
         },
       }
       await axios(config).then(async (res) => {
         if (res.status === 200) {
           Alert.alert("Successfully")
-          await userTransaction() // Ensure transactions are refreshed
-          await getCoins() // Refresh coins data
+          await userTransaction()
+          await getCoins()
           navigation.navigate("Home1")
         }
       })
@@ -3963,9 +3948,8 @@ function Home() {
 
   const isDisabled = !Amount || !gold
 
-  // react-native-razorpay+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  // react-native-razorpay
   const posttransaction = async () => {
-    // Validate amount before proceeding with payment
     if (!validateAmount(Amount)) {
       return
     }
@@ -4004,7 +3988,7 @@ function Home() {
     }
   }
 
-  // Validation function for amount - will be used only when Buy button is clicked
+  // Validation function for amount
   const validateAmount = (amount) => {
     const numAmount = Number(amount)
     if (numAmount < 100) {
@@ -4022,13 +4006,13 @@ function Home() {
     {
       name: "Redeem",
       icon: "card-giftcard",
-      color: "#4CAF50",
+      color: "#005801",
       action: () => Alert.alert("Redeem", "Redeem feature coming soon!"),
     },
     {
-      name: "Sell",
+      name: "Request",
       icon: "shopping-cart",
-      color: "#4CAF50",
+      color: "#005801",
       action: () => {
         if (totalgoldStore >= 1) {
           setSellModalVisible(true)
@@ -4040,19 +4024,19 @@ function Home() {
     {
       name: "Savings Plan",
       icon: "account-balance-wallet",
-      color: "#4CAF50",
+      color: "#005801",
       action: () => Alert.alert("Savings Plan", "Savings Plan feature coming soon!"),
     },
     {
       name: "Look Book",
       icon: "book",
-      color: "#4CAF50",
+      color: "#005801",
       action: () => Alert.alert("Look Book", "Look Book feature coming soon!"),
     },
     {
       name: "Deposit Plan",
       icon: "timeline",
-      color: "#4CAF50",
+      color: "#005801",
       action: () => Alert.alert("Deposit Plan", "Deposit Plan feature coming soon!"),
     },
   ]
@@ -4064,7 +4048,6 @@ function Home() {
       const storedUser = await AsyncStorage.getItem("user")
       const parsedUser = JSON.parse(storedUser)
 
-      // Refresh coins data silently
       const coinsRes = await axios.get(
         `https://justbuynewbackend.onrender.com/api/v1/coins/singalcoins/${parsedUser?._id}`,
       )
@@ -4072,7 +4055,6 @@ function Home() {
         setallcoin(coinsRes.data.success)
       }
 
-      // Refresh transaction history silently
       const transRes = await axios.get(
         "https://justbuynewbackend.onrender.com/api/v1/transactions/transactionhistory/" + parsedUser?._id,
       )
@@ -4085,20 +4067,40 @@ function Home() {
   }
 
   return (
-    <>
+    <SafeAreaView style={styles.safeAreaContainer}>
       {loading ? (
         <>
           <View style={styles.container}>
             {/* Greeting Section */}
-            <View style={styles.greetingContainer}>
-              <View style={styles.greetingContent}>
-                <Text style={styles.helloText}>Hello</Text>
-                <Text style={styles.handIcon}>👋 </Text>
+            <View style={[styles.greetingContainer, { paddingTop: Math.max(insets.top, 10) }]}>
+              <View style={styles.greetingMainContent}>
+                <View style={styles.greetingLeftContent}>
+                  <View style={styles.greetingContent}>
+                    <Text style={styles.helloText}>Hello</Text>
+                    <Text style={styles.handIcon}>👋 </Text>
+                  </View>
+                  <Text style={styles.usernameText}>{user?.name || "User"} !</Text>
+                </View>
+
+                {/* G5 Image on top right */}
+                <View style={styles.greetingRightContent}>
+                  <Image source={require("../../assets/images/g5.png")} style={styles.g5Image} />
+                </View>
               </View>
-              <Text style={styles.usernameText}>{user?.name || "User"} !</Text>
             </View>
 
-            <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+           <ScrollView
+  style={styles.scrollContainer}
+  showsVerticalScrollIndicator={false}
+  contentContainerStyle={[
+    styles.scrollContentContainer,
+    { 
+      paddingBottom: isKeyboardVisible 
+        ? 5  // Minimal padding when keyboard is visible
+        : Math.max(insets.bottom, 15) + 50  // Reduced padding when keyboard is hidden
+    }
+  ]}
+>
               {/* Carousel Images Section */}
               <View style={styles.swiperContainer}>
                 <Swiper
@@ -4117,59 +4119,89 @@ function Home() {
                 </Swiper>
               </View>
 
-              {/* Balance Section - Scrollable Layout */}
+              {/* Balance Section - Fixed Grid Layout */}
               <View style={styles.balanceMainContainer}>
                 <View style={styles.balanceContainer}>
-                  <View style={styles.scrollableRow}>
-                    <View style={styles.fixedLabelsColumn}>
-                      <View style={styles.labelSpacing}>{/* Empty space for coins and metal names */}</View>
-                      <View style={styles.labelContainer}>
-                        <Text style={styles.sectionLabel}>Balance{"\n"}in gms</Text>
-                      </View>
-                      <View style={styles.labelContainer}>
-                        <Text style={styles.sectionLabel}>Current{"\n"}rate(₹)/gm</Text>
+                  <View style={styles.balanceGrid}>
+                    {/* Header Row with Coins and Metal Names */}
+                    <View style={styles.balanceHeaderRow}>
+                      <View style={styles.headerLabelColumn}>{/* Empty space for alignment */}</View>
+
+                      <View style={styles.metalColumnsContainer}>
+                        {/* Gold 24k Column */}
+                        <View style={styles.metalColumn}>
+                          <Image source={require("../../assets/images/start.png")} style={styles.goldCoin} />
+                          <Text style={styles.metalName}>Gold</Text>
+                          <Text style={styles.purityText}>24k-999</Text>
+                        </View>
+
+                        {/* Gold 22k Column */}
+                        <View style={styles.metalColumn}>
+                          <Image source={require("../../assets/images/start.png")} style={styles.goldCoin} />
+                          <Text style={styles.metalName}>Gold</Text>
+                          <Text style={styles.purityText}>22k-916</Text>
+                        </View>
+
+                        {/* Silver Column */}
+                        <View style={styles.metalColumn}>
+                          <Image source={require("../../assets/images/silver.png")} style={styles.silverCoin} />
+                          <Text style={styles.metalName}>Silver</Text>
+                          <Text style={styles.purityText}>24k-995</Text>
+                        </View>
                       </View>
                     </View>
 
-                    <ScrollView
-                      horizontal
-                      showsHorizontalScrollIndicator={false}
-                      style={styles.scrollableContent}
-                      contentContainerStyle={styles.scrollContentContainer}
-                    >
-                      {metalData.map((metal, index) => (
-                        <View key={metal.id} style={styles.scrollableMetalColumn}>
-                          {/* Coin */}
-                          {index < 2 ? (
-                            <View style={styles.goldCoin}>
-                              <Text style={styles.coinText}>GOLD</Text>
-                            </View>
-                          ) : (
-                            <View style={styles.silverCoin}>
-                              <Text style={styles.coinTextSilver}>SILVER</Text>
-                            </View>
-                          )}
+                    {/* Balance in gms Row */}
+                    <View style={styles.balanceDataRow}>
+                      <View style={styles.rowLabel}>
+                        <Text style={styles.rowLabelText}>Balance{"\n"}in gms</Text>
+                      </View>
 
-                          {/* Metal Name */}
-                          <Text style={styles.metalName}>{metal.name}</Text>
-
-                          {/* Balance Value */}
-                          <View style={styles.valueBox}>
-                            <Text style={styles.balanceValue}>
-                              {index === 0 ? (metal.balance || 0).toFixed(4) : metal.balance.toFixed(4)}
-                            </Text>
-                            <Text style={styles.purityText}>{metal.purity}</Text>
-                          </View>
-
-                          {/* Rate Value */}
-                          <View style={styles.valueBox}>
-                            <Text style={styles.rateValue}>
-                              {index === 0 ? (metal.rate || 0).toLocaleString() : metal.rate.toLocaleString()}
-                            </Text>
-                          </View>
+                      <View style={styles.metalColumnsContainer}>
+                        {/* Gold 24k Balance */}
+                        <View style={styles.valueCell}>
+                          <Text style={styles.valueCellText}>
+                            {rate.length > 0 ? (transicitionData - coinsData || 0).toFixed(4) : "0.0000"}
+                          </Text>
                         </View>
-                      ))}
-                    </ScrollView>
+
+                        {/* Gold 22k Balance */}
+                        <View style={styles.valueCell}>
+                          <Text style={styles.valueCellText}>0.0000</Text>
+                        </View>
+
+                        {/* Silver Balance */}
+                        <View style={styles.valueCell}>
+                          <Text style={styles.valueCellText}>0.0000</Text>
+                        </View>
+                      </View>
+                    </View>
+
+                    {/* Current rate Row */}
+                    <View style={styles.balanceDataRow}>
+                      <View style={styles.rowLabel}>
+                        <Text style={styles.rowLabelText}>Current{"\n"}rate(₹)/gm</Text>
+                      </View>
+
+                      <View style={styles.metalColumnsContainer}>
+                        {/* Gold 24k Rate */}
+                        <View style={styles.valueCell}>
+                          <Text style={styles.valueCellText}>
+                            {rate.length > 0 ? (rate[0]?.rate || 0).toLocaleString() : "11,266.0"}
+                          </Text>
+                        </View>
+
+                        {/* Gold 22k Rate */}
+                        <View style={styles.valueCell}>
+                          <Text style={styles.valueCellText}>0</Text>
+                        </View>
+
+                        {/* Silver Rate */}
+                        <View style={styles.valueCell}>
+                          <Text style={styles.valueCellText}>0</Text>
+                        </View>
+                      </View>
+                    </View>
                   </View>
 
                   {/* GST Text */}
@@ -4177,7 +4209,7 @@ function Home() {
                 </View>
               </View>
 
-              {/* Quick Buy Section - First from backend, rest static */}
+              {/* Quick Buy Section */}
               <View style={styles.quickBuyContainer}>
                 <Text style={styles.quickBuyHeader}>Quick Buy</Text>
 
@@ -4212,6 +4244,7 @@ function Home() {
                   {/* Grams Input */}
                   <View style={styles.inputContainer}>
                     <View style={styles.inputHeader}>
+                      <View style={styles.spacer} />
                       <Text style={styles.inputLabel}>Grams</Text>
                       <FontAwesome name="balance-scale" style={styles.inputIcon} />
                     </View>
@@ -4222,7 +4255,7 @@ function Home() {
                       keyboardType="numeric"
                       value={gold === "0" ? "" : gold}
                       onChangeText={calculateAmount}
-                      onFocus={() => setKeyboardVisible(true)} // Added onFocus and onBlur to manage keyboard state
+                      onFocus={() => setKeyboardVisible(true)}
                       onBlur={() => setKeyboardVisible(false)}
                     />
                   </View>
@@ -4235,6 +4268,7 @@ function Home() {
                   {/* Amount Input */}
                   <View style={styles.inputContainer}>
                     <View style={styles.inputHeader}>
+                      <View style={styles.spacer} />
                       <Text style={styles.inputLabel}>Amount</Text>
                       <Text style={styles.rupeeSymbol}>₹</Text>
                     </View>
@@ -4245,7 +4279,7 @@ function Home() {
                       keyboardType="numeric"
                       value={Amount === "0" || Amount === "0.00" ? "" : Amount}
                       onChangeText={calculateGrams}
-                      onFocus={() => setKeyboardVisible(true)} // Added onFocus and onBlur to manage keyboard state
+                      onFocus={() => setKeyboardVisible(true)}
                       onBlur={() => setKeyboardVisible(false)}
                     />
                   </View>
@@ -4275,25 +4309,21 @@ function Home() {
                 </TouchableOpacity>
               </View>
 
-              {/* Quick Actions Section - Individual Cards like third image */}
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.actionsScrollContainer}
-                style={styles.actionsScrollView}
-              >
-                {actionButtons.map((action, index) => (
-                  <TouchableOpacity key={index} style={styles.actionCard} onPress={action.action} activeOpacity={0.7}>
-                    <View style={[styles.actionCardIcon, { backgroundColor: action.color }]}>
-                      <MaterialIcons name={action.icon} size={24} color="white" />
-                    </View>
-                    <Text style={styles.actionCardText}>{action.name}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-
-              {/* Bottom spacing */}
-              <View style={styles.bottomSpacing} />
+              {/* Quick Actions Section - Individual Cards */}
+              <View style={styles.actionsContainer}>
+                <View style={styles.actionsGrid}>
+                  {actionButtons.map((action, index) => (
+                    <TouchableOpacity key={index} style={styles.actionItem} onPress={action.action} activeOpacity={0.7}>
+                      <View style={styles.actionCard}>
+                        <View style={[styles.actionCardIcon, { backgroundColor: action.color }]}>
+                          <MaterialIcons name={action.icon} size={20} color="white" />
+                        </View>
+                      </View>
+                      <Text style={styles.actionCardText}>{action.name}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
             </ScrollView>
 
             {/* Sell Modal */}
@@ -4309,8 +4339,8 @@ function Home() {
           </View>
         </>
       ) : (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Text>Loading...</Text>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Loading...</Text>
         </View>
       )}
 
@@ -4320,13 +4350,18 @@ function Home() {
         onClose={() => setExitModalVisible(false)}
         onConfirm={() => BackHandler.exitApp()}
       />
-    </>
+    </SafeAreaView>
   )
 }
 
 export default Home
 
 const styles = StyleSheet.create({
+  // SafeAreaView container - CRITICAL for proper display
+  safeAreaContainer: {
+    flex: 1,
+    backgroundColor: "#005801", // Match the green header color
+  },
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
@@ -4335,23 +4370,92 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f8f9fa",
   },
+  // NEW: Content container for proper spacing
+  scrollContentContainer: {
+    flexGrow: 1,
+  },
+  // Loading container with proper centering
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f8f9fa",
+  },
+  loadingText: {
+    fontSize: 16,
+    color: "#666",
+    marginTop: 10,
+  },
+
+  // Greeting Styles - Updated for SafeAreaView
+  greetingContainer: {
+    backgroundColor: "#005801",
+    paddingHorizontal: 20,
+    paddingBottom: 15,
+    justifyContent: "flex-end",
+    minHeight: 80,
+  },
+  greetingMainContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+  },
+  greetingLeftContent: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+  greetingContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 2,
+  },
+  helloText: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    marginRight: 8,
+  },
+  handIcon: {
+    fontSize: 26,
+    color: "#FFD700",
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  usernameText: {
+    fontSize: 22,
+    color: "#FFFFFF",
+    fontWeight: "500",
+    marginTop: -8,
+  },
+  greetingRightContent: {
+    alignItems: "center",
+    justifyContent: "flex-end",
+    paddingBottom: 0,
+  },
+  g5Image: {
+    width: 220,
+    height: 100,
+    resizeMode: "contain",
+    marginBottom: -40,
+  },
 
   // Carousel Styles
   swiperContainer: {
-    height: 200,
+    height: 180,
     marginTop: 15,
-    marginBottom: 20,
+    marginBottom: 18,
     marginHorizontal: 15,
-    borderRadius: 20,
+    borderRadius: 16,
     overflow: "hidden",
-    elevation: 8,
+    elevation: 6,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 3,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
     backgroundColor: "#fff",
   },
   wrapper: {},
@@ -4359,39 +4463,39 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 20,
+    borderRadius: 16,
     overflow: "hidden",
   },
   swiperImage: {
     width: "100%",
     height: "100%",
     resizeMode: "cover",
-    borderRadius: 20,
+    borderRadius: 16,
   },
   dot: {
     backgroundColor: "rgba(255,255,255,0.5)",
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
     marginLeft: 3,
     marginRight: 3,
   },
   activeDot: {
     backgroundColor: "#FFD700",
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: 9,
+    height: 9,
+    borderRadius: 4.5,
     marginLeft: 3,
     marginRight: 3,
   },
 
-  // Balance Section - Scrollable Layout
+  // Balance Section - Fixed Grid Layout
   balanceMainContainer: {
-    marginHorizontal: 12,
+    marginHorizontal: 15,
     marginBottom: 15,
   },
   balanceContainer: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#D6DBE6",
     borderRadius: 16,
     padding: 16,
     shadowColor: "#000",
@@ -4403,154 +4507,189 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     borderWidth: 1,
-    borderColor: "#f0f0f0",
+    borderColor: "#D6DBE6",
   },
 
-  scrollableRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    marginBottom: 20,
-    paddingBottom: 12,
+  // Fixed grid layout
+  balanceGrid: {
+    marginBottom: 12,
+    paddingBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: "#D6DBE6",
   },
 
-  fixedLabelsColumn: {
-    width: 90,
-    justifyContent: "flex-start",
-    paddingRight: 12,
-  },
-
-  labelSpacing: {
-    height: 85,
-    marginBottom: 8,
-  },
-
-  labelContainer: {
-    height: 60,
-    justifyContent: "center",
-    marginBottom: 8,
-  },
-
-  scrollableMetalColumn: {
+  // Header row with labels
+  balanceHeaderRow: {
+    flexDirection: "row",
     alignItems: "center",
-    marginHorizontal: 12,
-    minWidth: 100,
+    marginBottom: 8,
   },
 
+  headerLabelColumn: {
+    width: 70,
+    paddingRight: 8,
+  },
+
+  headerLabel: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#333",
+    textAlign: "left",
+  },
+
+  // Metal columns in fixed grid
+  metalColumnsContainer: {
+    flexDirection: "row",
+    flex: 1,
+    justifyContent: "space-between",
+  },
+
+  metalColumn: {
+    flex: 1,
+    alignItems: "center",
+    marginHorizontal: 2,
+  },
+
+  metalColumnHeader: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 4,
+  },
+
+  // Coin styles - smaller for fixed layout
   goldCoin: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
     backgroundColor: "#FFD700",
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 3,
+    borderWidth: 2,
     borderColor: "#FFA500",
-    marginBottom: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 5,
-    elevation: 8,
-  },
-  silverCoin: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: "#E5E5E5",
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 3,
-    borderColor: "#B8B8B8",
-    marginBottom: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 5,
-    elevation: 8,
-  },
-  coinText: {
-    fontSize: 9,
-    fontWeight: "bold",
-    color: "#8B4513",
-    textAlign: "center",
-  },
-  coinTextSilver: {
-    fontSize: 8,
-    fontWeight: "bold",
-    color: "#2F4F4F",
-    textAlign: "center",
-  },
-  metalName: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#333",
-    textAlign: "center",
-    marginBottom: 8,
-  },
-
-  valueBox: {
-    backgroundColor: "#f8f9fa",
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    minHeight: 60,
-    width: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#e9ecef",
-    marginBottom: 8,
+    marginBottom: 4,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.3,
     shadowRadius: 3,
-    elevation: 2,
+    elevation: 4,
+  },
+  silverCoin: {
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
+    backgroundColor: "#E5E5E5",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#B8B8B8",
+    marginBottom: 4,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 4,
+  },
+  coinText: {
+    fontSize: 6,
+    fontWeight: "bold",
+    color: "#8B4513",
+    textAlign: "center",
+  },
+  coinTextSilver: {
+    fontSize: 6,
+    fontWeight: "bold",
+    color: "#2F4F4F",
+    textAlign: "center",
   },
 
-  sectionLabel: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#333",
-    textAlign: "left",
-    lineHeight: 16,
-  },
-  balanceValue: {
-    fontSize: 16,
+  metalName: {
+    fontSize: 11,
     fontWeight: "700",
-    color: "#000",
+    color: "#333",
     textAlign: "center",
-    marginBottom: 2,
+    marginBottom: 4,
   },
+
   purityText: {
-    fontSize: 10,
+    fontSize: 8,
     color: "#666",
     textAlign: "center",
     fontWeight: "500",
+    marginBottom: 6,
   },
-  rateValue: {
-    fontSize: 16,
+
+  // Data rows
+  balanceDataRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 6,
+  },
+
+  rowLabel: {
+    width: 70,
+    paddingRight: 8,
+  },
+
+  rowLabelText: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#333",
+    textAlign: "left",
+    lineHeight: 13,
+  },
+
+  // Value cells in fixed grid
+  valueCell: {
+    flex: 1,
+    backgroundColor: "#f8f9fa",
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 4,
+    minHeight: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#e9ecef",
+    marginHorizontal: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+
+  valueCellText: {
+    fontSize: 12,
     fontWeight: "700",
     color: "#000",
     textAlign: "center",
   },
 
-  // Quick Buy Section Styles
+  gstText: {
+    fontSize: 11,
+    color: "#666",
+    textAlign: "center",
+    fontStyle: "italic",
+    marginTop: 5,
+  },
+
+  // Quick Buy Section - Optimized
   quickBuyContainer: {
-    backgroundColor: "#f0f0f0",
-    borderRadius: 20,
+    backgroundColor: "#D6DBE6",
+    borderRadius: 16,
     margin: 15,
-    padding: 20,
+    padding: 18,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -4561,32 +4700,32 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   quickBuyHeader: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "700",
     color: "#000",
-    marginBottom: 20,
+    marginBottom: 16,
   },
   metalTypeContainer: {
     flexDirection: "row",
-    marginBottom: 25,
-    gap: 8,
+    marginBottom: 20,
+    gap: 6,
   },
   metalTypeTab: {
     flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 6,
+    borderRadius: 10,
     alignItems: "center",
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "#e0e0e0",
   },
   selectedMetalTypeTab: {
-    backgroundColor: "#4CAF50",
-    borderColor: "#4CAF50",
+    backgroundColor: "#005801",
+    borderColor: "#005801",
   },
   metalTypeLabel: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "600",
     color: "#666",
     marginBottom: 2,
@@ -4595,7 +4734,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   metalTypeSubtitle: {
-    fontSize: 12,
+    fontSize: 11,
     color: "#999",
   },
   selectedMetalTypeSubtitle: {
@@ -4604,8 +4743,8 @@ const styles = StyleSheet.create({
   inputSection: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 15,
-    gap: 15,
+    marginBottom: 12,
+    gap: 12,
   },
   inputContainer: {
     flex: 1,
@@ -4613,56 +4752,57 @@ const styles = StyleSheet.create({
   inputHeader: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
-    gap: 8,
+    marginBottom: 6,
+    gap: 6,
+    justifyContent: "center",
   },
+  spacer: {},
   inputLabel: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "600",
     color: "#333",
   },
   inputIcon: {
-    fontSize: 16,
+    fontSize: 15,
     color: "#666",
   },
   rupeeSymbol: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "600",
     color: "#666",
   },
   modernInput: {
     backgroundColor: "white",
-    borderRadius: 12,
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    fontSize: 16,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontSize: 15,
     fontWeight: "600",
     color: "#000",
     borderWidth: 1,
     borderColor: "#e0e0e0",
     textAlign: "center",
-    minHeight: 50,
+    minHeight: 45,
   },
   exchangeContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 25,
+    marginTop: 20,
   },
   exchangeIcon: {
-    fontSize: 20,
+    fontSize: 18,
     color: "#666",
-    transform: [{ rotate: "90deg" }],
   },
   gstIncludedText: {
-    fontSize: 14,
+    fontSize: 13,
     color: "#999",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 16,
   },
   buyNowButton: {
-    backgroundColor: "#4CAF50",
-    borderRadius: 15,
-    paddingVertical: 18,
+    backgroundColor: "#005801",
+    borderRadius: 10,
+    paddingVertical: 12,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -4675,102 +4815,109 @@ const styles = StyleSheet.create({
   },
   buyNowText: {
     color: "white",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "700",
   },
 
-  // Quick Actions Section - Individual Cards like third image
-  actionsScrollView: {
-    marginBottom: 20,
+  // Quick Actions Section - Enhanced with proper spacing
+  actionsContainer: {
+    marginHorizontal: 15,
+    marginBottom: 20, // Increased bottom margin for better spacing
   },
-  actionsScrollContainer: {
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+
+  actionsGrid: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
   },
-  actionCard: {
-    backgroundColor: "white",
-    borderRadius: 16,
-    padding: 15,
+
+  actionItem: {
     alignItems: "center",
-    marginHorizontal: 6,
-    minWidth: 100,
-    minHeight: 110,
+    width: "18.5%",
+  },
+
+  actionCard: {
+    backgroundColor: "#D6DBE6",
+    borderRadius: 12,
+    padding: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    aspectRatio: 1,
+    width: "100%",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 4,
-  },
-  actionCardIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    shadowRadius: 3,
+    elevation: 3,
     marginBottom: 8,
   },
+
+  actionCardIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   actionCardText: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: "600",
     color: "#333",
     textAlign: "center",
+    lineHeight: 12,
   },
 
-  // Bottom spacing
-  bottomSpacing: {
-    height: 30,
-  },
-
-  // Sell Modal Styles
+  // Sell Modal Styles - Optimized
   sellModalContainer: {
-    backgroundColor: "white",
+    backgroundColor: "#D6DBE6",
     borderRadius: 15,
     margin: 20,
-    padding: 25,
+    padding: 22,
   },
   sellModalContent: {
     alignItems: "center",
   },
   sellModalTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "700",
     color: "#333",
-    marginBottom: 20,
+    marginBottom: 18,
   },
   sellBalanceDisplay: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "600",
-    backgroundColor: "#f0f8ff",
-    borderColor: "#4CAF50",
+    backgroundColor: "#D6DBE6",
+    borderColor: "#005801",
     borderWidth: 2,
     borderRadius: 10,
-    padding: 15,
+    padding: 12,
     textAlign: "center",
-    marginBottom: 20,
-    minWidth: 250,
+    marginBottom: 18,
+    minWidth: 230,
     color: "#333",
   },
   sellModalSubtitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "600",
     color: "#333",
-    marginBottom: 15,
+    marginBottom: 12,
   },
   sellInput: {
-    height: 50,
+    height: 45,
     borderWidth: 2,
     borderRadius: 10,
     color: "#333",
-    padding: 15,
-    borderColor: "#4CAF50",
+    padding: 12,
+    borderColor: "#005801",
     backgroundColor: "#f9f9f9",
     textAlign: "center",
-    fontSize: 16,
-    minWidth: 250,
-    marginBottom: 25,
+    fontSize: 15,
+    minWidth: 230,
+    marginBottom: 20,
   },
   sellButtonContainer: {
     flexDirection: "row",
@@ -4779,20 +4926,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   sellButton: {
-    height: 45,
-    paddingHorizontal: 25,
-    borderRadius: 25,
+    height: 42,
+    paddingHorizontal: 22,
+    borderRadius: 21,
     justifyContent: "center",
     alignItems: "center",
-    minWidth: 110,
+    minWidth: 100,
   },
   sellButtonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "600",
   },
 
-  // Exit Modal Styles
+  // Exit Modal Styles - Optimized
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -4800,70 +4947,39 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "white",
-    borderRadius: 10,
-    padding: 20,
+    borderRadius: 12,
+    padding: 18,
     width: "80%",
     alignItems: "center",
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "700",
     color: "black",
-    marginBottom: 15,
+    marginBottom: 12,
   },
   modalText: {
-    fontSize: 16,
+    fontSize: 15,
     color: "black",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 18,
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   exitButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: 9,
+    paddingHorizontal: 18,
     borderRadius: 100,
-    minWidth: 100,
+    minWidth: 90,
     alignItems: "center",
   },
   exitButtonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "600",
-  },
-
-  // Greeting Styles
-  greetingContainer: {
-    backgroundColor: "#4CAF50",
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    paddingTop: 50, // Account for status bar
-  },
-  greetingContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 5,
-  },
-  helloText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#FFFFFF",
-    marginRight: 8,
-  },
-  handIcon: {
-    fontSize: 26,
-    color: "#FFD700", // Golden yellow color for better contrast
-    textShadowColor: "rgba(0, 0, 0, 0.3)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
-  },
-  usernameText: {
-    fontSize: 18,
-    color: "#FFFFFF",
-    fontWeight: "500",
   },
 })
